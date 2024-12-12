@@ -10,4 +10,13 @@
     <welcome-file>default.jsp</welcome-file>
     <welcome-file>default.htm</welcome-file>
   </welcome-file-list>
+  
+  <!-- ========= SemiProject Setting Start  ===========  -->
+  <resource-ref>
+ 	<description>Semi Datasource</description>
+ 	<res-ref-name>jdbc/semioracle</res-ref-name>
+ 	<res-type>javax.sql.DataSource</res-type>
+ 	<res-auth>Container</res-auth>
+  </resource-ref>
+  <!-- ========= SemiProject Setting End  ===========  -->
 </web-app>

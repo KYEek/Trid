@@ -97,5 +97,5 @@ replay_pid*
 
 /build/
 
-/src/main/java/common/controller/Constants.java
+/src/main/java/common/Constants.java
 /src/main/webapp/WEB-INF/Command.properties
