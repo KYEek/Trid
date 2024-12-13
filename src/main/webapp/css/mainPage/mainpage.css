@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+div#carouselExampleControls {
+  background-color: yellowgreen;
+  width: 100vw;
+  height: 100vh;
+}
+
+li#footer {
+  height: 100vh;
+}
+
+.fullscreen {
+  width: 100vw;
+  height: 100vh;
+}
+
+.group_list {
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.group_ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
