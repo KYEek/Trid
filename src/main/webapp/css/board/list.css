@@ -1,0 +1,84 @@
+@charset "UTF-8";
+
+/* 전체의 80% 로 비율 설정 */
+div#container {
+    margin: 0 350px;
+    min-width: 768px;
+}
+
+/* 등록하기 버튼 */
+div#register_btn {
+    border: solid 3px black;
+    width: 10%;
+    height: 30px;
+    text-align: center;
+    font-size: 14pt;
+    font-weight: bold;
+    margin-left: auto;
+    margin-bottom: 3%;
+    margin-top: 100px;  /* 헤더가 들어올 자리  */   /* 헤더 들어오면 수정 또는 삭제  */
+}
+
+/* 등록하기 버튼에 호버했을 때 */
+div#register_btn:hover {
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+/* 질문 리스트의 고정된 헤더 */
+div#list_header {
+    border: solid 1px black;
+    display: flex;
+    text-align: center;
+    height: 60px;
+    font-size: 12pt;
+    align-items: center;
+}
+
+/* 리스트의 한 줄 */
+div.list_item {
+    display: flex;
+    text-align: center;
+    height: 60px;
+    font-size: 12pt;
+    align-items: center;
+    margin: 1% 0;
+    border: solid 1px black;
+}
+
+/* 리스트 한 줄에 호버했을 때 */
+div.list_item:hover {
+    background-color: black;
+    color: white;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+
+/* 번호 */
+div#seq {
+    width: 10%;
+}
+
+/* 제목 */
+div#title {
+    width: 50%;
+}
+
+/* 답변상태 */
+div#aswer_status {
+    width: 15%;
+}
+
+/* 등록일자 */
+div#register_day {
+    width: 15%;
+}
+
+/* 비밀여부 */
+div#private {
+    width: 10%;
+}
+
