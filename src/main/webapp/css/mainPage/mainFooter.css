@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+:root {
+  --main_font: 14pt;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  font: inherit;
+}
+footer {
+  height: 100vh;
+  padding: 40vh 7vw 0 7vw;
+}
+
+#first_footer {
+  text-align: center;
+  font-size: var(--main_font);
+}
+
+#first_footer > div:first-child {
+  margin-bottom: 15vh;
+}
+
+#news_letter_row {
+  margin: 0 5vw;
+}
+
+#second_footer {
+  font-size: x-small;
+  font-weight: lighter;
+  position: relative;
+  width: 45vw;
+  margin: 30vh 5vw 5vh 5vw;
+}
+
+.news_letter {
+  font-size: small;
+}
+
+@media (max-width: 768px) {
+  #second_footer {
+    width: 78vw;
+  }
+}

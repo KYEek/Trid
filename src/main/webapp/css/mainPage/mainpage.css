@@ -1,16 +1,22 @@
 @charset "UTF-8";
 
+body {
+  overflow: hidden;
+}
+
 div#carouselExampleControls {
-  background-color: yellowgreen;
+	
+  position:relative;
   width: 100vw;
   height: 100vh;
 }
 
-li#footer {
+.fullscreen {
+  width: 100vw;
   height: 100vh;
 }
 
-.fullscreen {
+.list_size {
   width: 100vw;
   height: 100vh;
 }
