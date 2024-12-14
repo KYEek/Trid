@@ -36,7 +36,7 @@ public class FrontController extends HttpServlet {
 		
 		FileInputStream fls = null; 
 		
-		String props = Constants.propertiesPath; // Command.properties 경로
+		String props = Constants.PROPERTIES_PATH; // Command.properties 경로
 		
 		try {
 			
@@ -103,18 +103,18 @@ public class FrontController extends HttpServlet {
 					}
 					else {
 						System.out.println(">>> viewPage가 존재하지 않습니다.");
-						response.sendRedirect(request.getContentType() + "error.jsp");
+						response.sendRedirect(request.getContentType() + "/error.trd");
 					}
 				}
 				
 				// 리다이렉트인 경우
 				else {
 					if(viewPage != null) {
-						response.sendRedirect(viewPage);
+						response.sendRedirect(request.getContextPath() + viewPage);
 					}
 					else {
 						System.out.println(">>> viewPage가 존재하지 않습니다.");
-						response.sendRedirect(request.getContentType() + "error.jsp");
+						response.sendRedirect(request.getContentType() + "/error.trd");
 					}
 				}
 			} catch (Exception e) {
