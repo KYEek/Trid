@@ -15,6 +15,7 @@
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.7.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/mainPage/mainpage.js"></script>
 
 </head>
 <div class="container-fluid m-0 p-0">
@@ -46,6 +47,8 @@
 		</div>
 	</div>
 
+
+	<!-- 케러셀 부분  -->
 	<div
       id="carouselExampleControls"
       class="carousel slide"
@@ -53,6 +56,8 @@
       data-wrap="false"
     >
       <div class="carousel-inner">
+      
+        	<!--첫번째 카테고리 리스트  -->
         <div class="carousel-item active fullscreen group_list">
           <ul class="h-100 w-100 group_ul">
             <li class="list_size">
@@ -97,6 +102,8 @@
                   src="images/mainPage/women/image-landscape-fill-684d0f95-30fb-49aa-aa66-f37f86260128-default_0.jpg"
               /></a>
             </li>
+            
+            <!-- 메인푸터 -->
             <li class="list_size">
               <footer>
                 <div id="first_footer">
@@ -124,6 +131,8 @@
             </li>
           </ul>
         </div>
+        
+        <!--두번째 카테고리 리스트  -->
         <div class="carousel-item fullscreen group_list">
           <ul class="h-100 w-100 group_ul">
             <li class="h-100 w-100">
@@ -158,9 +167,11 @@
               <a
                 ><img
                   class="h-100 w-100"
-                  src="images/mainPage/mage-landscape-4af6b9e7-1ca1-42d4-9bbb-1a321783250e-default_0.jpg"
+                  src="images/mainPage/image-landscape-4af6b9e7-1ca1-42d4-9bbb-1a321783250e-default_0.jpg"
               /></a>
             </li>
+            
+            <!-- 메인푸터 -->
             <li class="h-100 w-100">
               <footer>
                 <div id="first_footer">
@@ -189,6 +200,8 @@
           </ul>
         </div>
       </div>
+      
+      <!-- 버튼부분 -->
       <button
         class="carousel-control-prev"
         type="button"

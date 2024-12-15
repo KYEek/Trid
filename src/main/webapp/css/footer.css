@@ -1,0 +1,70 @@
+@charset "UTF-8";
+
+/* 푸터의 기본 폰트사이즈를 정하는 부분 */
+
+body {
+  font-family: Arial, sans-serif;
+  font: inherit;
+}
+
+footer {
+  padding: 20vh 6vw 0 8vw;
+}
+
+ul.footer_nav_ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.footer_nav_ul li {
+  font-size: x-small;
+  margin: 1.3vh 3vw 1.3vh 0;
+}
+
+ul.footer_nav_ul li:first-child {
+  font-weight: bold;
+}
+
+/* 푸터의 메뉴부분 */
+div#footer_nav {
+  height: 55vh;
+  display: flex;
+  color: inherit;
+}
+
+/* 하이퍼링크의 색상 검은색으로 */
+li > a {
+  color: black;
+}
+
+li > a:hover {
+  color: black;
+}
+
+/* 카피라이트 영역 */
+div#copy_right {
+  height: 2vh;
+  text-align: right;
+  color: gray;
+  font-size: x-small;
+  font-weight: lighter;
+}
+
+/* 회사의 정보가 저장되는 div */
+div#company_info {
+  font-size: x-small;
+  font-weight: lighter;
+  position: relative;
+  margin: 10vh 0 0 0;
+}
+
+/* 모바일 크기에서는 네비게이션과 카피라이트를 삭제한다다 */
+@media (max-width: 768px) {
+  div#copy_right {
+    display: none;
+  }
+  div#footer_nav {
+    display: none;
+  }
+}

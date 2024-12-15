@@ -38,6 +38,7 @@ footer {
   font-size: small;
 }
 
+/* 회사 정보를 모바일에서 가운데 정렬 */
 @media (max-width: 768px) {
   #second_footer {
     width: 78vw;
