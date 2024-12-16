@@ -103,7 +103,7 @@ public class FrontController extends HttpServlet {
 					}
 					else {
 						System.out.println(">>> viewPage가 존재하지 않습니다.");
-						response.sendRedirect(request.getContentType() + "/error.trd");
+						response.sendRedirect(request.getContextPath() + "/error.trd");
 					}
 				}
 				
@@ -114,7 +114,7 @@ public class FrontController extends HttpServlet {
 					}
 					else {
 						System.out.println(">>> viewPage가 존재하지 않습니다.");
-						response.sendRedirect(request.getContentType() + "/error.trd");
+						response.sendRedirect(request.getContextPath() + "/error.trd");
 					}
 				}
 			} catch (Exception e) {
