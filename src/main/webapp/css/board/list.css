@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/* 전체의 80% 로 비율 설정 */
 div#container {
     margin: 0 350px;
     min-width: 768px;

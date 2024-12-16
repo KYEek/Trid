@@ -1,0 +1,92 @@
+/* 관리자 메인페이지를 감싸는 전체 컨테이너 */
+div#main_container {
+	width: 100%;
+	min-width: 768px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+/* 관리자 메인페이지 헤더 */
+div#header {
+	width: 100%;
+	margin-top: 30px;
+	display: flex;
+	justify-content: center;
+}
+
+/* 관리자 메인 페이지 로고 컨테이너 */
+div#logo_container {
+	width: 500px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Admin logo 간격 */
+div#logo_container > img:last-child {
+	margin-top: 10px;
+}
+
+/* 관리자 성명 및 로그아웃을 감싸는 컨테이너 */
+div#profile_container {
+	position: absolute;
+	right: 50px;
+	display: flex;
+	align-items: center;
+}
+
+/* 관리자 성명 */
+span#profile {
+	margin-right: 30px;
+}
+
+/* 로그아웃 버튼 */
+button#logout_button {
+	padding: 5px;
+	background-color: transparent;
+	border: solid 1px;
+}
+
+button#logout_button:hover {
+	background-color: black;
+	color: white;
+}
+
+/* 관리자 메뉴 버튼을 감싸는 컨테이너 */
+div#admin_menu_container {
+	margin: 50px 0;
+	width: 60%;
+	max-width: 800px;
+	display: flex;
+	justify-content: space-between;
+}
+
+/* 관리자 메뉴 앵커 */
+div#admin_menu_container > a {
+	color: inherit;
+	text-decoration: none;
+}
+
+/* 관리자 메뉴 버튼 */
+span.admin_menu {
+	font-size: 16pt;
+	padding: 5px;
+	border: solid 1px;
+}
+
+span.admin_menu:hover {
+	background-color: black;
+	color: white;
+	cursor: pointer;
+}
+
+/* 관리자 대시보드 컨테이너 */
+div.dashboard_container {
+	width: 60%;
+	height: 250px;
+	margin-bottom: 10px;
+	border: solid 1px;
+}
