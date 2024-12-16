@@ -38,9 +38,9 @@
         </div>
 
 		<c:if test="${not empty requestScope.questionList}">
-			<c:forEach var="boardDTO" items="${requestScope.questionList}">			
+			<c:forEach var="boardDTO" items="${requestScope.questionList}" varStatus="status">			
 				<div class="list_item">
-					<div id="seq">${boardDTO.pk_question_no}</div>
+					<div id="seq">${status.count}</div>
 					
 					<%-- 질문을 '공개' 로 선택한 경우 --%>
 					<c:if test="${boardDTO.question_isprivate == 0}">

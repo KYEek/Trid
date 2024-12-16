@@ -2,5 +2,5 @@
     pageEncoding="UTF-8"%>
 <script type="text/javascript">
 	alert("${requestScope.message}");
-	location.href = "${reqeustScope.loc}";
+	location.href = "${requestScope.loc}";
 </script>

@@ -61,8 +61,10 @@ public class BoardDAO_imple implements BoardDAO {
 			conn = ds.getConnection();
 			
 			String sql = " select pk_question_no, fk_member_no, question_title, question_content, "
-					   + " question_isprivate, question_status, question_registerday "
-					   + " from tbl_question ";
+					   + " question_isprivate, question_status, question_registerday, "
+					   + " ROW_NUMBER() OVER (ORDER BY question_registerday desc) AS row_num "
+					   + " from tbl_question "
+					   + " order by row_num asc ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -89,6 +91,35 @@ public class BoardDAO_imple implements BoardDAO {
 		
 		return questionList;
 	}
+
+	
+	
+	// Q&A 게시핀에 질문을 등록하는 메소드
+	@Override
+	public int registerMember(BoardDTO board) throws SQLException {
+		int result = 0;
+		
+		try {
+		
+		conn = ds.getConnection();
+		  
+		String sql = " insert into tbl_question (pk_question_no, fk_member_no, question_title, question_content, question_answer, question_isprivate, question_status, question_registerday) "
+				   + " values(pk_question_no_seq.NEXTVAL, 1, ?, ?, null, ?, 0, SYSDATE) ";
+
+		pstmt = conn.prepareStatement(sql);
+		
+		pstmt.setString(1, board.getQuestion_title());
+		pstmt.setString(2, board.getQuestion_content());
+		pstmt.setInt(3, board.getQuestion_isprivate());
+		
+		result = pstmt.executeUpdate();
+		
+		} finally {
+			close();
+		}
+		
+		return result;
+	} // end of Q&A 게시핀에 질문을 등록하는 메소드 ----
 	
 	
 	
