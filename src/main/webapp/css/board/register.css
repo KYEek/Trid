@@ -1,1 +1,118 @@
 @charset "UTF-8";
+
+
+/* 전체 크기 설정 */
+div#container {
+    margin: 0 350px;
+    min-width: 768px;
+}
+
+/* 메인박스이 크기 및 바깥 선 */
+div#main_box{
+    border: solid 3px black;
+    width: 100%;
+    height: 500px;
+}
+
+/* 3개의 행 flex */
+div#first_row,
+div#second_row,
+div#last_row {
+    display: flex;
+}
+
+/* 왼쪽의 고정된 값 */
+div.sidebar {
+    background-color: black;
+    color: white;
+    display: flex;
+    align-items: center;
+    font-size: 14pt;
+    font-weight: bold;
+    width: 15%;
+    justify-content: center;
+}
+
+/* 제목 */
+div#title{
+    height: 100px;
+}
+/* 공개여부 */
+div#isprivate {
+    height: 80px;
+}
+/* 내용 */
+div#content {
+    height: 320px;
+}
+
+/* 제목 input 태그 */
+input#title {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: solid 2px black;
+    width: 82%;
+    font-size: 14pt;
+    margin-left: 1%;
+}
+
+/* 공개여부 input 태그 감싸기 */
+div#radio {
+    display: flex;
+    align-items: center;
+    width: 82%;
+    margin-left: 1%;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: solid 2px black;
+    font-size: 14pt;
+}
+    
+/* 공개여부 input 태그 */
+input[type='radio'] {
+    width: 15px;
+    height: 15px;
+    accent-color: black;
+    padding-left: 5%;
+    margin: 0 3%;
+}
+/* 내용 input 태그 */
+input#content {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: solid 2px black;
+    width: 82%;
+    font-size: 12pt;
+    margin-left: 1%;
+    margin-bottom: 2%;
+}
+
+/* 버튼 감싸기 */
+div#button {
+    display: flex;
+    justify-content: center;
+    margin-top: 4%;
+}
+
+/* 등록 && 취소 버튼 */
+input[type='button'],
+input[type='reset'] {
+    width: 120px;
+    height: 40px;
+    border: solid 3px black;
+    background-color: white;
+    font-size: 16pt;
+    font-weight: bold;
+    margin: 0 7%;
+}
+
+/* 버튼에 호버 했을 때 */
+input[type='button']:hover,
+input[type='reset']:hover {
+    background-color: black;
+    color: white;
+	transition: 0.5s;
+}
