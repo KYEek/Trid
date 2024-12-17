@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 
+
+
 public class ListController extends AbstractController {
 	
 	private BoardDAO bdao = null;
