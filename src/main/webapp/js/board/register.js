@@ -1,8 +1,6 @@
 
 let register_complete = true;
 
-
-
 // "등록"버튼을 눌렀을 때 실행되는 메소드
 function goRegister() {
 	
@@ -25,7 +23,6 @@ function goRegister() {
 		return;
 	}
 	else {
-		
 		const frm = document.registerFrm;
 		frm.action = "register.trd";
 		frm.method = "post";

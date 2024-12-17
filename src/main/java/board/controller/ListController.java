@@ -6,6 +6,7 @@ import java.util.List;
 import board.domain.BoardDTO;
 import board.model.BoardDAO;
 import board.model.BoardDAO_imple;
+import common.Constants;
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,7 +28,7 @@ public class ListController extends AbstractController {
 			request.setAttribute("questionList", questionList);
 			
 			super.setRedirect(false);
-			super.setViewPage("/WEB-INF/board/list.jsp");
+			super.setViewPage(Constants.BOARD_LIST_PAGE);
 		} catch(SQLException e) {
 			e.printStackTrace();
 			
