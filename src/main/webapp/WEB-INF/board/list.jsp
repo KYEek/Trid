@@ -38,8 +38,9 @@
         </div>
 
 		<c:if test="${not empty requestScope.questionList}">
-			<c:forEach var="boardDTO" items="${requestScope.questionList}" varStatus="status">			
-				<div class="list_item">
+			<c:forEach var="boardDTO" items="${requestScope.questionList}" varStatus="status">	
+				
+				<div class="list_item" onclick="go_detail(${boardDTO.pk_question_no})">
 					<div id="seq">${status.count}</div>
 					
 					<%-- 질문을 '공개' 로 선택한 경우 --%>
@@ -54,7 +55,7 @@
 						<div id="title">비밀 글 입니다.</div>
 					</c:if>
 	            	
-		            
+		         
 		            <%-- 답변이 아직 안 된 경우 --%>
 		            <c:if test="${boardDTO.question_status == 0}">
 		            	<div id="aswer_status">답변 중</div>
@@ -76,8 +77,9 @@
 					<c:if test="${boardDTO.question_isprivate == 1}">
 		            	<div id="private"><i class="bi bi-lock-fill"></i></div>
 		            </c:if>
-		            
+		           
 	            </div>
+	            
 			</c:forEach>
 		</c:if>
 		
