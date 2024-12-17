@@ -19,6 +19,7 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/mypage/mypage.js"></script>
   </head>
   <body>
+ <%@include file="../header.jsp" %>
     <main>
       <div id="menu_container">
         <ul id="menu_ul">

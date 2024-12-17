@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <!-- 유저 CSS -->
-    <link rel="stylesheet" type="text/css" href="../css/footer.css" />
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/footer.css" />
     <footer>
         <div id="footer_nav">
             <ul class="footer_nav_ul">

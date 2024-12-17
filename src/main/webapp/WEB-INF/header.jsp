@@ -17,7 +17,10 @@
 		<!-- 로고 -->
 		<div class="header-logo-container">
 			<div class="header-logo">
-				<img src="${pageContext.request.contextPath}/images/logo/logo.svg" />
+				<!-- 로고 하이퍼링크 -->
+				<a href="${pageContext.request.contextPath}">
+					<img src="${pageContext.request.contextPath}/images/logo/logo.svg" />
+				</a>	
 			</div>
 		</div>
 
@@ -34,9 +37,9 @@
 			<a class="header-link" style="color:black" href="${pageContext.request.contextPath}/login.trd">로그인</a> 
 		</c:if>
 		<c:if test="${not empty sessionScope.loginuser}">
-			<a class="header-link" style="color:black" href="">${(sessionScope.loginuser).member_name}</a> 
+			<a class="header-link" style="color:black" href="${pageContext.request.contextPath}/member/mypage.trd">${(sessionScope.loginuser).member_name}</a> 
 		</c:if>	
-			<a class="header-link" style="color:black">바스켓백</a>
+			<a class="header-link" style="color:black" href="${pageContext.request.contextPath}/basket.trd">바스켓백</a>
 			<a class="header-link" style="color:black" href="${pageContext.request.contextPath}/board/list.trd" >Q&A</a>
 		</div>
 	</div>

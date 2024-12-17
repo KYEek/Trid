@@ -1,179 +1,192 @@
 :root {
-	--layout-header-logo-height: 100px;
-	--layout-header-transition: 0.5s linear;
+  --layout-header-logo-height: 100px;
+  --layout-header-transition: 0.5s linear;
 }
 
 div.header {
-	min-width: 768px;
-	display: grid;
-	grid-template-columns: 100px minmax(0, 5fr) minmax(0, 5fr) minmax(0, 7fr) minmax(0, 5fr);
-	grid-column-gap: 20px;
+  min-width: 768px;
+  display: grid;
+  grid-template-columns: 100px minmax(0, 5fr) minmax(0, 5fr) minmax(0, 7fr) minmax(
+      0,
+      5fr
+    );
+  grid-column-gap: 20px;
 
-	position: sticky;
-	top: 0;
-	width: 100%;
-	z-index: 10;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 10;
 
-	padding: 20px 24px;
+  padding: 20px 24px;
 
-	transition: grid-template-columns 0.5s linear, background-color 0.2s linear;
+  transition: grid-template-columns 0.5s linear, background-color 0.2s linear;
 }
 
-/* 반응형 - 1600px 이상 */
+/* �ｰ們搗��� - 1600px �擽�メ */
 @media screen and (min-width: 768px) {
-	div.header {
-		grid-template-columns: 80px minmax(0, 4fr) minmax(0, 1fr) minmax(0, 7fr) minmax(0, 4fr);
-	}
+  div.header {
+    grid-template-columns: 80px minmax(0, 4fr) minmax(0, 1fr) minmax(0, 7fr) minmax(
+        0,
+        4fr
+      );
+  }
 }
 
-/* 반응형 - 1600px 이상 */
+/* �ｰ們搗��� - 1600px �擽�メ */
 @media screen and (min-width: 1600px) {
-	div.header {
-		grid-template-columns: 80px minmax(0, 4fr) minmax(0, 6fr) minmax(0, 7fr) minmax(0, 5fr);
-	}
+  div.header {
+    grid-template-columns: 80px minmax(0, 4fr) minmax(0, 6fr) minmax(0, 7fr) minmax(
+        0,
+        5fr
+      );
+  }
 }
 
-/* 반응형 - 2560px 이상 */
+/* �ｰ們搗��� - 2560px �擽�メ */
 @media screen and (min-width: 2560px) {
-	div.header {
-		grid-template-columns: 200px minmax(0, 3fr) minmax(0, 7fr) minmax(0, 7fr) minmax(0, 5fr);
-	}
+  div.header {
+    grid-template-columns: 200px minmax(0, 3fr) minmax(0, 7fr) minmax(0, 7fr) minmax(
+        0,
+        5fr
+      );
+  }
 }
 
-/* 카테고리 버튼을 감싼 컨테이너 */
+/* �ｹｴ��語ｳ��ｦｬ �ｲ�款�揆 �ｰ川蕎 �ｻｨ��護擽�ц */
 div.header-menu-container {
-	position: relative;
-	display: flex;
-	align-items: flex-start;
-	grid-column: 1;
-	grid-row: 1;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  grid-column: 1;
+  grid-row: 1;
 }
 
-/* 로고의 크기를 정하는 최상위 컨테이너 */
+/* �｡懋ｳ��攪 �〓�ｸｰ�･ｼ ��倣葺�株 �ｵ懍メ�怱 �ｻｨ��護擽�ц */
 div.header-logo-container {
-	min-width: 80px;
-	height: var(--layout-header-logo-height);
-	position: relative;
-	transform: 0.5s linear;
-	grid-column: 2;
-	grid-row: 1;
+  min-width: 80px;
+  height: var(--layout-header-logo-height);
+  position: relative;
+  transform: 0.5s linear;
+  grid-column: 2;
+  grid-row: 1;
 }
 
-/* 로고 공간을 담당하는 컨테이너 */
+/* �｡懋ｳ� �ｳｵ�ｰ�揆 �橋�胸�葺�株 �ｻｨ��護擽�ц */
 div.header-logo {
-	display: block;
-	fill: inherit;
-	height: 100%;
-	max-width: 100%;
+  display: block;
+  fill: inherit;
+  height: 100%;
+  max-width: 100%;
 }
 
 div.header-logo > img {
-	display: block;
-	fill: inherit;
-	height: 100%;
-	max-width: 100%;
+  display: block;
+  fill: inherit;
+  height: 100%;
+  max-width: 100%;
 }
 
 div.header-search-container {
-	grid-column: 4;
-	grid-row: 1;
+  grid-column: 4;
+  grid-row: 1;
 }
 
 div.search-bar {
-	width: 100%;
-	height: 30px;
-	padding-right: 20px;
-	position: relative;
-	top: 28px;
-	font-size: 14px;
+  width: 100%;
+  height: 30px;
+  padding-right: 20px;
+  position: relative;
+  top: 28px;
+  font-size: 14px;
 
-	display: flex;
-	align-items: center;
-	transition: 0.5s linear;
+  display: flex;
+  align-items: center;
+  transition: 0.5s linear;
 
-	font-weight: 300;
-	background-color: white;
-	border: solid 1px black;
-	cursor: pointer;
+  font-weight: 300;
+  background-color: white;
+  border: solid 1px black;
+  cursor: pointer;
 }
 
 div.search-bar a {
-	width: 100%;
-	color: black;
-	text-align: end;
-	text-decoration: none;
+  width: 100%;
+  color: black;
+  text-align: end;
+  text-decoration: none;
 }
 
 div.header-links {
-	display: flex;
-	grid-column: 5;
-	grid-row: 1;
-	font-size: 14px;
-	gap: 24px;
-	justify-content: flex-end;
-	white-space: nowrap;
-	line-height: 1.4;
-	letter-spacing: 0.06em;
-	text-transform: uppercase;
-	font-stretch: normal;
-	font-weight: 300;
+  display: flex;
+  grid-column: 5;
+  grid-row: 1;
+  font-size: 12pt;
+  gap: 24px;
+  justify-content: flex-end;
+  white-space: nowrap;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-stretch: normal;
+  font-weight: 300;
 }
 
 div.header-links > a.header-link {
-	text-decoration: none;
-	color: white;
+  margin-left: 1vw;
+  text-decoration: none;
+  color: white;
 }
 
 @media screen and (min-width: 768px) {
-	:root {
-		--layout-header-logo-height: 80px;
-	}
+  :root {
+    --layout-header-logo-height: 80px;
+  }
 }
 
 @media screen and (min-width: 1024px) {
-	:root {
-		--layout-header-logo-height: 90px;
-	}
+  :root {
+    --layout-header-logo-height: 90px;
+  }
 }
 
 @media screen and (min-width: 1280px) {
-	:root {
-		--layout-header-logo-height: 100px;
-	}
+  :root {
+    --layout-header-logo-height: 100px;
+  }
 }
 
 @media screen and (min-width: 1600px) {
-	:root {
-		--layout-header-logo-height: 130px;
-	}
+  :root {
+    --layout-header-logo-height: 130px;
+  }
 }
 
 @media screen and (min-width: 1920px) {
-	:root {
-		--layout-header-logo-height: 150px;
-	}
+  :root {
+    --layout-header-logo-height: 150px;
+  }
 }
 
 @media screen and (min-width: 2160px) {
-	:root {
-		--layout-header-logo-height: 152px;
-	}
+  :root {
+    --layout-header-logo-height: 152px;
+  }
 }
 
 @media screen and (min-width: 2560px) {
-	:root {
-		--layout-header-logo-height: 128px;
-	}
+  :root {
+    --layout-header-logo-height: 128px;
+  }
 }
 
 @media screen and (min-width: 2960px) {
-	:root {
-		--layout-header-logo-height: 150px;
-	}
+  :root {
+    --layout-header-logo-height: 150px;
+  }
 }
 
 @media screen and (min-width: 3840px) {
-	:root {
-		--layout-header-logo-height: 201px;
-	}
+  :root {
+    --layout-header-logo-height: 201px;
+  }
 }
