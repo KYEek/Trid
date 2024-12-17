@@ -15,7 +15,6 @@ div#register_btn {
     font-weight: bold;
     margin-left: auto;
     margin-bottom: 3%;
-    margin-top: 100px;  /* 헤더가 들어올 자리  */   /* 헤더 들어오면 수정 또는 삭제  */
 }
 
 /* 등록하기 버튼에 호버했을 때 */

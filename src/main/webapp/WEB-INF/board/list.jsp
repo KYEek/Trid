@@ -22,7 +22,9 @@
 
 </head>
 <body>
-
+	
+	<jsp:include page="/WEB-INF/header.jsp" />
+	
     <div id="container">
 
         <div id="register_btn">질문하기</div>

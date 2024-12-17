@@ -21,6 +21,8 @@
 </head>
 <body>
 
+	<jsp:include page="/WEB-INF/header.jsp" />
+
 	<div id="container">
 
         <form name="registerFrm">
