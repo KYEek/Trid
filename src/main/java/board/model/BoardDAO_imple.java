@@ -123,6 +123,47 @@ public class BoardDAO_imple implements BoardDAO {
 	
 	
 	
+	// Q&A 게시판에 질문을 상세조회하는 메소드
+	@Override
+	public BoardDTO go_detail(int pk_question_no) throws SQLException {
+
+		BoardDTO boardDTO = null;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select question_title, question_content, question_answer "
+					   + " from tbl_question "
+					   + " where pk_question_no = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, pk_question_no);
+			
+			rs = pstmt.executeQuery();
+			
+			
+			if (rs.next()) {
+				boardDTO = new BoardDTO();
+				boardDTO.setQuestion_title(rs.getString("question_title"));
+				boardDTO.setQuestion_content(rs.getString("question_content"));
+				boardDTO.setQuestion_answer(rs.getString("question_answer"));
+			}
+			
+			
+		} finally {
+			close();
+		}
+		
+		return boardDTO;
+	}
+
+
+	
+
+
+	
+	
 	
 	
 	
