@@ -28,7 +28,7 @@ div#register_btn:hover {
 
 /* 질문 리스트의 고정된 헤더 */
 div#list_header {
-    border: solid 1px black;
+    border: solid 3px black;
     display: flex;
     text-align: center;
     height: 60px;
@@ -44,7 +44,7 @@ div.list_item {
     font-size: 12pt;
     align-items: center;
     margin: 1% 0;
-    border: solid 1px black;
+    border: solid 3px black;
 }
 
 /* 리스트 한 줄에 호버했을 때 */

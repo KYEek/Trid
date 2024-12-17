@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import board.domain.BoardDTO;
 import board.model.BoardDAO;
 import board.model.BoardDAO_imple;
+import common.Constants;
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +22,7 @@ public class RegisterController extends AbstractController {
 		if ("GET".equals(method)) {
 			// System.out.println("GET 요청 호출됨");
 			super.setRedirect(false);
-			super.setViewPage("/WEB-INF/board/register.jsp");
+			super.setViewPage(Constants.BOARD_REGISTER_PAGE);
 		}
 		else {
 			String title = request.getParameter("title");
@@ -42,11 +43,11 @@ public class RegisterController extends AbstractController {
 				
 				if(n == 1) {
 					message = "질문등록 성공 ^^";
-					loc = request.getContextPath()+"/board/list.trd";
+					loc = request.getContextPath()+Constants.BOARD_LIST_URL;
 				}
 				else {
 					message = "질문등록 실패 ㅠㅜ";
-					loc = request.getContextPath()+"/board/list.trd";
+					loc = request.getContextPath()+Constants.BOARD_LIST_URL;
 				}
 				
 				request.setAttribute("message", message);
