@@ -56,8 +56,8 @@
             </div>
 
             <div id="button">            
-                <input type="button" value="등록" onclick="goRegister()" />
-                <input type="reset" value="취소" onclick="goReset()" />
+                <input type="button" value="등록" onclick="goRegister()" /> <%--- 등록하기로 보내기 --%>
+                <input type="reset" value="취소" onclick="goReset()" />	<%--- 뒤로가기 --%>
             </div>    
         </form>
 

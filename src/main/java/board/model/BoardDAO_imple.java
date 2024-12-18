@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -96,7 +97,7 @@ public class BoardDAO_imple implements BoardDAO {
 	
 	// Q&A 게시핀에 질문을 등록하는 메소드
 	@Override
-	public int registerMember(BoardDTO board) throws SQLException {
+	public int registerMember(BoardDTO board, int pk_member_no) throws SQLException {
 		int result = 0;
 		
 		try {
@@ -104,13 +105,14 @@ public class BoardDAO_imple implements BoardDAO {
 		conn = ds.getConnection();
 		  
 		String sql = " insert into tbl_question (pk_question_no, fk_member_no, question_title, question_content, question_answer, question_isprivate, question_status, question_registerday) "
-				   + " values(pk_question_no_seq.NEXTVAL, 1, ?, ?, null, ?, 0, SYSDATE) ";
+				   + " values(pk_question_no_seq.NEXTVAL, ?, ?, ?, null, ?, 0, SYSDATE) ";
 
 		pstmt = conn.prepareStatement(sql);
 		
-		pstmt.setString(1, board.getQuestion_title());
-		pstmt.setString(2, board.getQuestion_content());
-		pstmt.setInt(3, board.getQuestion_isprivate());
+		pstmt.setInt(1, pk_member_no);
+		pstmt.setString(2, board.getQuestion_title());
+		pstmt.setString(3, board.getQuestion_content());
+		pstmt.setInt(4, board.getQuestion_isprivate());
 		
 		result = pstmt.executeUpdate();
 		
@@ -125,20 +127,38 @@ public class BoardDAO_imple implements BoardDAO {
 	
 	// Q&A 게시판에 질문을 상세조회하는 메소드
 	@Override
-	public BoardDTO go_detail(int pk_question_no) throws SQLException {
+	public BoardDTO go_detail(Map<String, String> paraMap) throws SQLException {
 
 		BoardDTO boardDTO = null;
+		
+		String question_isprivate = paraMap.get("question_isprivate");
 		
 		try {
 			conn = ds.getConnection();
 			
 			String sql = " select question_title, question_content, question_answer "
 					   + " from tbl_question "
-					   + " where pk_question_no = ? ";
+					   + " where pk_question_no = ?";
 			
-			pstmt = conn.prepareStatement(sql);
+			if(question_isprivate.equals("0")) {
+				// "전체공개" 인 글은 로그인 하지 않아도 조회가 가능
+				sql += " and question_isprivate = 0 ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, paraMap.get("pk_question_no"));
+			}
 			
-			pstmt.setInt(1, pk_question_no);
+			else {
+				// "비공개" 인 글은 로그인 후에 조회가 가능 
+				
+				sql += " and fk_member_no = ? and question_isprivate = 1 ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, paraMap.get("pk_question_no"));
+				pstmt.setString(2, paraMap.get("pk_member_no"));
+			}
 			
 			rs = pstmt.executeQuery();
 			
@@ -156,7 +176,7 @@ public class BoardDAO_imple implements BoardDAO {
 		}
 		
 		return boardDTO;
-	}
+	}// end of Q&A 게시판에 질문을 상세조회하는 메소드 
 
 
 	

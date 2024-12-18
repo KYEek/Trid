@@ -8,8 +8,9 @@ div#container {
 /* 등록하기 버튼 */
 div#register_btn {
     border: solid 3px black;
-    width: 10%;
-    height: 30px;
+    width: 120px;
+    height: 40px;
+    line-height: 37px;
     text-align: center;
     font-size: 14pt;
     font-weight: bold;

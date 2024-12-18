@@ -9,6 +9,8 @@ import common.Constants;
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import member.domain.MemberDTO;
 
 public class RegisterController extends AbstractController {
 
@@ -18,6 +20,16 @@ public class RegisterController extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String method = request.getMethod(); // "GET" 또는 "POST"
+		
+		HttpSession session = request.getSession();
+		
+		MemberDTO loginuser = (MemberDTO) session.getAttribute("loginuser");
+		
+		if(!checkLogin(request)) {
+			super.handleMessage(request, Constants.ACCESS_DENIED, Constants.MEMBER_LOGIN_URL);
+			return;
+		}
+		
 		
 		if ("GET".equals(method)) {
 			// System.out.println("GET 요청 호출됨");
@@ -36,7 +48,7 @@ public class RegisterController extends AbstractController {
 			boardDTO.setQuestion_content(content);
 			
 			try {
-				int n = bdao.registerMember(boardDTO);
+				int n = bdao.registerMember(boardDTO, loginuser.getPk_member_no());
 				
 				String message = "";
 				String loc = "";
