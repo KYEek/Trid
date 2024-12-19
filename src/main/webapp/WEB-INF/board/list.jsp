@@ -22,10 +22,14 @@
 
 </head>
 <body>
-
+	
+	<jsp:include page="/WEB-INF/header.jsp" />
+	
     <div id="container">
-
-        <div id="register_btn">질문하기</div>
+		
+		<c:if test="${not empty sessionScope.loginuser}">
+			<div id="register_btn" onclick="go_register()">질문하기</div>
+		</c:if>
 
         <div id="list_header">
 
@@ -38,9 +42,12 @@
         </div>
 
 		<c:if test="${not empty requestScope.questionList}">
-			<c:forEach var="boardDTO" items="${requestScope.questionList}" varStatus="status">	
+			<c:forEach var="boardDTO" items="${requestScope.questionList}" varStatus="status">
 				
-				<div class="list_item" onclick="go_detail(${boardDTO.pk_question_no})">
+				<%-- 글 작성자와 로그인한 유저가 일치한지 비교 --%>
+				<c:set var="is_writer" value="${boardDTO.fk_member_no eq sessionScope.loginuser.pk_member_no}"></c:set>
+	
+				<div class="list_item" onclick="go_detail(${boardDTO.pk_question_no}, ${boardDTO.question_isprivate}, ${is_writer})">
 					<div id="seq">${status.count}</div>
 					
 					<%-- 질문을 '공개' 로 선택한 경우 --%>
@@ -49,10 +56,16 @@
 						<div id="title">${boardDTO.question_title}</div>
 					</c:if>
 					
-	            	<%-- 질물은 '비공개' 롤 선택한 경우 --%>
-         			<c:if test="${boardDTO.question_isprivate == 1}">
+	            	<%-- 남이 등록한 "비공개"글일 경우 (제목 감추기) --%>
+         			<c:if test="${boardDTO.question_isprivate == 1 && !is_writer}">
          				<%-- 제목 감추기 --%>
-						<div id="title">비밀 글 입니다.</div>
+						<div id="title">비공개 글입니다.</div>
+					</c:if>
+	            	
+	            	<%-- 로그인한 유저가 등록한 "비공개"글일 경우 (제목 보여주기)  --%>
+       	         	<c:if test="${boardDTO.question_isprivate == 1 && is_writer}">
+         				<%-- 제목 감추기 --%>
+						<div id="title">${boardDTO.question_title}</div>
 					</c:if>
 	            	
 		         

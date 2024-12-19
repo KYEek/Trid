@@ -56,7 +56,7 @@ div#company_info {
   font-size: x-small;
   font-weight: lighter;
   position: relative;
-  margin: 10vh 0 0 0;
+  margin: 10vh 0 7vh 0;
 }
 
 /* 모바일 크기에서는 네비게이션과 카피라이트를 삭제한다다 */

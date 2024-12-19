@@ -16,7 +16,6 @@ import javax.sql.DataSource;
 import common.Constants;
 import member.domain.MemberDTO;
 import util.security.AES256;
-import util.security.SecretMyKey;
 import util.security.Sha256;
 
 public class MemberDAO_imple implements MemberDAO {
@@ -36,7 +35,7 @@ public class MemberDAO_imple implements MemberDAO {
 			Context envContext = (Context) initContext.lookup("java:/comp/env");
 			ds = (DataSource) envContext.lookup("jdbc/semioracle");
 
-			aes = new AES256(SecretMyKey.KEY);
+			aes = new AES256(Constants.KEY);
 			// SecretMyKey.KEY 은 우리가 만든 암호화/복호화 키이다.
 
 		} catch (NamingException e) {

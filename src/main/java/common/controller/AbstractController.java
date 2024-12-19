@@ -3,6 +3,7 @@ package common.controller;
 import common.Constants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import member.domain.MemberDTO;
 
 /*
  * InterCommand 인터페이스를 구현하는 추상 클래스
@@ -53,5 +54,22 @@ public abstract class AbstractController implements InterCommand {
 		handleMessage(request, Constants.ACCESS_DENIED, Constants.ADMIN_LOGIN_URL);
 		return result;
 	}
+	
+	   // 로그인 유무를 검사해서 로그인 했으면 true 를 리턴해주고
+	   // 로그인 안했으면 false 를 리턴해주도록 한다.
+		public boolean checkLogin(HttpServletRequest request) {
+
+			HttpSession session = request.getSession();
+			MemberDTO loginuser = (MemberDTO) session.getAttribute("loginuser");
+
+			if (loginuser != null) {
+				// 로그인 한 경우
+				return true;
+			} else {
+				// 로그인을 하지 않은 경우
+				return false;
+			}
+
+		}// end of public boolean checkLogin(HttpServletRequest request) {} ----------
 	
 }

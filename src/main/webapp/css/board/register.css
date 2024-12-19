@@ -3,7 +3,7 @@
 
 /* 전체 크기 설정 */
 div#container {
-    margin: 0 350px;
+    margin: 90px 350px;
     min-width: 768px;
 }
 

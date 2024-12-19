@@ -20,6 +20,8 @@
 </head>
 <body>
 
+	<jsp:include page="/WEB-INF/header.jsp" />
+
     <div id="container">
             
         <div id="main_box">
