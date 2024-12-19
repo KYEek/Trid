@@ -15,7 +15,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import common.Constants;
-import common.domain.PageDTO;
+import common.domain.PagingDTO;
 import product.domain.ColorDTO;
 import product.domain.ProductDTO;
 
