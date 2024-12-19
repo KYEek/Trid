@@ -2,18 +2,18 @@ package product.domain;
 
 public class ColorDTO {
 	
-	private int colorNo; // 색상 일련번호
+	private int pkColorNo; // 색상 일련 번호
 	
 	private String colorName; // 색상명
 
-	private String color_code; // 색상 코드
-	
-	public int getColorNo() {
-		return colorNo;
+	private String colorCode; // 색상 코드
+
+	public int getPkColorNo() {
+		return pkColorNo;
 	}
 
-	public void setColorNo(int colorNo) {
-		this.colorNo = colorNo;
+	public void setPkColorNo(int pkColorNo) {
+		this.pkColorNo = pkColorNo;
 	}
 
 	public String getColorName() {
@@ -24,12 +24,12 @@ public class ColorDTO {
 		this.colorName = colorName;
 	}
 
-	public String getColor_code() {
-		return color_code;
+	public String getColorCode() {
+		return colorCode;
 	}
 
-	public void setColor_code(String color_code) {
-		this.color_code = color_code;
+	public void setColorCode(String colorCode) {
+		this.colorCode = colorCode;
 	}
 
 }
