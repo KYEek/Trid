@@ -1,7 +1,7 @@
 package common.domain;
 
 public class PagingDTO {
-   
+  
    // 입력 데이터
    private int curPage = 1; // 현재 페이지 번호
 
