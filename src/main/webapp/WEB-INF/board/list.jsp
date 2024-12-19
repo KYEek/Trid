@@ -22,7 +22,7 @@
 
 </head>
 <body>
-	
+	<c:set var="paging" value="${requestScope.pagingDTO}"></c:set>
 	<jsp:include page="/WEB-INF/header.jsp" />
 	
     <div id="container">
@@ -42,13 +42,13 @@
         </div>
 
 		<c:if test="${not empty requestScope.questionList}">
+			<c:set value="${paging.firstRow}" var="firstRow"></c:set>
 			<c:forEach var="boardDTO" items="${requestScope.questionList}" varStatus="status">
 				
 				<%-- 글 작성자와 로그인한 유저가 일치한지 비교 --%>
 				<c:set var="is_writer" value="${boardDTO.fk_member_no eq sessionScope.loginuser.pk_member_no}"></c:set>
-	
 				<div class="list_item" onclick="go_detail(${boardDTO.pk_question_no}, ${boardDTO.question_isprivate}, ${is_writer})">
-					<div id="seq">${status.count}</div>
+					<div id="seq">${firstRow}</div>
 					
 					<%-- 질문을 '공개' 로 선택한 경우 --%>
 					<c:if test="${boardDTO.question_isprivate == 0}">
@@ -93,8 +93,48 @@
 		           
 	            </div>
 	            
+	            <c:set value="${firstRow + 1}" var="firstRow"></c:set>
+	            
 			</c:forEach>
 		</c:if>
+		
+
+		
+		<!-- START : 페이지네이션  -->
+		<nav class="text-center">
+			<ul class="pagination">
+				<!-- 첫 페이지  -->
+				<li><a href="list.trd?curPage=1" data-page="1"><span aria-hidden="true">&laquo;</span></a></li>
+				<!-- 이전 페이지 -->
+				<c:if test="${paging.firstPage ne 1}">
+					<li><a href="list.trd?curPage=${paging.firstPage-1}" data-page="${paging.firstPage-1}"><span aria-hidden="true">&lt;</span></a></li>
+				</c:if>
+				
+				<!-- 페이지 넘버링  -->
+				<c:forEach begin="${paging.firstPage}" end="${paging.lastPage}" var="i" >
+				
+					<c:if test="${paging.curPage ne i}">
+						<li><a href="list.trd?curPage=${i}" data-page="${i}">${i}</a></li>
+					</c:if>
+					
+					<c:if test="${paging.curPage eq i}">
+						<li class="active"><a href="#">${i}</a></li>
+					</c:if>
+					
+				</c:forEach>
+				
+				<!-- 다음  페이지  -->
+				<c:if test="${paging.lastPage ne paging.totalPageCount}">
+				
+					<li><a href="list.trd?curPage=${paging.lastPage+1}" data-page="${paging.lastPage+1}"><span aria-hidden="true">&gt;</span></a></li>
+				
+				</c:if>
+				
+				<!-- 마지막 페이지 -->
+				<li><a href="list.trd?curPage=${paging.totalPageCount}" data-page="${paging.totalPageCount}"><span aria-hidden="true">&raquo;</span></a></li>
+			</ul>
+		</nav>
+		<!-- END : 페이지네이션  -->
 		
     </div>
 </body>

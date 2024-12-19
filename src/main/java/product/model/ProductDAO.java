@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import common.domain.PageDTO;
+import common.domain.PagingDTO;
 import product.domain.ProductDTO;
 
 public interface ProductDAO {

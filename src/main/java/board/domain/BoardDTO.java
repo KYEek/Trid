@@ -19,11 +19,10 @@ public class BoardDTO {
     private String question_registerday;	// 등록일자
 
     
-    
     ////////////////////////////////////////////////////////////////////////////////
     
     
-    
+
 	public int getPk_question_no() {
 		return pk_question_no;
 	}
@@ -94,12 +93,5 @@ public class BoardDTO {
 	public void setQuestion_registerday(String question_registerday) {
 		this.question_registerday = question_registerday;
 	}
-    
-    
-	
-    
-    
-    
-    
     
 }

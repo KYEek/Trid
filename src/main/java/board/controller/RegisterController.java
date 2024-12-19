@@ -48,7 +48,7 @@ public class RegisterController extends AbstractController {
 			boardDTO.setQuestion_content(content);
 			
 			try {
-				int n = bdao.registerMember(boardDTO, loginuser.getPk_member_no());
+				int n = bdao.insertQuestionRegister(boardDTO, loginuser.getPk_member_no());
 				
 				String message = "";
 				String loc = "";
