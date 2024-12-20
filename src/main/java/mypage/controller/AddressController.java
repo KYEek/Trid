@@ -10,6 +10,12 @@ public class AddressController extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
+//		if(!super.checkLogin(request)) {
+//			super.setRedirect(false);
+//			super.setViewPage(request.getContextPath());
+//			return;
+//		}
+		
 		super.setRedirect(false);
 		super.setViewPage(Constants.MY_ADDRESS);
 

@@ -1,0 +1,159 @@
+@charset "UTF-8";
+
+div#menu_container {
+  border: 0px solid black;
+  width: 50vw;
+}
+
+div#address_header {
+  display: block;
+  width: 59vw;
+}
+
+input[type="text"].input_area {
+  border: 0px solid black;
+  border-bottom: 0.7px solid #d3d3d3;
+}
+
+/* div#address_input {
+} */
+
+form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(5, 1fr);
+  gap: 4vh 2vw;
+}
+
+/* 인풋 태그에 관한 사항들 */
+input[type="text"].input_area {
+  width: 100%;
+}
+input[type="text"].input_area:focus {
+  outline: none;
+}
+
+input[type="text"].input_area::placeholder {
+  position: relative;
+  animation-duration: 0.5s;
+  animation-name: slidein;
+}
+
+/* 폼의 이름과 전화번호의 크기를 바꾼다 */
+form > div:first-child,
+form > div:nth-child(6) {
+  grid-column: 1 / 3;
+  width: 50%;
+}
+
+/* 주소 입력 부분의 높이를 최대로  */
+input.input_area {
+  height: 100%;
+}
+
+button#find_Zip {
+  border-style: none;
+  background-color: white;
+  font-size: 10pt;
+  width: 9rem;
+  margin-left: 1vw;
+  border-bottom: 0.7px solid black;
+}
+
+div#address_header > div {
+  border: 0px solid black;
+}
+div#address_header > p {
+  padding: 10px;
+  background-color: whitesmoke;
+  border: 0px solid black;
+  font-size: 9pt;
+  font-weight: lighter;
+}
+
+form > button {
+  position: relative;
+  top: 7vh;
+  border: 0.7px solid black;
+  padding: 14px;
+  margin-left: auto;
+  width: 100%;
+  background-color: white;
+}
+
+div.input_area > label {
+  position: relative;
+  margin-left: 1vw;
+  /* bottom: 65%; */
+  color: #d3d3d3;
+  transform: translateY(40px);
+  height: 0;
+}
+
+div#zip_input > label {
+  position: relative;
+  margin-left: 1vw;
+  white-space: nowrap;
+  transform: translateY(25px);
+  color: #d3d3d3;
+  height: 0;
+  width: 0px;
+}
+
+div.input_area > div#zip_input > label[for="input2"] {
+  position: relative;
+  width: 0px;
+  white-space: nowrap;
+  background-color: violet;
+}
+
+div.input_area > label[for="input5"] {
+  transform: translateY(10px);
+}
+/* 주소 버튼이 있는 곳 */
+div#zip_area {
+  height: 100%;
+}
+div#zip_input {
+  display: flex;
+  height: 100%;
+}
+div#zip_input > input[type="text"] {
+  margin-right: auto;
+  height: 45.5px;
+}
+
+div.warning_div {
+  font-size: 10px;
+  display: none;
+  white-space: nowrap;
+}
+div.warning_div > span:first-child {
+  margin-right: 5px;
+}
+
+div.warning_div:nth-child(2) {
+  height: 10px;
+}
+
+label.position_move {
+  /* bottom: 110% !important; */
+  /* top: -6.5vh !important; */
+  transform: translateY(20px) !important;
+  transition-duration: 1s;
+}
+label.position_move2 {
+  /* bottom: 110% !important; */
+  /* top: -0.5vh !important; */
+  transform: translateY(-5px) !important;
+  transition-duration: 1s;
+}
+
+/* @keyframes slidein {
+  from {
+    bottom: 65%;
+  }
+  to {
+    bottom: 110%;
+  }
+} */

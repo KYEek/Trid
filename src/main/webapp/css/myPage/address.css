@@ -1,0 +1,96 @@
+@charset "UTF-8";
+
+/* 주소 제목과 주소추가 버튼 div */
+div#address_header {
+  margin-left: 7vw;
+  margin-top: 5vh;
+  display: flex;
+  width: 45vw;
+  font-size: 17px;
+}
+div#address_header > div {
+  border: 0.7px solid black;
+  padding: 8px 14px;
+  margin-left: auto;
+}
+
+ul#menu_ul > li > div {
+  margin: 0 3vw;
+  width: 100%;
+  display: flex;
+}
+
+ul.address_contents {
+  list-style: none;
+  padding: 0;
+  width: 90%;
+}
+
+div.i_tag {
+  margin: auto 0 auto auto;
+  font-size: 14pt;
+}
+
+div#is_default_address {
+  border: 0.7px solid black;
+  width: 13%;
+  text-align: center;
+  font-size: 10px;
+  margin-top: 1vh;
+}
+
+/* 부트스트랩 드롭다운 설정 변경 */
+.btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+.dropdown-toggle::after {
+  display: none;
+}
+
+.dropdown-menu {
+  border: 0.7px solid black;
+  border-radius: 0;
+}
+.dropdown-item:hover {
+  background-color: white;
+}
+
+/* 풀 화면이 아닐 때의 폰트 사이즈 */
+@media (max-width: 1919px) {
+  div#address_header {
+    font-size: 15px;
+  }
+}
+
+/* 태블릿 버전 */
+@media (max-width: 1025px) {
+  div#address_header {
+    font-size: 13px;
+  }
+}
+
+/* 모바일 버전 */
+@media (max-width: 768px) {
+  div#address_header {
+    border: 0px solid black;
+    font-size: 13px;
+    margin-left: 3vw;
+    width: 100vw;
+  }
+  div#address_header > span {
+    margin: auto 0 auto 0;
+  }
+
+  div#address_header > div {
+    border: 0.7px solid black;
+    padding: 14px;
+    margin-top: 85vh;
+    width: 94vw;
+    position: fixed;
+  }
+
+  div.i_tag {
+    margin: auto 0;
+  }
+}
