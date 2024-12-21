@@ -12,6 +12,7 @@ import common.Constants;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +22,10 @@ import jakarta.servlet.http.HttpServletResponse;
  * 클라이언트의 요청을 가장 먼저 처리하는 컨트롤러
  */
 @WebServlet(urlPatterns = {"*.trd"})
+@MultipartConfig(
+maxFileSize = 1024 * 1024 * 5,      // 파일당 최대 크기 제한 5MB
+maxRequestSize = 1024 * 1024 * 20   // 전체 파일들의 최대 크기 제한 20MB
+)
 public class FrontController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;

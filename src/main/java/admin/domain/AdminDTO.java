@@ -1,5 +1,8 @@
 package admin.domain;
 
+/*
+ * 관리자 정보를 저장하는 DTO
+ */
 public class AdminDTO {
 	
 	private String adminId; // 관리자 아이디
