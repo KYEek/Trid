@@ -1,5 +1,8 @@
 package product.domain;
 
+/*
+ * 상품의 색상 정보를 담는 DTO
+ */
 public class ColorDTO {
 	
 	private int pkColorNo; // 색상 일련 번호
