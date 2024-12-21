@@ -1,0 +1,34 @@
+div#product_register_container {
+	width: 100%;
+	height: 100vh;
+	padding: 30px;
+	display: flex;
+}
+
+div#register_container {
+	display: flex;
+}
+
+div#image_container {
+	height: 300px;
+}
+
+form#product_register_frm {
+	display: flex;
+	flex-direction: column;
+}
+
+div#size_container {
+	width: 200px;
+	display: flex;
+	flex-direction: column;
+}
+
+div#image_frm_container {
+	width : 200px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items : center;
+}
+
