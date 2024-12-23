@@ -1,47 +1,77 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<%-- pageContextPath --%>
 <c:set var="ctxPath" value="${pageContext.request.contextPath}" />
 
+<%-- 관리자 상품 상세 조회 페이지 --%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>관리자 상품 상세</title>
+
+<%-- css --%>
 <link rel="stylesheet" href="${ctxPath}/css/admin/product_detail.css">
+
+<%-- js --%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.7.1.min.js"></script>
 <script src="${ctxPath}/js/admin/product_detail.js"></script>
 </head>
+
 <body>
+	<%-- ProductDTO --%>
 	<c:set var="productDTO" value="${requestScope.productDTO}" />
+	<%-- ColorDTO List --%>
+	<c:set var="colorList" value="${requestScope.productDTO.colorList}" />
+	<%-- CategoryDTO --%>
+	<c:set var="categoryDTO" value="${requestScope.productDTO.categoryDTO}" />
+	<%-- ProductDetailDTO List --%>
+	<c:set var="productDetailList" value="${requestScope.productDTO.productDetailList}" />
 
+	<%-- 상품 상세 --%>
 	<div id="product_manage_container">
+	
+		<%-- 관리자 사이드 네비게이션 --%>
 		<%@ include file="side_navigation.jsp"%>
-		<div style="display:flex; flex-direction:column">
-			<span>${productDTO.productNo}</span> 
-			<span>${productDTO.categoryName}</span>
+		
+		<%-- 상세 정보 --%>
+		<div style="display: flex; flex-direction: column">
+			<span>상품 일련번호 : ${productDTO.productNo}</span> 
+			<span>카테고리 : ${categoryDTO.categoryName}</span>
+			<span>성별 : ${categoryDTO.gender}</span>
+			<span>상의/하의 : ${categoryDTO.type}</span>
+			
 			<%-- 사이즈 분류 --%>
-			<c:choose>
-				<c:when test="${productDTO.size == 0}">
-					<span>S</span>
-				</c:when>
-				<c:when test="${productDTO.size == 1}">
-					<span>M</span>
-				</c:when>
-				<c:when test="${productDTO.size == 2}">
-					<span>L</span>
-				</c:when>
-				<c:otherwise>
-					<span>XL</span>
-				</c:otherwise>
-			</c:choose>
+			<c:forEach items="${productDetailList}" var="productDetailDTO">
 
-			<span>${productDTO.productName}</span> 
-			<span>${productDTO.explanation}</span> 
-			<span>${productDTO.price}</span> 
-			<span>${productDTO.inventory}</span> 
-			<span>${productDTO.registerday}</span> 
-			<span>${productDTO.updateday}</span>
+				<div style="display: flex">
+					<c:choose>
+						<c:when test="${productDetailDTO.size == 0}">
+							<span>사이즈 : S //</span>
+						</c:when>
+						<c:when test="${productDetailDTO.size == 1}">
+							<span>사이즈 : M //</span>
+						</c:when>
+						<c:when test="${productDetailDTO.size == 2}">
+							<span>사이즈 : L //</span>
+						</c:when>
+						<c:otherwise>
+							<span>사이즈 : XL //</span>
+						</c:otherwise>
+					</c:choose>
 
+					<span>재고 : ${productDetailDTO.inventory}</span>
+				</div>
+			</c:forEach>
+
+			<span>상품명 : ${productDTO.productName}</span> 
+			<span>상품설명 : ${productDTO.explanation}</span> 
+			<span>가격 : ${productDTO.price}</span> 
+			<span>등록일자 : ${productDTO.registerday}</span> 
+			<span>수정일자 : ${productDTO.updateday} </span>
+
+			<%-- 상품 상태 여부 --%>
 			<c:choose>
 				<c:when test="${productDTO.status == 0}">
 					<span>비활성화</span>
@@ -51,11 +81,26 @@
 				</c:otherwise>
 			</c:choose>
 
-			<span>${productDTO.colorDTO.colorName}</span> 
+			<%-- 상품 색상 --%>
+			<c:forEach items="${colorList}" var="colorDTO">
+				<span>${colorDTO.colorName}</span>
+				<span>${colorDTO.colorCode}</span>
+			</c:forEach>
 
 		</div>
-		<div></div>
+		
+		<%-- 이미 삭제 상태인 상품은 삭제버튼을 비활성화 한다. --%>
+		<c:if test="${productDTO.status == 1}">
+			<form name="delete_product_frm">
+				<input type="hidden" name="productNo" value="${productDTO.productNo}" />
+				<button id="delete_product_button" type="button">삭제하기</button>	
+			</form>
+		</c:if>
+		
+		<%-- 돌아가기 버튼을 클릭 시 이전 페이지로 돌아간다. --%>
+		<button onclick="goBack()">돌아가기</button>
 	</div>
-
+	
 </body>
+
 </html>

@@ -1,3 +1,3 @@
-function goProductDetail(productDetailNo) {
-	location.href = `productDetail.trd?productDetailNo=${productDetailNo}`;
+function goProductDetail(productNo) {
+	location.href = `productDetail.trd?productNo=${productNo}`;
 }
