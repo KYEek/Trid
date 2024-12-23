@@ -14,6 +14,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import board.domain.BoardDTO;
+import common.domain.PagingDTO;
 
 
 public class BoardDAO_imple implements BoardDAO {
@@ -51,9 +52,9 @@ public class BoardDAO_imple implements BoardDAO {
 
 
 	
-	// Q&A 게시판으로 이동했을 때 불러오는 메소드
+	// Q&A 게시판으로 이동했을 때 리스트를 페이징 처리해서 가져오는 메소드
 	@Override
-	public List<BoardDTO> questionSelect() throws SQLException {
+	public List<BoardDTO> selectQuestionList(PagingDTO pagingDTO) throws SQLException {
 
 		List<BoardDTO> questionList = new ArrayList<>();
 		
@@ -61,23 +62,37 @@ public class BoardDAO_imple implements BoardDAO {
 			
 			conn = ds.getConnection();
 			
-			String sql = " select pk_question_no, fk_member_no, question_title, question_content, "
-					   + " question_isprivate, question_status, question_registerday, "
-					   + " ROW_NUMBER() OVER (ORDER BY question_registerday desc) AS row_num "
-					   + " from tbl_question "
-					   + " order by row_num asc ";
+			String sql = " SELECT * "
+					   + " FROM ( "
+					   + "    SELECT A.*, rownum AS rnum "
+					   + "    FROM ( "
+					   + "        SELECT pk_question_no, "
+					   + "               fk_member_no, "
+					   + "               question_title, "
+					   + "               question_isprivate, "
+					   + "               question_status, "
+					   + "               question_registerday "
+					   + "        FROM tbl_question "
+					   + "        ORDER BY question_registerday desc "
+					   + "    ) A "
+					   + " ) B "
+					   + " WHERE rnum BETWEEN ? AND ? ";
 			
 			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, pagingDTO.getFirstRow());
+			pstmt.setInt(2, pagingDTO.getLastRow());
 			
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
+				System.out.println(rs.getString("question_title"));
 				
 				BoardDTO boardDTO = new BoardDTO();
+				
 				boardDTO.setPk_question_no(rs.getInt("pk_question_no"));
 				boardDTO.setFk_member_no(rs.getInt("fk_member_no"));
 				boardDTO.setQuestion_title(rs.getString("question_title"));
-				boardDTO.setQuestion_content(rs.getString("question_content"));
 				boardDTO.setQuestion_isprivate(rs.getInt("question_isprivate"));
 				boardDTO.setQuestion_status(rs.getInt("question_status"));
 				boardDTO.setQuestion_registerday(rs.getString("question_registerday"));
@@ -91,13 +106,40 @@ public class BoardDAO_imple implements BoardDAO {
 		}
 		
 		return questionList;
-	}
+	}// end of Q&A 게시판으로 이동했을 때 리스트 전체를 불러오는 메소드 -------
 
 	
+	// Q&A 게시판의 전체 행 개수를 불러오는 메소드
+	@Override
+	public int selectTotalRowCount(PagingDTO pagingDTO) throws SQLException {
+		int totalRowCount = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select count(*) AS total "
+					   + " from tbl_question ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				totalRowCount = rs.getInt("total");
+			}
+			
+			
+		} finally {
+			close();
+		}
+		
+		return totalRowCount;
+	}// end of Q&A 게시판의 전체 행 개수를 불러오는 메소드
+
 	
 	// Q&A 게시핀에 질문을 등록하는 메소드
 	@Override
-	public int registerMember(BoardDTO board, int pk_member_no) throws SQLException {
+	public int insertQuestionRegister(BoardDTO board, int pk_member_no) throws SQLException {
 		int result = 0;
 		
 		try {
@@ -127,7 +169,7 @@ public class BoardDAO_imple implements BoardDAO {
 	
 	// Q&A 게시판에 질문을 상세조회하는 메소드
 	@Override
-	public BoardDTO go_detail(Map<String, String> paraMap) throws SQLException {
+	public BoardDTO selectQuestionDetail(Map<String, String> paraMap) throws SQLException {
 
 		BoardDTO boardDTO = null;
 		
@@ -177,6 +219,7 @@ public class BoardDAO_imple implements BoardDAO {
 		
 		return boardDTO;
 	}// end of Q&A 게시판에 질문을 상세조회하는 메소드 
+
 
 
 	

@@ -1,5 +1,8 @@
 package product.domain;
 
+/*
+ * 카테고리 정보를 담는 DTO
+ */
 public class CategoryDTO {
 
 	private int pkCategoryNo; // 카테고리일련번호

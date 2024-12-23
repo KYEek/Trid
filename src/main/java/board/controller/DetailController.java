@@ -44,7 +44,7 @@ public class DetailController extends AbstractController {
 			paraMap.put("pk_member_no", String.valueOf(loginuser.getPk_member_no()));
 		}
 		
-		BoardDTO boardDTO = bdao.go_detail(paraMap);
+		BoardDTO boardDTO = bdao.selectQuestionDetail(paraMap);
 		
 		if(boardDTO == null) {
 			super.handleMessage(request, "접근할 수 없는 게시글입니다.", Constants.BOARD_LIST_URL);

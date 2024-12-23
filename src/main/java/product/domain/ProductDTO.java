@@ -27,6 +27,8 @@ public class ProductDTO {
 	
 	private List<ProductDetailDTO> productDetailList; // 상품 상세(사이즈, 재고) 정보들이 담긴 리스트
 	
+	private List<ImageDTO> imageList; // 이미지 저장 경로 리스트
+	
 	public int getProductNo() {
 		return productNo;
 	}
@@ -105,6 +107,14 @@ public class ProductDTO {
 
 	public void setCategoryDTO(CategoryDTO categoryDTO) {
 		this.categoryDTO = categoryDTO;
+	}
+
+	public List<ImageDTO> getImageList() {
+		return imageList;
+	}
+
+	public void setImageList(List<ImageDTO> imageList) {
+		this.imageList = imageList;
 	}
 
 }

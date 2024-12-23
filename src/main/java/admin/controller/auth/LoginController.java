@@ -1,4 +1,4 @@
-package admin.controller;
+package admin.controller.auth;
 
 import java.sql.SQLException;
 
@@ -27,6 +27,7 @@ public class LoginController extends AbstractController {
 		// POST 요청인 경우 관리자 로그인 처리
 		if ("POST".equalsIgnoreCase(method)) {
 			String adminId = request.getParameter("adminId"); // 관리자 아이디
+			
 			String password = request.getParameter("password"); // 관리자 비밀번호
 
 			String encryptPw = Sha256.encrypt(password); // 비밀번호 암호화
@@ -45,6 +46,7 @@ public class LoginController extends AbstractController {
 
 				super.setRedirect(true);
 				super.setViewPage(Constants.ADMIN_MAIN_URL);
+				
 			} catch (SQLException e) {
 				e.printStackTrace();
 				super.setRedirect(true);

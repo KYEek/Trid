@@ -1,4 +1,4 @@
-package admin.controller;
+package admin.controller.auth;
 
 import common.Constants;
 import common.controller.AbstractController;

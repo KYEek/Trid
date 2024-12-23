@@ -1,5 +1,8 @@
 package common.domain;
 
+/*
+ * 페이징을 위해 페이지 정보를 담는 DTO 
+ */
 public class PagingDTO {
 	
 	// 입력 데이터
