@@ -2,12 +2,10 @@
 	document.addEventListener("DOMContentLoaded", function () {
 		  // 메뉴 ul을 선택
 		  const menu_ul = document.querySelector("ul#menu_ul");
-		  console.log(addrList);
 
 		  let html = "";
 		    //json의 객체를 추출
 		    addrList.forEach((item) => {
-			console.log(item);
 			// html 코드를 담을 변수를 설정합니다.
 			  let member_name ="";
 			  let addr_address ="";

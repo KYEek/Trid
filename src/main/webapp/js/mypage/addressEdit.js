@@ -29,9 +29,41 @@ const mobile_condition = "-를 제외한 숫자만 입력해 주십시오.";
 
 //문서가 로드되면 실행
 document.addEventListener("DOMContentLoaded", function () {
+  //주소 인풋
   const input_text = document.querySelectorAll("input.input_area");
   const submit_btn = document.querySelector("button#submit_btn");
   input_text.forEach((item, index) => {
+	
+ const addr = JSON.parse(JSON.stringify(addrInfo));
+	
+//	각 인풋에 기존의 값을 넣어줍니다.
+	  switch (index) {
+		  case 0:
+			  item.value = addr["member_name"];
+			  break;
+		  case 1:
+			  item.value = addr["addr_post_no"];
+			  break;
+		  case 2:
+			  item.value = addr["addr_address"];
+			  break;
+		  case 3:
+			  item.value = addr["addr_address"];
+			  break;
+		  case 5:
+			  item.value = addr["member_mobile"];
+			  break;
+
+	  }//end of switch--------------------------
+	
+	  //기본적으로 클래스를 지정해줍니다.
+	  const label = getSibilingElement(item, "label");
+	  //주소input은 다른 클래스를 지정해 줍니다.
+	  if (index == 1) {
+		  label.classList.add("position_move2");
+	  } else {
+		  label.classList.add("position_move");
+	  }
     //주소, 지역 버튼일 때
     if (index == 2 || index == 4) {
       item.setAttribute("readonly", "readonly");
@@ -42,17 +74,22 @@ document.addEventListener("DOMContentLoaded", function () {
       item.addEventListener("focus", function (e) {
         // const warning_div = e.target.parentElement.querySelector(".warning_div");
         let warning_div;
+		//우편번호는 경고 위치가 달라서 다르게 선택했습니다.
         if (index != 1) {
           warning_div = getSibilingElement(e.target, ".warning_div");
         } else {
           warning_div = e.target.parentElement.nextElementSibling;
         }
-        const label = getSibilingElement(item, "label");
-        if (index == 1) {
+		
+       /* const label = getSibilingElement(item, "label");*/
+        //주소input은 다른 클래스를 지정해 줍니다.
+		if (index == 1) {
           label.classList.add("position_move2");
         } else {
           label.classList.add("position_move");
         }
+		
+		//경고창의 상태를 hidden에서 block으로 바꾸고 글자를 검은색으로 해줍니다.
         warning_div.style.display = "block";
         warning_div.style.color = "black";
         let html = "";
@@ -123,6 +160,10 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
     if (is_submit) {
+//		//버튼에 자기 페이지로 갔을 때 조건별로 처리 하기 위해서 버튼에 값을 부여
+//		submit_btn.setAttribute("name","action");
+//		submit_btn.setAttribute("value","editComplete");
+		//폼 실행
       const form = document.querySelector("#address_form");
       form.setAttribute("method", "post");
       form.setAttribute("action", "");
