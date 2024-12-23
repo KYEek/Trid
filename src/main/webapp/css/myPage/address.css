@@ -44,9 +44,9 @@ div#is_default_address {
   outline: none;
   box-shadow: none;
 }
-.dropdown-toggle::after {
-  display: none;
-}
+/* .dropdown-toggle::after { */
+/*   display: none; */
+/* } */
 
 .dropdown-menu {
   border: 0.7px solid black;

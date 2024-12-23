@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     if (is_submit) {
       const form = document.querySelector("#address_form");
-      form.setAttribute("method", "post");
+      form.setAttribute("method", "get");
       form.setAttribute("action", "");
       form.submit();
     }

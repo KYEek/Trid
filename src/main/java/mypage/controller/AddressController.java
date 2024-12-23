@@ -1,5 +1,6 @@
 package mypage.controller;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import common.Constants;
@@ -22,21 +23,22 @@ public class AddressController extends AbstractController {
 		HttpSession session = request.getSession();
 		MemberDTO member = (MemberDTO)session.getAttribute("loginuser");
 		
-//		if(!super.checkLogin(request)) {
-//			super.setRedirect(false);
-//			super.setViewPage(request.getContextPath());
-//			return;
-//		}
+		if(!super.checkLogin(request)) {
+			super.setRedirect(false);
+			super.setViewPage(request.getContextPath());
+			return;
+		}
 		
-		JSONObject addrList = addr_dao.selectAddrs(member.getPk_member_no());
+		JSONArray addrList = addr_dao.selectAddrs(member.getPk_member_no());
 	
+		String addrList_str = addrList.toString();
 		
 		
-		
-		
+		request.setAttribute("addrList", addrList_str);
 		
 		super.setRedirect(false);
 		super.setViewPage(Constants.MY_ADDRESS);
+
 
 	}
 

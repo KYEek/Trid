@@ -1,6 +1,7 @@
 package mypage.model;
 
 import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,9 +12,12 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import common.Constants;
+import mypage.domain.AddressDTO;
 import util.security.AES256;
 
 public class AddressDAO_imple implements AddressDAO {
@@ -25,13 +29,15 @@ public class AddressDAO_imple implements AddressDAO {
 	
 	private AES256 aes;
 	
+	String sql ="";
+	
 	// 생성자
 	public AddressDAO_imple() {
 		
 		try {
 			Context initContext = new InitialContext();
 		    Context envContext  = (Context)initContext.lookup("java:/comp/env");
-		    ds = (DataSource)envContext.lookup("jdbc/myoracle");
+		    ds = (DataSource)envContext.lookup("jdbc/semioracle");
 		    
 		    aes = new AES256(Constants.KEY);
 		    // SecretMyKey.KEY 은 우리가 만든 암호화/복호화 키이다.
@@ -57,14 +63,76 @@ public class AddressDAO_imple implements AddressDAO {
 	
 	
 	
+	//주소를 모두 조회하는 메서드 입니다.
 	@Override
-	public JSONObject selectAddrs(int pk_member_no) throws SQLException {
+	public JSONArray selectAddrs(int pk_member_no) throws SQLException {
 		
-		JSONObject json = new JSONObject();
+		JSONArray parentJson = new JSONArray();
+		JSONObject json = null;
 		conn = ds.getConnection();
 		
-		String sql = "";
-		return json;
+		
+		sql = "select member_name, addr_address, addr_detail, addr_extraaddr, addr_post_no, member_mobile, addr_isdefault,pk_addr_no "
+				+ " from tbl_addr a "
+				+ " join tbl_member m "
+				+ " on a.fk_member_no = m.pk_member_no "
+				+ " where fk_member_no = ? ";
+		
+		
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, pk_member_no);
+		try {
+			
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				json = new JSONObject();
+				json.put("member_name", rs.getString(1));
+				json.put("addr_address", rs.getString(2));
+				json.put("addr_detail", rs.getString(3));
+				json.put("addr_extraaddr", rs.getString(4));
+				json.put("addr_post_no", rs.getInt(5));
+				json.put("member_mobile", aes.decrypt(rs.getString(6)));
+				json.put("addr_isdefault", rs.getInt(7));
+				json.put("pk_addr_no", rs.getInt(8));
+				parentJson.put(json);
+			}
+
+		} catch (JSONException | UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		if(json == null) {
+			return null;
+		}
+		else {
+			return parentJson;
+		}
+	}
+
+	
+	
+	//주소 입력하는 sql문 입니다.
+	@Override
+	public int insertAddress(AddressDTO addrDto) throws SQLException {
+		
+		int result = 0;
+		conn = ds.getConnection();
+		
+		sql = " insert into tbl_addr(PK_ADDR_NO, FK_MEMBER_NO, ADDR_POST_NO, ADDR_ADDRESS, ADDR_DETAIL, ADDR_EXTRAADDR, addr_isdefault) "
+				+ "values (PK_ADDR_NO_SEQ.nextval, ?, ?,?, ?, ?, 0) ";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, addrDto.getMember_no());
+		pstmt.setInt(2, addrDto.getPost_no());
+		pstmt.setString(3, addrDto.getAddress());
+		pstmt.setString(4, addrDto.getDetail());
+		pstmt.setString(5, addrDto.getExtraaddr());
+		
+		result = pstmt.executeUpdate();
+
+		close();
+		
+		return result;
 	}
 
 }
