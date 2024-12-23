@@ -104,34 +104,40 @@
 		<nav class="text-center">
 			<ul class="pagination">
 				<!-- 첫 페이지  -->
-				<li><a href="list.trd?curPage=1" data-page="1"><span aria-hidden="true">&laquo;</span></a></li>
-				<!-- 이전 페이지 -->
-				<c:if test="${paging.firstPage ne 1}">
-					<li><a href="list.trd?curPage=${paging.firstPage-1}" data-page="${paging.firstPage-1}"><span aria-hidden="true">&lt;</span></a></li>
-				</c:if>
-				
-				<!-- 페이지 넘버링  -->
-				<c:forEach begin="${paging.firstPage}" end="${paging.lastPage}" var="i" >
-				
-					<c:if test="${paging.curPage ne i}">
-						<li><a href="list.trd?curPage=${i}" data-page="${i}">${i}</a></li>
+				<div class="pageBtn_box">
+					<li><a href="list.trd?curPage=1" data-page="1"><span aria-hidden="true"><img class="pageBtn" src="${pageContext.request.contextPath}/images/logo/go_first.svg" /></span></a></li>
+					<!-- 이전 페이지 -->
+					<c:if test="${paging.firstPage ne 1}">
+						<li><a href="list.trd?curPage=${paging.firstPage-1}" data-page="${paging.firstPage-1}"><span aria-hidden="true"><img class="pageBtn" src="${pageContext.request.contextPath}/images/logo/prev.svg" /></span></a></li>
 					</c:if>
-					
-					<c:if test="${paging.curPage eq i}">
-						<li class="active"><a href="#">${i}</a></li>
-					</c:if>
-					
-				</c:forEach>
+				</div>
+				
+				<div id="pageNo_box">
+					<!-- 페이지 넘버링  -->
+					<c:forEach begin="${paging.firstPage}" end="${paging.lastPage}" var="i" >
+						
+						<c:if test="${paging.curPage ne i}">
+							<li><a class="pageNo"  href="list.trd?curPage=${i}" data-page="${i}">${i}</a></li>
+						</c:if>
+						
+						<c:if test="${paging.curPage eq i}">
+							<li class="active"><a class="pageNo" href="#">${i}</a></li>
+						</c:if>
+						
+					</c:forEach>
+				</div>
 				
 				<!-- 다음  페이지  -->
-				<c:if test="${paging.lastPage ne paging.totalPageCount}">
-				
-					<li><a href="list.trd?curPage=${paging.lastPage+1}" data-page="${paging.lastPage+1}"><span aria-hidden="true">&gt;</span></a></li>
-				
-				</c:if>
-				
-				<!-- 마지막 페이지 -->
-				<li><a href="list.trd?curPage=${paging.totalPageCount}" data-page="${paging.totalPageCount}"><span aria-hidden="true">&raquo;</span></a></li>
+				<div class="pageBtn_box">
+					<c:if test="${paging.lastPage ne paging.totalPageCount}">
+					
+						<li><a href="list.trd?curPage=${paging.lastPage+1}" data-page="${paging.lastPage+1}"><span aria-hidden="true"><img class="pageBtn" src="${pageContext.request.contextPath}/images/logo/next.svg" /></span></a></li>
+					
+					</c:if>
+					
+					<!-- 마지막 페이지 -->
+					<li><a href="list.trd?curPage=${paging.totalPageCount}" data-page="${paging.totalPageCount}"><span aria-hidden="true"><img class="pageBtn" src="${pageContext.request.contextPath}/images/logo/go_last.svg" /></span></a></li>
+				</div>
 			</ul>
 		</nav>
 		<!-- END : 페이지네이션  -->
