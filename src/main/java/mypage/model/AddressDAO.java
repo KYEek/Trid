@@ -15,7 +15,7 @@ public interface AddressDAO {
 	int insertAddress(AddressDTO addrDto) throws SQLException;
 
 	//기본 주소를 설정하는 sql문
-	int setDefault(int addrNo, int pk_member_no) throws SQLException;
+	boolean setDefault(int addrNo, int pk_member_no) throws SQLException;
 
 	// 주소를 삭제하기
 	int deleteAddr(int addrNo, int pk_member_no) throws SQLException;

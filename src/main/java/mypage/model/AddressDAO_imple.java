@@ -139,26 +139,19 @@ public class AddressDAO_imple implements AddressDAO {
 
 	//입력받은 주소 번호를 기본주소로 설정합니다.
 	@Override
-	public int setDefault(int addrNo, int pk_member_no) throws SQLException {
+	public boolean setDefault(int addrNo, int pk_member_no) throws SQLException {
 		
 		conn = ds.getConnection();
 		
-		int result = 0;
+		boolean result=true;
 		
-		//로그인 회원의 모든 주소의 기본주소 값을 0으로 초기화 합니다.
-		sql = " update TBL_ADDR set ADDR_ISDEFAULT = 0 where FK_MEMBER_NO = ? ";
-		pstmt = conn.prepareStatement(sql);
-		pstmt.setInt(1, pk_member_no);
-		
-		pstmt.executeUpdate();
-		
-		//설정한 주소를 기본주소로 만듭니다.
-		sql = " update TBL_ADDR set ADDR_ISDEFAULT = 1 where PK_ADDR_NO = ? and FK_MEMBER_NO = ? ";
+		//기본 주소를 실행하는 프로시저입니다.
+		sql = " {call setdefaultaddr(?, ?)} ";
 		pstmt = conn.prepareStatement(sql);
 		pstmt.setInt(1, addrNo);
 		pstmt.setInt(2, pk_member_no);
 		
-		result = pstmt.executeUpdate();
+		result = pstmt.execute();
 		
 		return result;
 	}
