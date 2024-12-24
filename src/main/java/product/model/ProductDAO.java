@@ -2,6 +2,7 @@ package product.model;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import common.domain.PagingDTO;
 
@@ -17,15 +18,18 @@ public interface ProductDAO {
 	List<CategoryDTO> selectCategoryList() throws SQLException;
 	
 	// 상품 리스트 전체 행 개수 조회
-	int selectTotalRowCount(PagingDTO pagingDTO) throws SQLException ;
+	int selectTotalRowCount(Map<String, Object> paraMap) throws SQLException ;
 
 	// 관리자 상품 리스트 조회
-	List<ProductDTO> selectProductList(PagingDTO pagingDTO) throws SQLException;
+	List<ProductDTO> selectProductList(Map<String, Object> paraMap) throws SQLException;
 
 	// 관리자 상품 상세 조회
 	ProductDTO selectProduct(String productNo) throws SQLException;
 
 	// 관리자 상품 삭제
 	int deleteProduct(String productNo) throws SQLException;
+
+	// 관리자 상품 수정
+	int updateProduct(ProductDTO productDTO) throws SQLException;
 
 }

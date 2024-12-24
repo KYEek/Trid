@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -241,14 +242,39 @@ public class ProductDAO_imple implements ProductDAO{
 	 * 상품 리스트 전체 행 개수 조회
 	 */
 	@Override
-	public int selectTotalRowCount(PagingDTO pagingDTO) throws SQLException {
+	public int selectTotalRowCount(Map<String, Object> paraMap) throws SQLException {
 		int totalRowCount = 0;
+		
+		String searchWord = (String)paraMap.get("searchWord");
+		
+		String categoryNo = (String)paraMap.get("categoryNo");
+		
+		int count = 0;
+		
 		try {
 			conn = ds.getConnection();
 
-			String sql 	= " select count(*) as total from tbl_product ";
+			String sql 	= " select count(*) as total "
+						+ " from tbl_product p join tbl_category c on p.fk_category_no = c.pk_category_no "
+						+ " where 1=1 ";
+			
+			if(searchWord != null && !searchWord.isBlank()) {
+				sql += " and product_name like '%' || ? || '%' ";
+			}
+			
+			if(categoryNo != null && !categoryNo.isBlank()) {
+				sql += " and pk_category_no = ? ";
+			}
 
 			pstmt = conn.prepareStatement(sql);
+			
+			if(searchWord != null && !searchWord.isBlank()) {
+				pstmt.setString(++count, searchWord);
+			}
+			
+			if(categoryNo != null && !categoryNo.isBlank()) {
+				pstmt.setString(++count, categoryNo);
+			}
 			
 			rs = pstmt.executeQuery();
 			
@@ -268,35 +294,73 @@ public class ProductDAO_imple implements ProductDAO{
 	 * PagingDTO를 통해 페이지 당 정해진 개수만큼의 상품을 조회
 	 */
 	@Override
-	public List<ProductDTO> selectProductList(PagingDTO pagingDTO) throws SQLException {
+	public List<ProductDTO> selectProductList(Map<String, Object> paraMap) throws SQLException {
 		List<ProductDTO> productList = new ArrayList<>();
+		
+		PagingDTO pagingDTO = (PagingDTO)paraMap.get("pagingDTO");
+		
+		String searchWord = (String)paraMap.get("searchWord");
+		
+		String categoryNo = (String)paraMap.get("categoryNo");
+		
+		String sortCategory = (String)paraMap.get("sortCategory") == null ? "" : (String)paraMap.get("sortCategory");
 		
 		try {
 			conn = ds.getConnection();
 
 			String sql 	= " WITH T AS"
 						+ " ( "
-							+ " SELECT ROWNUM AS RN, A.total, A.pk_product_no, A.product_name, A.product_price, A.product_explanation, "
+							+ " SELECT ROWNUM AS RN, A.pk_product_no, A.product_name, A.product_price, A.product_explanation, "
 							+ " to_char(A.product_registerday, 'yyyy-mm-dd') as product_registerday, "
 							+ " to_char(A.product_updateday, 'yyyy-mm-dd') as product_updateday, "
 							+ " A.product_status_code, A.pk_category_no, A.category_name, A.category_type, A.category_gender " 
 							+ " FROM ( "
-								+ " select count(*) over() total, "
+								+ " select "
 								+ " p.pk_product_no , p.product_name, p.product_price, p.product_explanation, p.product_registerday, "
 								+ " p.product_updateday, p.product_status_code, "
 								+ " c.pk_category_no, c.category_name, c.category_type, c.category_gender "
-								+ " from tbl_product p join tbl_category c on c.pk_category_no = p.fk_category_no "
-								+ " order by p.product_registerday desc "
-								+ " ) A "
-						+ " ) "
-						+ " SELECT * FROM T "
-						+ " WHERE T.RN between ? and ? ";
+								+ " from tbl_product p join tbl_category c on c.pk_category_no = p.fk_category_no ";
+			
+			if(searchWord != null && !searchWord.isBlank()) {
+				sql += " and product_name like '%' || ? || '%' ";
+			}
+			
+			if(categoryNo != null && !categoryNo.isBlank()) {
+				sql += " and pk_category_no = ? ";
+			}
+			
+		switch(sortCategory) {
+			case "0" : {sql += " order by p.product_registerday desc "; break;}
+			case "1" : {sql += " order by p.product_registerday "; break;}
+			case "2" : {sql += " order by p.product_price desc "; break;}
+			case "3" : {sql += " order by p.product_price "; break;}
+			default : {sql += " order by p.product_registerday desc "; break;}
+		}
+				
+			
+			
+			sql += " ) A "
+					+ " ) "
+					+ " SELECT * FROM T  WHERE T.RN between ? and ? ";
+			
 
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setInt(1, pagingDTO.getFirstRow()); // 현재 페이지의 첫 레코드의 번호
-			pstmt.setInt(2, pagingDTO.getLastRow()); // 현재 페이지의 마지막 레코드의 번호
+			int count = 0;
 			
+			if(searchWord != null && !searchWord.isBlank()) {
+				pstmt.setString(++count, searchWord);
+			}
+			
+			if(categoryNo != null && !categoryNo.isBlank()) {
+				pstmt.setString(++count, categoryNo);
+			}
+			
+			pstmt.setInt(++count, pagingDTO.getFirstRow()); // 현재 페이지의 첫 레코드의 번호
+			pstmt.setInt(++count, pagingDTO.getLastRow()); // 현재 페이지의 마지막 레코드의 번호
+		
+			
+
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -324,6 +388,8 @@ public class ProductDAO_imple implements ProductDAO{
 				productList.add(productDTO);
 		
 			}
+			
+			System.out.println(sql);
 	
 		} finally {
 			close();
@@ -344,6 +410,8 @@ public class ProductDAO_imple implements ProductDAO{
 		List<ColorDTO> colorList = new ArrayList<>(); // ColorDTO 리스트 초기화
 		
 		List<ProductDetailDTO> productDetailList = new ArrayList<>(); // ProductDetailDTO 리스트 초기화
+		
+		List<ImageDTO> imageList = new ArrayList<>(); // ImageDTO 리스트 초기화
 		
 		try {
 			conn = ds.getConnection();
@@ -366,15 +434,30 @@ public class ProductDAO_imple implements ProductDAO{
 							+ " LISTAGG(product_inventory, ',') WITHIN GROUP(ORDER BY product_detail_size) as product_inventory "
 							+ " from tbl_product_detail "
 							+ " group by fk_product_no "
+						+ " ),"
+						+ " IMAGES AS ( "
+						+ "    select "
+						+ "        fk_product_no, "
+						+ "        LISTAGG(pk_product_image_no, ',') WITHIN GROUP(ORDER BY pk_product_image_no) AS pk_product_image_no, "
+						+ "        LISTAGG(product_image_path, ',') WITHIN GROUP(ORDER BY pk_product_image_no) AS product_image_path, "
+						+ "        LISTAGG(product_image_name, ',') WITHIN GROUP(ORDER BY pk_product_image_no) AS product_image_name, "
+						+ "        LISTAGG(to_char(product_image_registerday, 'yyyy-mm-dd'), ',') WITHIN GROUP(ORDER BY pk_product_image_no) AS product_image_registerday "
+						+ "    from tbl_product_image "
+						+ "    group BY fk_product_no "
 						+ " ) "
 						+ " select p.pk_product_no, p.product_name, p.product_price, p.product_explanation, to_char(p.product_registerday, 'yyyy-mm-dd') as product_registerday, "
 						+ " to_char(p.product_updateday, 'yyyy-mm-dd') as product_updateday, p.product_status_code, "
 						+ " d.pk_product_detail_no, d.product_detail_size, d.product_inventory, "
 						+ " c.pk_category_no, c.category_name, c.category_type, c.category_gender, "
-						+ " COLOR.pk_color_no, COLOR.color_name, COLOR.color_code "
+						+ " COLOR.pk_color_no, COLOR.color_name, COLOR.color_code,"
+						+ " IMAGES.pk_product_image_no, "
+						+ " IMAGES.product_image_path, "
+						+ " IMAGES.product_image_name,"
+						+ " IMAGES.product_image_registerday "
 						+ " from tbl_product p join d on p.pk_product_no = d.fk_product_no "
 						+ " join tbl_category c on c.pk_category_no = p.fk_category_no "
-						+ " join COLOR on COLOR.fk_product_no = p.pk_product_no " 
+						+ " join COLOR on COLOR.fk_product_no = p.pk_product_no "
+						+ " join IMAGES on IMAGES.fk_product_no = p.pk_product_no "
 						+ " where p.pk_product_no = ? ";
 						
 			pstmt = conn.prepareStatement(sql);
@@ -418,6 +501,18 @@ public class ProductDAO_imple implements ProductDAO{
 				// 상품의 색상 코드 배열
 				String[] colorCodeArr = rs.getString("color_code").split(",");
 				
+				// 상품 이미지 일련번호 배열
+				String[] pkProductImageNoArr = rs.getString("pk_product_image_no").split(",");
+				
+				// 상품 이미지 주소 배열
+				String[] productImagePathArr = rs.getString("product_image_path").split(",");
+				
+				// 상품 이미지명 배열
+				String[] productImageNameArr = rs.getString("product_image_name").split(",");
+				
+				// 상품 이미지명 배열
+				String[] productImageReigsterdayArr = rs.getString("product_image_registerday").split(",");
+				
 				// ColorDTO 리스트에 색상 정보 저장
 				for(int i = 0; i < pkColorNoArr.length; i++) {
 					ColorDTO colorDTO = new ColorDTO();
@@ -440,6 +535,18 @@ public class ProductDAO_imple implements ProductDAO{
 					productDetailList.add(productDetailDTO);
 				}
 				
+				// ImageDTO 리스트에 이미지 정보 저장
+				for(int i = 0; i < pkProductImageNoArr.length; i++) {
+					ImageDTO imageDTO = new ImageDTO();
+					
+					imageDTO.setPkProductImageNo(Integer.parseInt(pkProductImageNoArr[i]));
+					imageDTO.setImagePath(productImagePathArr[i]);
+					imageDTO.setImageName(productImageNameArr[i]);
+					imageDTO.setRegisterday(productImageReigsterdayArr[i]);
+					
+					imageList.add(imageDTO);
+				}
+				
 				// ProductDTO에 CategoryDTO 저장
 				productDTO.setCategoryDTO(categoryDTO);
 				
@@ -448,6 +555,9 @@ public class ProductDAO_imple implements ProductDAO{
 				
 				// ProductDTO에 ProductDetailDTO 리스트 저장
 				productDTO.setProductDetailList(productDetailList);
+				
+				// ProductDTO에 imageDTO 리스트 저장
+				productDTO.setImageList(imageList);
 				
 			}
 			else {
@@ -488,6 +598,17 @@ public class ProductDAO_imple implements ProductDAO{
 		}
 		
 		return result;
+	}
+
+	/*
+	 * 관리자 상품 수정
+	 */
+	@Override
+	public int updateProduct(ProductDTO productDTO) throws SQLException {
+
+		
+		
+		return 0;
 	}
 
 }

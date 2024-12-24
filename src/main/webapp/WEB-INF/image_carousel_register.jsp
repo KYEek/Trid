@@ -2,8 +2,7 @@
 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 		<c:set var="ctxPath" value="${pageContext.request.contextPath}" />
 
-		<link rel="stylesheet" href="${ctxPath}/css/image_carousel.css">
-
+		<link rel="stylesheet" href="${ctxPath}/css/image_carousel_register.css">
 
 		<div class="product-container">
 			<div class="product-viewer">
@@ -12,8 +11,6 @@
 			</div>
 			<span id="image_name"></span>
 		</div>
-
-		<button id="delete_image_button" type="button">삭제</button>
 
 		<script>
 			let currentIndex = 0;
@@ -39,16 +36,16 @@
 					}
 				});
 
-				// 마우스 휠 이벤트
-				document.querySelector('.product-container').addEventListener('wheel', function (e) {
-					e.preventDefault();
+				// // 마우스 휠 이벤트
+				// document.querySelector('.thumbnail-container').addEventListener('wheel', function (e) {
+				// 	e.preventDefault();
 
-					if (e.deltaY > 0 && currentIndex < totalSlides - 1) {
-						moveToSlide(currentIndex + 1);
-					} else if (e.deltaY < 0 && currentIndex > 0) {
-						moveToSlide(currentIndex - 1);
-					}
-				}, { passive: false });
+				// 	if (e.deltaY > 0 && currentIndex < totalSlides - 1) {
+				// 		moveToSlide(currentIndex + 1);
+				// 	} else if (e.deltaY < 0 && currentIndex > 0) {
+				// 		moveToSlide(currentIndex - 1);
+				// 	}
+				// }, { passive: false });
 
 
 				$(document).on("click", "button#delete_image_button", function () {
