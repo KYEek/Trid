@@ -15,7 +15,7 @@ function go_detail(pk_question_no, question_isprivate, is_writer) {
 		alert("비공개 게시글입니다.");
 	}
 	
-}// end of 리스트 상세로 보내느 함수
+}// end of 리스트 상세로 보내는 함수
 
 function go_register() {
 
