@@ -38,34 +38,40 @@ public class ProductRegisterController extends AbstractController {
 		if ("POST".equalsIgnoreCase(method)) {
 			List<ImageDTO> imageList = new ArrayList<>();
 
-			String uploadPath = "C:/uploads"; // 이미지 파일 저장 경로
+			if(request.getParts().size() > 0) {
+				
+				String path = "/images/product_images";
+			
+				String uploadPath = request.getServletContext().getRealPath(path);
+				
+				File uploadDir = new File(uploadPath);
+				
+				// 해당 경로에 디렉토리가 존재하는 확인
+				if (!uploadDir.exists()) {
+					uploadDir.mkdir();
+				}
+				
+				// 파일 업로드 처리
+				for (Part part : request.getParts()) {
+					if (part.getSubmittedFileName() != null && !part.getSubmittedFileName().isBlank()) {
+						ImageDTO imageDTO = new ImageDTO();
 
-			File uploadDir = new File(uploadPath);
+						String fileName = part.getSubmittedFileName(); // 이미지 파일명 지정
 
-			// 해당 경로에 디렉토리가 존재하는 확인
-			if (!uploadDir.exists()) {
-				uploadDir.mkdir();
-			}
+						String imagePath = uploadPath + File.separator + fileName; // 이미지 파일 경로
 
-			// 파일 업로드 처리
-			for (Part part : request.getParts()) {
-				if (part.getSubmittedFileName() != null) {
-					ImageDTO imageDTO = new ImageDTO();
+						// ImageDTO에 이미지 정보 저장
+						imageDTO.setImagePath(path +  File.separator + fileName);
+						imageDTO.setImageName(fileName);
 
-					String fileName = part.getSubmittedFileName(); // 이미지 파일명 지정
+						// 지정된 경로에 이미지 저장
+						part.write(imagePath);
 
-					String imagePath = uploadPath + File.separator + fileName; // 이미지 파일 경로
-
-					// ImageDTO에 이미지 정보 저장
-					imageDTO.setImagePath(imagePath);
-					imageDTO.setImageName(fileName);
-
-					// 지정된 경로에 이미지 저장
-					part.write(imagePath);
-
-					imageList.add(imageDTO);
+						imageList.add(imageDTO);
+					}
 				}
 			}
+
 
 			////////////////////////// 이미지를 제외한 정보 저장 ////////////////////////////////
 
@@ -84,9 +90,9 @@ public class ProductRegisterController extends AbstractController {
 
 				String[] inventoryArr = request.getParameter("inventory").split(","); // 재고 배열 (100, 100, 100, 100) 사이즈 순서에 맞추어 형성
 
-				String[] colorNameArr = request.getParameterValues("colorName"); // 색상명 (red, blue) 배열
+				String[] colorNameArr = request.getParameter("colorName").split(","); // 색상명 (red, blue) 배열
 
-				String[] colorCodeArr = request.getParameterValues("colorCode"); // 색상코드 (#ffffff, #000000) 배열
+				String[] colorCodeArr = request.getParameter("colorCode").split(","); // 색상코드 (#ffffff, #000000) 배열
 
 				String productName = request.getParameter("productName"); // 상품 명
 
@@ -153,6 +159,8 @@ public class ProductRegisterController extends AbstractController {
 
 		}
 		// GET 요청인 경우 상품 추가 페이지로 이동
+		
+		// TODO try catch
 		else {
 			List<CategoryDTO> categoryList = productDAO.selectCategoryList();
 
