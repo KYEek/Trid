@@ -25,6 +25,14 @@ public class AddressButtonController extends AbstractController {
 		MemberDTO member = (MemberDTO) session.getAttribute("loginuser");
 		JSONObject addrJson = null;
 
+		if(!super.checkLogin(request)) {
+			System.out.println("로그인 안되어짐");
+			super.setRedirect(true);
+			super.setViewPage("/main.trd");
+		}
+		else {
+		}
+		
 		if ("post".equalsIgnoreCase(method)) {
 			//어떤 버튼을 눌렀는지 알기 위한 변수
 			String action = request.getParameter("action");

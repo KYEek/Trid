@@ -9,10 +9,10 @@
 <!-- <link rel="stylesheet" -->
 <%-- 	href="${pageContext.request.contextPath}/css/main.css"> --%>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/header/hamburger.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/header/header.css">
+<!-- <link rel="stylesheet" -->
+<%-- 	href="${pageContext.request.contextPath}/css/header/hamburger.css"> --%>
+<!-- <link rel="stylesheet" -->
+<%-- 	href="${pageContext.request.contextPath}/css/header/header.css"> --%>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/myPage/mypage.css">
 
