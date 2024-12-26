@@ -10,7 +10,13 @@ public class MypageController extends AbstractController {
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-//		System.out.println("마이페이지 컨트롤러 실행됨");
+		
+		
+		if(!super.checkLogin(request)) {
+			super.setRedirect(false);
+			super.setViewPage(request.getContextPath());
+			return;
+		}
 		
 		super.setRedirect(false);
 		super.setViewPage(Constants.MY_PAGE);
