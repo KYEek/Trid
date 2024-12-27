@@ -200,8 +200,12 @@ public class BasketDAO_imple implements BasketDAO {
 		int result = 0;
 
 		try {
-
-			sql = " insert into tbl_basket (pk_basket_no, fk_member_no, fk_product_detail_no, basket_quantity) values (PK_BASKET_NO_SEQ.nextval, ?, ?, 1); ";
+			
+			System.out.println(productDetailNum);
+			
+			System.out.println(pk_member_no);
+			
+			sql = " insert into tbl_basket (pk_basket_no, fk_member_no, fk_product_detail_no, basket_quantity) values (PK_BASKET_NO_SEQ.nextval, ?, ?, 1) ";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, pk_member_no);

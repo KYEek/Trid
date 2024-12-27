@@ -52,8 +52,6 @@ public class ListController extends AbstractController {
 			
 			List<BoardDTO> questionList = bdao.selectQuestionList(pagingDTO);
 			
-			System.out.println(questionList.get(0).getQuestion_content());
-			
 			request.setAttribute("questionList", questionList);
 			request.setAttribute("pagingDTO", pagingDTO);
 			

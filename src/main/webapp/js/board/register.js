@@ -41,3 +41,4 @@ function goReset() {
 	// 리스트 페이지로 보내기
 	location.href="/Trid/board/list.trd";
 }// end of "취소" 버튼을 눌렀으 때 실행되는 메소드 
+
