@@ -1,6 +1,7 @@
 package admin.controller.product;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import common.controller.AbstractController;
 import common.domain.PagingDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import product.domain.CategoryDTO;
 import product.domain.ProductDTO;
 import product.model.ProductDAO;
 import product.model.ProductDAO_imple;
@@ -41,15 +43,29 @@ public class ProductManageController extends AbstractController {
 			try {
 				curPage = Integer.parseInt(request.getParameter("curPage"));
 			} catch (NumberFormatException e) {
-				System.out.println("curPage is not Integer");
 				curPage = 1;
 			}
 			
+			String searchWord = request.getParameter("searchWord");
+			
+			String categoryNo = request.getParameter("categoryNo");
+			
+			String sortCategory = request.getParameter("sortCategory");
+			
+			Map<String, Object> paraMap = new HashMap<>();
+			
+		
+				paraMap.put("searchWord", searchWord);
+				paraMap.put("categoryNo", categoryNo);
+				paraMap.put("sortCategory", sortCategory);
+		
+			
 			// 상품 리스트 가져오기
 			try {
+				
 				PagingDTO pagingDTO = new PagingDTO(); // PagingDTO 초기화
 				
-				int totalRowCount = productDAO.selectTotalRowCount(pagingDTO); // 전체 행 개수 조회
+				int totalRowCount = productDAO.selectTotalRowCount(paraMap); // 전체 행 개수 조회
 				
 				// curPage 유효성 검사
 				if(curPage > totalRowCount || curPage < 1 ) {
@@ -58,12 +74,24 @@ public class ProductManageController extends AbstractController {
 				
 				pagingDTO.setCurPage(curPage);
 				pagingDTO.setTotalRowCount(totalRowCount);
+				pagingDTO.setPageSize(5);
+				pagingDTO.setRowSizePerPage(6);
 				pagingDTO.pageSetting(); // 페이징 시 필요한 나머지 정보 계산
 				
-				List<ProductDTO> productList = productDAO.selectProductList(pagingDTO);
-	
+				paraMap.put("pagingDTO", pagingDTO);
+				
+				List<ProductDTO> productList = productDAO.selectProductList(paraMap);
+				List<CategoryDTO> categoryList = productDAO.selectCategoryList();
+
+				request.setAttribute("categoryList", categoryList);
 				request.setAttribute("productList", productList);
 				request.setAttribute("pagingDTO", pagingDTO);
+				
+				request.setAttribute("searchWord", searchWord);
+				request.setAttribute("categoryNo", categoryNo);
+				request.setAttribute("sortCategory", sortCategory);
+				
+				
 				
 				super.setRedirect(false);
 				super.setViewPage(Constants.ADMIN_PRODUCT_MANAGE_PAGE);

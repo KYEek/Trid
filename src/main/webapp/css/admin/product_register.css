@@ -1,34 +1,227 @@
 div#product_register_container {
 	width: 100%;
-	height: 100vh;
-	padding: 30px;
+	height: 100%;
+	padding: 40px;
 	display: flex;
+	background: #fafafa;
+}
+
+div#main_container {
+	width: 100vw;
+	height: 100%;
+	background: white;
+	margin-left: 40px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+div#register_header {
+	margin: 5px 20px;
+	display: flex;
+	justify-content: space-between;
 }
 
 div#register_container {
+	height: calc(100% - 48px);
+}
+
+form#register_frm {
 	display: flex;
+	height: 100%;
+}
+
+button#return_button {
+	border: none;
+	background-color: transparent;
+	font-size: 14pt;
+	padding: 0;
+}
+
+button#return_button:after {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: -5px;
+	width: 0px;
+	height: 2px;
+	transition: all 0.2s ease-in-out;
+	transition-duration: 0.3s;
+	opacity: 0;
+	background-color: black;
+}
+
+button#return_button:hover:after {
+	width: 100%;
+	opacity: 1;
+}
+
+div#form_register_container {
+	padding: 20px;
+	max-width: 500px;
+	flex: 1;
+	/* padding: 32px; */
+}
+
+div#image_register_container {
+	position: relative;
+	top: -40px;
+	height: 600px;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	padding: 20px 0 0 0;
+}
+
+div#input_container {
+	margin-bottom: 20px;
+}
+
+div.input_box {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 10px 0;
+}
+
+div.input_box input,
+div.size_box input {
+	border: none;
+	border-bottom: 1px solid #eee;
+	padding: 8px 0;
+	transition: border-color 0.2s;
+}
+
+div.input_box input:focus,
+div.size_box input:focus {
+	border-bottom-color: #000;
+	outline: none;
+}
+
+textarea#explanation_textarea {
+	border: 1px solid #eee;
+}
+
+div#select_container {
+	margin: 20px 0;
+	display: flex;
+	justify-content: space-between;
+}
+
+div.size_container {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+div.size_box {
+	margin: 0 0 0 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+div.size_box span {
+	font-weight: bold;
+}
+
+div.size_box input {
+	margin-left: 10px;
+	width: 60px;
+	text-align: end;
+}
+
+div#color_box {
+	margin: 30px 0;
+	height: 150px;
+	border: none;
+	overflow-y: scroll;
+	border: solid 1px #eee;
+}
+
+div.color_item {
+	border: none;
+	border-bottom: 1px solid #eee;
+	margin: 0;
+	padding: 12px;
+	display: flex;
+	justify-content: space-between;
+}
+
+div#color_container {
+	margin-bottom: 20px;
+	width: 100%;
+	height: 40px;
+	display: flex;
+}
+
+input#color_code_input {
+	margin: 0 10px;
+	width: 100px;
+}
+
+button#add_color_button {
+	background-color: transparent;
+}
+
+button#add_color_button:hover {
+	transition: 0.2s ease;
+	color: white;
+	background-color: black;
+}
+
+button.delete_color_button {
+	background-color: transparent;
 }
 
 div#image_container {
-	height: 300px;
-}
-
-form#product_register_frm {
-	display: flex;
-	flex-direction: column;
-}
-
-div#size_container {
-	width: 200px;
-	display: flex;
-	flex-direction: column;
+	height: 90%;
 }
 
 div#image_frm_container {
-	width : 200px;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items : center;
+	margin-top: 20px;
 }
 
+div#color_box::-webkit-scrollbar {
+	width: 4px;
+}
+
+div#color_box::-webkit-scrollbar-thumb {
+	background: #000;
+}
+
+button#return_button {
+	font-size: 14px;
+	letter-spacing: 0.5px;
+	/* 호버 언더라인 효과 제거하고 투명도로 대체 */
+}
+
+button#return_button:hover {
+	opacity: 0.7;
+}
+
+button#add_color_button,
+button#product_register_button,
+button#file_upload_button,
+button#delete_image_button {
+	padding: 8px 24px;
+	border: none;
+	background: #000;
+	color: white;
+	transition: opacity 0.2s;
+}
+
+button#add_color_button:hover {
+	opacity: 0.8;
+	background: #000; /* 호버 시 색상 변경 대신 투명도로 */
+}
+
+button#product_register_button {
+	float: right;
+	align-self: flex-end;
+}
+
+input#image_input {
+	display: none; /* 파일 input 숨기기 */
+}

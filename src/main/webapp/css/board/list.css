@@ -81,3 +81,64 @@ div#private {
     width: 10%;
 }
 
+
+/* 페이지바와 관련된 CSS */
+
+/* 페이징바 위치 잡기 */
+nav.text-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* 페이징바 안의 요소들 */
+ul.pagination {
+	width: 450px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 40px;
+}
+
+/* 페이징바의 숫자를 감싸고 있는 박스 */
+/* 가운데 정렬을 위해 사용 */
+div#pageNo_box {
+	width: 250px;
+	display: flex;
+	justify-content: center;
+	margin: 0 2%;	
+}
+
+div#pageNo_box > li {
+	width: 50px;
+	margin: 0 2%;
+}
+
+/* 페이징바의 숫자 요소들 (1 2 3 4 5) */
+a.pageNo {
+	font-size: 22px;
+	color: black;
+	border-bottom: solid 2px black;
+}
+
+/* 페이징바의 버튼을 감싸고 있는 박스 */
+div.pageBtn_box {
+	display: flex;
+	width: 60	px;
+}
+
+div.pageBtn_box > li {
+	margin: 0 3%;
+}
+
+/* 페이지바의 이동하는 버튼 (< << > >>) */
+img.pageBtn {
+	width: 25px;
+	height: 30px;
+}
+
+
+
+
+
+

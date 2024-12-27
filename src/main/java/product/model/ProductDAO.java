@@ -2,10 +2,10 @@ package product.model;
 
 import java.sql.SQLException;
 import java.util.List;
-
-import common.domain.PagingDTO;
+import java.util.Map;
 
 import product.domain.CategoryDTO;
+import product.domain.ImageDTO;
 import product.domain.ProductDTO;
 
 public interface ProductDAO {
@@ -17,15 +17,27 @@ public interface ProductDAO {
 	List<CategoryDTO> selectCategoryList() throws SQLException;
 	
 	// 상품 리스트 전체 행 개수 조회
-	int selectTotalRowCount(PagingDTO pagingDTO) throws SQLException ;
+	int selectTotalRowCount(Map<String, Object> paraMap) throws SQLException ;
 
 	// 관리자 상품 리스트 조회
-	List<ProductDTO> selectProductList(PagingDTO pagingDTO) throws SQLException;
+	List<ProductDTO> selectProductList(Map<String, Object> paraMap) throws SQLException;
 
 	// 관리자 상품 상세 조회
 	ProductDTO selectProduct(String productNo) throws SQLException;
 
 	// 관리자 상품 삭제
 	int deleteProduct(String productNo) throws SQLException;
+
+	// 관리자 상품 수정
+	int updateProduct(ProductDTO productDTO) throws SQLException;
+	
+	// 사용자 상품 상세 조회
+	ProductDTO selectProductByMember(String productNo) throws SQLException;
+
+	// 관리자 상품 수정 시 이미지 삭제
+	int deleteProductImage(String pkProductImageNo) throws SQLException;
+	
+	// 관리자 상품 수정 시 이미지 추가
+	int insertProductImage(List<ImageDTO> imageList, int productNo) throws SQLException;
 
 }

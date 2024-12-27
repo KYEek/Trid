@@ -96,9 +96,16 @@ public class FrontController extends HttpServlet {
 			try {
 				controllerInstance.execute(request, response); // 컨트롤러 인스턴스의 execute 메소드 실행
 				
+				boolean isJsonResponse = controllerInstance.isJsonResponse();
+				
 				boolean isRedirect = controllerInstance.isRedirect(); // 리다이렉트 처리 여부
 				 
 				String viewPage = controllerInstance.getViewPage(); // 페이지 경로
+				
+				if(isJsonResponse) {
+					controllerInstance.setJsonResponse(false);
+					return;
+				}
 				
 				// 포워드인 경우
 				if(!isRedirect) {

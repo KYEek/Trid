@@ -1,0 +1,191 @@
+:root {
+  --border_size: 0.7px solid black;
+}
+
+/* 장바구니 헤더 */
+div#basket_header {
+  top: 2%;
+  width: 100%;
+  display: flex;
+  border-bottom: var(--border_size);
+  position: sticky;
+  background-color: white;
+}
+
+/* 장바구니 이름과 개수  */
+div#basket_header > div {
+  font-weight: bold;
+  text-align: center;
+  width: 25%;
+  padding: 0.5% 0;
+  border: var(--border_size);
+  border-collapse: collapse;
+  border-bottom: 0;
+}
+
+/* 장바구니 설명문 */
+div#basket_explain {
+  background-color: rgb(235, 235, 235);
+  border: var(--border_size);
+  padding: 1% 1%;
+  border-top: 0;
+}
+
+/* 장바구니 목록 */
+div#basket_list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  margin-bottom: 9.8vh;
+}
+
+/* 장바구니 목록의 각 항목 */
+div#basket_list > div {
+  width: 100%;
+  border-right: var(--border_size);
+  border-bottom: var(--border_size);
+}
+
+a.product_link {
+  color: black;
+  text-decoration: none;
+}
+
+/* 상품 이름과 삭제버튼*/
+div.basket_product_info_header {
+  display: flex;
+  width: 100%;
+}
+.basket_product_info_header > div:first-child {
+  margin-left: 0.7vw;
+  width: 85%;
+}
+/* 상품 이름에 호버가 될 때 */
+.basket_product_info_header > div:first-child {
+  cursor: pointer;
+}
+.basket_product_info_header > div:last-child:hover {
+  cursor: pointer;
+}
+
+/* 이미지를 basket_img에 꽉자게 한다 */
+img {
+  width: 100%;
+  aspect-ratio: 750/1125;
+}
+
+/* 이미지를 담는 div의 디자인을 신경쓴다 */
+.basket_img {
+  width: 100%;
+  border-bottom: var(--border_size);
+}
+
+.basket_product_info {
+  width: 100%;
+  height: 25%;
+  margin: 1vh 0;
+}
+
+/* 개수 관련 div 스타일 설정 */
+div.basket_product_count_container {
+  display: flex;
+  border: var(--border_size);
+  width: 35%;
+  margin-left: 0.7vw;
+}
+div.basket_product_count_container > button {
+  width: 33.3%;
+  border: 0;
+  background-color: white;
+}
+
+div.basket_product_count {
+  width: 33.3%;
+  text-align: center;
+  border-left: var(--border_size);
+  border-right: var(--border_size);
+}
+
+/* 개수와 카테고리 div */
+.basket_pruduct_price {
+  margin-left: 0.7vw;
+}
+.basket_pruduct_size_category {
+  margin-left: 0.7vw;
+}
+
+/* 푸터 관련 */
+
+div#basket_footer {
+  border-top: var(--border_size);
+  position: fixed;
+  top: 90vh;
+  background-color: white;
+  width: 100%;
+  opacity: 0.9;
+  height: 10vh;
+  display: table;
+}
+
+div#basket_footer_info {
+  display: table-cell;
+  width: 70%;
+  padding-left: 2vw;
+  vertical-align: middle;
+}
+
+div#basket_footer_total_price {
+  width: 10%;
+  text-align: right;
+  padding-right: 1vw;
+  margin: 0 0 0 auto;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+div#basket_footer_total_price > div:first-child {
+  font-weight: bold;
+}
+div#basket_footer_total_price > div:first-child > span {
+  margin-left: 1.5vw;
+}
+
+div#basket_footer_next_button {
+  background-color: black;
+  text-align: center;
+  color: white;
+  width: 10%;
+  margin: 0 0 0 auto;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+div#basket_footer_next_button:hover {
+  cursor: pointer;
+  background-color: rgb(83, 83, 83);
+}
+
+span.basket_item {
+  font-size: 30px;
+}
+
+/* 로딩화면 */
+div#roading_container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.5);
+  display: none;
+}
+
+div#roading_box {
+  position: fixed;
+  top: 45%;
+  left: 40%;
+  border: 1px solid black;
+  z-index: 101;
+  width: 20vw;
+  height: 10vh;
+  text-align: center;
+  background-color: white;
+}
