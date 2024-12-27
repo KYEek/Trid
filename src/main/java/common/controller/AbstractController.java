@@ -14,6 +14,8 @@ public abstract class AbstractController implements InterCommand {
 
 	private String viewPage;
 	
+	private boolean isJsonResponse = false; // 클라이언트에 직접 JSON 문자열로 응답
+	
 	public boolean isRedirect() {
 		return isRedirect;
 	}
@@ -29,7 +31,15 @@ public abstract class AbstractController implements InterCommand {
 	public void setViewPage(String viewPage) {
 		this.viewPage = viewPage;
 	}
-	
+
+	public boolean isJsonResponse() {
+		return isJsonResponse;
+	}
+
+	public void setJsonResponse(boolean isJsonResponse) {
+		this.isJsonResponse = isJsonResponse;
+	}
+
 	/*
 	 * 사용자 알림 처리를 위한 메소드
 	 */
@@ -51,7 +61,10 @@ public abstract class AbstractController implements InterCommand {
 		// 세션에 관리자 아이디가 있는지 확인
 		boolean result = adminId == null ? false : true;
 		
-		handleMessage(request, Constants.ACCESS_DENIED, Constants.ADMIN_LOGIN_URL);
+		if(!result) {
+			handleMessage(request, Constants.ACCESS_DENIED, Constants.ADMIN_LOGIN_URL);	
+		}
+		
 		return result;
 	}
 	
