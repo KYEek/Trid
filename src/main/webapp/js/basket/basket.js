@@ -72,7 +72,7 @@ async function getBasketList() {
       } // end of for-------------------------------
       html += `<div id="basket_${PK_BASKET_NO}" class="basket_item" data-basket_no="${PK_BASKET_NO}" >
             <div class="basket_img">
-              <a><img src="${PRODUCT_IMAGE_PATH}" /></a>
+              <a><img src="/Trid/${PRODUCT_IMAGE_PATH}" /></a>
             </div>
             <div class="basket_product_info">
               <div class="basket_product_info_header">

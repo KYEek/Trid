@@ -31,5 +31,9 @@ public interface ProductDAO {
 
 	// 관리자 상품 수정
 	int updateProduct(ProductDTO productDTO) throws SQLException;
+	
+	// 사용자 상품 상세 조회
+	ProductDTO selectProductByMember(String productNo) throws SQLException;
+
 
 }

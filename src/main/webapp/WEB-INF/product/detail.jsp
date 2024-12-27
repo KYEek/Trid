@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,54 +21,189 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/product/detail.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/product/detail.js"></script>
 
+<script>
+$(document).ready(function() {
+
+	$("input#go_basket").on("click", function(e){
+		
+		<%-- 로그인 하지 않고 "장바구니에 추가하기" 버튼 클릭 시 --%>
+		if(${sessionScope.loginuser == null}) {
+			alert("로그인 후에 이용하세요!");
+			<%-- 로그인 페이지로 보내기 --%>
+			location.href = "/Trid/login.trd";
+		}
+		<%-- 사이즈를 고르지 않고 "장바구니에 추가하기" 버튼 클릭 시 --%>
+		else if(!$("input.size").hasClass("clicked")) {
+			alert("사이즈를 선택하세요!");
+		}
+		<%-- 모든 조건을 만족했을 때 --%>
+		else {
+			$("form#go_basketFrm").submit();
+		}
+		
+	});
+
+});
+</script>
+
 </head>
 <body>
 
 	<jsp:include page="/WEB-INF/header.jsp" />
 
+	<%-- ProductDTO --%>
+	<c:set var="productDTO" value="${requestScope.productDTO}" />
+	<%-- ColorDTO List --%>
+	<c:set var="colorList" value="${requestScope.productDTO.colorList}" />
+	<%-- CategoryDTO --%>
+	<c:set var="categoryDTO" value="${requestScope.productDTO.categoryDTO}" />
+	<%-- ProductDetailDTO List --%>
+	<c:set var="productDetailList" value="${requestScope.productDTO.productDetailList}" />
+	<%-- ImageDTO List --%>
+	<c:set var="imageList" value="${requestScope.productDTO.imageList}" />
+	
 	<div id="container">
-		<div id="img_box">
-			<div id="main_img">
-				<div class="image-container">
-					<div class="product-slide" style="background-color: red"></div>
-					<div class="product-slide" style="background-color: blue"></div>
-					<div class="product-slide" style="background-color: yellow"></div>
-					<div class="product-slide" style="background-color: green"></div>
-				</div>
-				<div class="touch-overlay"></div>
-			</div>
-
-			<div id="img_sidebar">
-				<div class="thumbnail" style="background-color: red;"></div>
-				<div class="thumbnail" style="background-color: blue;"></div>
-				<div class="thumbnail" style="background-color: yellow;"></div>
-				<div class="thumbnail" style="background-color: green;"></div>
-			</div>
+	
+		<div id="image_box" style="height: 700px;">
+			<%@ include file="../image_carousel.jsp"%>
 		</div>
 
 		<div id="product_detailbox">
 			<div id="top_deatilbox">
-				<div id="name">상품명</div>
-				<div id="price">가격</div>
-				<div id="explanation">상품 설명</div>
+				<div id="name">${productDTO.productName}</div>
+				<div id="price">${productDTO.price}원</div>
+				<div id="explanation">${productDTO.explanation}</div>
 			</div>
-
-			<div id="bottom_detailbox">
-				<div id="color">색상 || 색상코드</div>
+	
+			<div id="bottom_detailbox">	
+				
+				<div id="color">
+					
+					<div id="color_name">
+						<c:forEach items="${colorList}" var="colorDTO" varStatus="status">
+							
+							<%-- 첫번째면 || 하지 않기 --%>
+							<c:if test="${status.first}">
+								<div>${colorDTO.colorName}</div>
+							</c:if>
+							<%-- 첫번째가 아니면 공백 + || 추가하기 --%>
+							<c:if test="${!status.first}">
+								<div>&nbsp;|| ${colorDTO.colorName}</div>
+							</c:if>
+							
+						</c:forEach>
+					</div>  
+					
+					<div id="color_code">
+					
+						<c:forEach items="${colorList}" var="colorDTO"  varStatus="status">
+							
+							<%-- 첫번째면 || 하지 않기 --%>
+							<c:if test="${status.first}">
+								<div>${colorDTO.colorCode}</div>
+							</c:if>
+							<%-- 첫번째가 아니면 공백 + || 추가하기 --%>
+							<c:if test="${!status.first}">
+								<div>&nbsp;|| ${colorDTO.colorCode}</div>
+							</c:if>
+							 
+						</c:forEach>
+					</div> 
+					
+				</div>
+				
 				<div id="colorbox">
-					<div class="gratify" style="background-color: blanchedalmond;"></div>
-					<div class="gratify" style="background-color: aqua"></div>
+				
+					<c:forEach items="${colorList}" var="colorDTO">
+						<div class="gratify" style="background-color: ${colorDTO.colorCode};"></div>
+					</c:forEach>
+					
 				</div>
 
 				<div id="size_bar">
-					<input class="size" type="button" value="S"> <input class="size" type="button" value="M"> 
-					<input class="size"type="button" value="L"> <input class="size" type="button" value="XL">
+					
+					<c:forEach items="${productDetailList}" var="productDetailDTO">
+					
+						<%-- 사이즈 별로 choose --%>
+						<c:choose>
+							<%-- S 사이즈 --%>
+							<c:when test="${productDetailDTO.size == 0}">
+							
+								<%-- S 사이즈 재고가 있을 때 --%>
+								<c:if test="${productDetailDTO.inventory != 0}">
+									<input id="${productDetailDTO.pkProductDetailNo}" class="size" type="button" value="S" size="${productDetailDTO.size}">
+								</c:if>
+								<%-- S 사이즈 재고가 없을 때 --%>
+								<c:if test="${productDetailDTO.inventory == 0}">
+									<input id="${productDetailDTO.pkProductDetailNo}" class="noinventory" type="button" value="재고없음" size="${productDetailDTO.size}">
+								</c:if>
+								
+							</c:when>
+							
+							<%-- M 사이즈 --%>
+							<c:when test="${productDetailDTO.size == 1}">
+								
+								<%-- M 사이즈 재고가 있을 때 --%>
+								<c:if test="${productDetailDTO.inventory != 0}">
+									<input id="${productDetailDTO.pkProductDetailNo}" class="size" type="button" value="M" size="${productDetailDTO.size}"> 
+								</c:if>
+								<%-- M 사이즈 재고가 없을 때 --%>
+								<c:if test="${productDetailDTO.inventory == 0}">
+									<input id="${productDetailDTO.pkProductDetailNo}" class="noinventory" type="button" value="재고없음" size="${productDetailDTO.size}"> 
+								</c:if>
+								
+							</c:when>
+							
+							<%-- L 사이즈 --%>
+							<c:when test="${productDetailDTO.size == 2}">
+							
+								<%-- L 사이즈 재고가 있을 때 --%>
+								<c:if test="${productDetailDTO.inventory != 0}">
+									<input id="${productDetailDTO.pkProductDetailNo}" class="size" type="button" value="L" size="${productDetailDTO.size}"> 
+								</c:if>
+								<%-- L 사이즈 재고가 없을 때 --%>
+								<c:if test="${productDetailDTO.inventory == 0}">
+									<input id="${productDetailDTO.pkProductDetailNo}" class="noinventory" type="button" value="재고없음" size="${productDetailDTO.size}"> 
+								</c:if>
+								
+							</c:when>
+							
+							<%-- XL 사이즈 --%>
+							<c:when test="${productDetailDTO.size == 3}">
+							
+								<%-- XL 사이즈 재고가 있을 때 --%>
+								<c:if test="${productDetailDTO.inventory != 0}">
+									<input id="${productDetailDTO.pkProductDetailNo}" class="size" type="button" value="XL" size="${productDetailDTO.size}"> 
+								</c:if>
+								<%-- XL 사이즈 재고가 없을을 때 --%>
+								<c:if test="${productDetailDTO.inventory == 0}">
+									<input id="${productDetailDTO.pkProductDetailNo}" class="noinventory" type="button" value="재고없음" size="${productDetailDTO.size}"> 
+								</c:if>
+								
+							</c:when>
+							
+						</c:choose>
+						
+					</c:forEach>
+			
 				</div>
 
 				<div id="paymentbar">
 					<input id="go_basket" class="paymentBtn" type="button" value="장바구니에 추가하기"> 
 					<input id="go_payment" class="paymentBtn" type="button" value="바로 결제하기">
 				</div>
+				
+				<%-- "장바구니에 추가하기" 클릭 시 사용되는 폼태그 --%>
+				<form id="go_basketFrm" action="/Trid/basket.trd" method="post">
+					<input type="hidden" name="go_basket" id="go_basketProductDetailNo" />
+				</form>
+				
+				<%-- 
+				<form id="go_basketFrm" action="/Trid/basket.trd" method="post">
+					<input type="hidden" name="go_basket" id="go_basketProductDetailNo" />
+				</form>
+				--%>
+				
 			</div>
 		</div>
 	</div>
