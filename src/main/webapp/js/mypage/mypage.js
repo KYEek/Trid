@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
         //프로필
         item.addEventListener("click", function () {
           // alert("프로필");
-          location.href = "";
+          location.href = "/Trid/member/memberSearch.trd";
         });
         break;
     }
