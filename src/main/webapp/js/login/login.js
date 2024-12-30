@@ -27,3 +27,20 @@ function goLogin() {
 	const frm = document.loginFrm;
 	frm.submit();
 }
+
+ function goLogOut(ctx_Path){
+		
+	// 로그아웃을 처리해주는 페이지로 이동
+	location.href=`${ctx_Path}/login/logout.trd`;
+}
+
+
+function goRegister(){
+	
+	location.href= "/Trid/register.trd";
+}
+
+function findPwd() {
+	
+	location.href= "/Trid/login/findPwd.trd";
+}
