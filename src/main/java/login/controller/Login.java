@@ -32,6 +32,15 @@ public class Login extends AbstractController {
 			MemberDTO loginuser = mdao.login(paraMap);
 			
 			if(loginuser == null) {
+				
+				 String message = "사용자 이메일과 비밀번호 조합이 Trid.trd 계정과 일치하지 않습니다.";
+	        	 String loc = "/Trid/main.trd"; // 현재페이지에 머뭄.
+	             
+	             request.setAttribute("message", message);
+	             request.setAttribute("loc", loc);
+	             
+	             super.setRedirect(false); 
+	             super.setViewPage(Constants.MESSAGE_PAGE);
 			//	System.out.println("로그인 실패");
 				//super.handleMessage(request, Constants.INVALID_EMAIL_OR_PASSWORD, Constants.MEMBER_LOGIN_URL);
 				return;
@@ -43,8 +52,15 @@ public class Login extends AbstractController {
 				
 				session.setAttribute("loginuser", loginuser);
 				
-				super.setRedirect(true);
-				super.setViewPage("/main.trd");
+				String message = "로그인 성공!!";
+	        	String loc = "/Trid/main.trd"; // 현재페이지에 머뭄.
+	             
+	            request.setAttribute("message", message);
+	            request.setAttribute("loc", loc);
+	             
+	            super.setRedirect(false); 
+	            super.setViewPage(Constants.MESSAGE_PAGE);
+	             
 				return;
 			}
 		}

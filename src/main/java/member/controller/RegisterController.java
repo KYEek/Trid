@@ -56,13 +56,13 @@ public class RegisterController extends AbstractController {
 				
 				if(n == 1) {
 				
-					message = "회원가입 성공^^";
+					message = "회원가입이 완료되었습니다";
 					loc = request.getContextPath()+"/main.trd"; // 시작페이지로 이동한다. 
 				}
 			} catch(SQLException e) {
 				e.printStackTrace();
                 
-				message = "회원가입 실패ㅜㅜ";
+				message = "회원가입을 재시도 하십시오.";
 				loc = "javascript:history.back()";  // 자바스크립트를 이용한 이전페이지로 이동하는 것. 
 			}
 			
