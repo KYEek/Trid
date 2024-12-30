@@ -17,6 +17,9 @@ public class BoardDTO {
     private int question_status;	// 답변상태 (답변 중 or 완료)
     
     private String question_registerday;	// 등록일자
+  
+    
+    private String memberName; // 작성자
 
     
     ////////////////////////////////////////////////////////////////////////////////
@@ -93,5 +96,13 @@ public class BoardDTO {
 	public void setQuestion_registerday(String question_registerday) {
 		this.question_registerday = question_registerday;
 	}
-    
+
+	public String getMemberName() {
+		return memberName;
+	}
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+	
 }

@@ -1,57 +1,83 @@
-#admin_side_navigation {
-	width: 300px;
+@font-face {
+	font-family: "Pretendard";
+	font-style: normal;
+	font-weight: 400;
+	src: url("../../fonts/Pretendard/Pretendard-Medium.ttf") format("truetype");
+}
+
+/* 사이드 네비게이션 최상위 컨테이너 */
+div#admin_side_navigation {
+	width: 250px;
+	min-width: 200px;
+	padding: 30px 0;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
-	border: solid 1px;
-	padding: 30px 10px;
+	background-color: #0a111a;
+	color: #918f9b;
+	font-family: "Pretendard";
 }
 
-#logo_container {
+/* 로고 컨테이너 */
+div#logo_container {
+	margin-bottom: 30px;
 	display: flex;
-	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-}
-
-/* 로그아웃 버튼 */
-button#logout_button {
-	padding: 5px;
-	background-color: transparent;
-	border: solid 1px;
-}
-
-button#logout_button:hover {
-	background-color: black;
-	color: white;
 }
 
 /* 관리자 메뉴 버튼을 감싸는 컨테이너 */
 div#admin_menu_container {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
-	align-items: center;
+	align-items: flex-start;
 	width: 100%;
-	height: 300px;
+}
+
+/* 관리자 메뉴 제목 span */
+div#admin_menu_container > span {
+	margin-bottom: 10px;
+	font-size: 12pt;
 }
 
 /* 관리자 메뉴 앵커 */
-div#admin_menu_container > a {
+a.menu {
+	margin: 20px 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	color: inherit;
+	text-decoration: none;
+}
+
+a.menu:hover,
+button#logout_button:hover {
+	filter: brightness(0) invert(1);
+	transition: 0.2s ease;
 	text-decoration: none;
 }
 
 /* 관리자 메뉴 버튼 */
 span.admin_menu {
-	font-size: 16pt;
-	padding: 5px;
-	border: solid 1px;
+	font-size: 13pt;
+	margin-left: 5px;
 }
 
-span.admin_menu:hover {
-	background-color: black;
-	color: white;
-	cursor: pointer;
+/* 로그아웃 폼 */
+form#logout_frm {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 13pt;
+}
+
+/* 로그아웃 버튼 */
+button#logout_button {
+	padding: 5px;
+	margin-left: 10px;
+	color: #918f9b;
+	background-color: transparent;
+	border: none;
 }

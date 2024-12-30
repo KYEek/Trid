@@ -45,3 +45,14 @@ $(document).ready(function () {
 	});
 
 });
+
+function addColorItem(colorName, colorCode) {
+	const html = `<div class="color_item">
+						<span>색상명 : ${colorName}</span>
+						<span>색상코드 : ${colorCode}</span>
+						<div style="border:solid 1px; width:30px; height:30px; background-color : ${colorCode};" ></div>
+						<button type="button" class="delete_color_button">색상 제거</button>
+					</div>`;
+
+	$("div#color_box").append(html);
+}

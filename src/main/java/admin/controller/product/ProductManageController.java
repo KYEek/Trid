@@ -14,6 +14,7 @@ import product.domain.CategoryDTO;
 import product.domain.ProductDTO;
 import product.model.ProductDAO;
 import product.model.ProductDAO_imple;
+import util.StringUtil;
 
 /*
  * 관리자 상품 리스트 조회 컨트롤러
@@ -52,13 +53,23 @@ public class ProductManageController extends AbstractController {
 			
 			String sortCategory = request.getParameter("sortCategory");
 			
-			Map<String, Object> paraMap = new HashMap<>();
+			String priceMin = request.getParameter("priceMin");
 			
+			String priceMax = request.getParameter("priceMax");
+			
+			String dateMin = request.getParameter("dateMin");
+			
+			String dateMax = request.getParameter("dateMax");
+			
+			Map<String, Object> paraMap = new HashMap<>();
 		
-				paraMap.put("searchWord", searchWord);
-				paraMap.put("categoryNo", categoryNo);
-				paraMap.put("sortCategory", sortCategory);
-		
+			paraMap.put("searchWord", searchWord);
+			paraMap.put("categoryNo", categoryNo);
+			paraMap.put("sortCategory", sortCategory);
+			paraMap.put("priceMin", priceMin);
+			paraMap.put("priceMax", priceMax);
+			paraMap.put("dateMin", dateMin);
+			paraMap.put("dateMax", dateMax);
 			
 			// 상품 리스트 가져오기
 			try {
@@ -90,8 +101,10 @@ public class ProductManageController extends AbstractController {
 				request.setAttribute("searchWord", searchWord);
 				request.setAttribute("categoryNo", categoryNo);
 				request.setAttribute("sortCategory", sortCategory);
-				
-				
+				request.setAttribute("priceMin", priceMin);
+				request.setAttribute("priceMax", priceMax);
+				request.setAttribute("dateMin", dateMin);
+				request.setAttribute("dateMax", dateMax);
 				
 				super.setRedirect(false);
 				super.setViewPage(Constants.ADMIN_PRODUCT_MANAGE_PAGE);

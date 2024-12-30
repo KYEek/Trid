@@ -80,7 +80,7 @@ public class ProductDAO_imple implements ProductDAO {
 			
 			
 			////// 상품 테이블 PK를 미리 추출 //////
-			String sql = " select pk_category_no_seq.nextval as pk_product_no from dual ";
+			String sql = " select pk_product_no_seq.nextval as pk_product_no from dual ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -250,6 +250,14 @@ public class ProductDAO_imple implements ProductDAO {
 		
 		String categoryNo = (String)paraMap.get("categoryNo");
 		
+		String priceMin = (String)paraMap.get("priceMin");
+		
+		String priceMax = (String)paraMap.get("priceMax");
+		
+		String dateMin = (String)paraMap.get("dateMin");
+		
+		String dateMax = (String)paraMap.get("dateMax");
+		
 		int count = 0;
 		
 		try {
@@ -259,22 +267,72 @@ public class ProductDAO_imple implements ProductDAO {
 						+ " from tbl_product p join tbl_category c on p.fk_category_no = c.pk_category_no "
 						+ " where 1=1 ";
 			
-			if(searchWord != null && !searchWord.isBlank()) {
+			if(!StringUtil.isBlank(searchWord)) {
 				sql += " and product_name like '%' || ? || '%' ";
 			}
 			
-			if(categoryNo != null && !categoryNo.isBlank()) {
+			if(!StringUtil.isBlank(categoryNo)) {
 				sql += " and pk_category_no = ? ";
+			}
+			
+			if(!StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				sql += " and product_price between ? and ? ";
+			}
+			
+			if(StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				sql += " and product_price <= ? ";
+			}
+			
+			if(!StringUtil.isBlank(priceMin) && StringUtil.isBlank(priceMax)) {
+				sql += " and product_price >= ? ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and product_registerday between to_date(?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and product_registerday <= to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				sql += " and product_registerday >= to_date(?, 'yyyy-mm-dd') ";
 			}
 
 			pstmt = conn.prepareStatement(sql);
 			
-			if(searchWord != null && !searchWord.isBlank()) {
+			if(!StringUtil.isBlank(searchWord)) {
 				pstmt.setString(++count, searchWord);
 			}
 			
-			if(categoryNo != null && !categoryNo.isBlank()) {
+			if(!StringUtil.isBlank(categoryNo)) {
 				pstmt.setString(++count, categoryNo);
+			}
+			
+			if(!StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				pstmt.setString(++count, priceMin);
+				pstmt.setString(++count, priceMax);
+			}
+			
+			if(StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				pstmt.setString(++count, priceMax);
+			}
+			
+			if(!StringUtil.isBlank(priceMin) && StringUtil.isBlank(priceMax)) {
+				pstmt.setString(++count, priceMin);
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
 			}
 			
 			rs = pstmt.executeQuery();
@@ -306,6 +364,14 @@ public class ProductDAO_imple implements ProductDAO {
 		
 		String sortCategory = (String)paraMap.get("sortCategory") == null ? "" : (String)paraMap.get("sortCategory");
 		
+		String priceMin = (String)paraMap.get("priceMin");
+		
+		String priceMax = (String)paraMap.get("priceMax");
+		
+		String dateMin = (String)paraMap.get("dateMin");
+		
+		String dateMax = (String)paraMap.get("dateMax");
+		
 		try {
 			conn = ds.getConnection();
 
@@ -322,46 +388,92 @@ public class ProductDAO_imple implements ProductDAO {
 								+ " c.pk_category_no, c.category_name, c.category_type, c.category_gender "
 								+ " from tbl_product p join tbl_category c on c.pk_category_no = p.fk_category_no ";
 			
-			if(searchWord != null && !searchWord.isBlank()) {
+			if(!StringUtil.isBlank(searchWord)) {
 				sql += " and product_name like '%' || ? || '%' ";
 			}
 			
-			if(categoryNo != null && !categoryNo.isBlank()) {
+			if(!StringUtil.isBlank(categoryNo)) {
 				sql += " and pk_category_no = ? ";
 			}
 			
-		switch(sortCategory) {
-			case "0" : {sql += " order by p.product_registerday desc "; break;}
-			case "1" : {sql += " order by p.product_registerday "; break;}
-			case "2" : {sql += " order by p.product_price desc "; break;}
-			case "3" : {sql += " order by p.product_price "; break;}
-			default : {sql += " order by p.product_registerday desc "; break;}
-		}
+			if(!StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				sql += " and product_price between ? and ? ";
+			}
+			
+			if(StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				sql += " and product_price <= ? ";
+			}
+			
+			if(!StringUtil.isBlank(priceMin) && StringUtil.isBlank(priceMax)) {
+				sql += " and product_price >= ? ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and product_registerday between to_date(?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				System.out.println(dateMin);
+				sql += " and product_registerday <= to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				sql += " and product_registerday >= to_date(?, 'yyyy-mm-dd') ";
+			}
+			
+			switch(sortCategory) {
+				case "0" : {sql += " order by p.product_registerday desc "; break;}
+				case "1" : {sql += " order by p.product_registerday "; break;}
+				case "2" : {sql += " order by p.product_price desc "; break;}
+				case "3" : {sql += " order by p.product_price "; break;}
+				default : {sql += " order by p.product_registerday desc "; break;}
+			}
 				
-			
-			
 			sql += " ) A "
 					+ " ) "
 					+ " SELECT * FROM T  WHERE T.RN between ? and ? ";
 			
-
 			pstmt = conn.prepareStatement(sql);
 			
 			int count = 0;
 			
-			if(searchWord != null && !searchWord.isBlank()) {
+			if(!StringUtil.isBlank(searchWord)) {
 				pstmt.setString(++count, searchWord);
 			}
 			
-			if(categoryNo != null && !categoryNo.isBlank()) {
+			if(!StringUtil.isBlank(categoryNo)) {
 				pstmt.setString(++count, categoryNo);
+			}
+			
+			if(!StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				pstmt.setString(++count, priceMin);
+				pstmt.setString(++count, priceMax);
+			}
+			
+			if(StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				pstmt.setString(++count, priceMax);
+			}
+			
+			if(!StringUtil.isBlank(priceMin) && StringUtil.isBlank(priceMax)) {
+				pstmt.setString(++count, priceMin);
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
 			}
 			
 			pstmt.setInt(++count, pagingDTO.getFirstRow()); // 현재 페이지의 첫 레코드의 번호
 			pstmt.setInt(++count, pagingDTO.getLastRow()); // 현재 페이지의 마지막 레코드의 번호
 		
-			
-
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -389,8 +501,6 @@ public class ProductDAO_imple implements ProductDAO {
 				productList.add(productDTO);
 		
 			}
-			
-			System.out.println(sql);
 	
 		} finally {
 			close();
