@@ -27,7 +27,7 @@
 		<!-- 검색창 -->
 		<div class="header-search-container">
 			<div class="search-bar">
-				<a class="search-bar-link">검색</a>
+				<a class="search-bar-link" href="${pageContext.request.contextPath}/category/search.trd">검색</a>
 			</div>
 		</div>
 

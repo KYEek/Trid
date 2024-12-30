@@ -1,0 +1,105 @@
+
+/* 카테고리바 CSS */
+div#choose_color_box button {
+    width: 30px;
+    height: 30px;
+    border: none;
+
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+div#choose_color_box button:hover{
+    border: solid 5px black;
+}
+
+button.choose_color_active {
+    border: solid 2px black;
+    /* background-color: red; */
+}
+
+button.color_active {
+    box-shadow: none;
+    width: 30px;
+}
+
+button.logo {
+	border: none;
+	float: right;
+	background-color:transparent;
+}
+
+button#2box {
+	margin-right: 3%;
+} 
+
+button#choose_color_button,
+button#choose_price_button,
+button#apply_filter_button {
+	width: 60px;
+	height: 30px;
+	background: transparent;
+	margin: 1% 0 1% 0.5%;
+	border: solid 1px black;
+}
+
+button#choose_color_button {
+	margin-left: 8%
+}
+
+/* 상품 리스트 페이지 CSS */
+
+div.search_box {
+    text-align: center;
+}
+
+/* 검색창 */
+input#product_name {
+    border-width: 0 0 1px;
+    outline: none;
+    text-align: center;
+    width: 400px;
+    font-size: 20px;
+
+    margin:0 auto;
+}
+
+/* 추천아이템 텍스트 */
+h4 {
+    margin: 1.2% 1.2%;
+}
+
+/* 상품사진+상품명 감싸는 div */
+div#container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+
+    width: 100%;
+}
+
+/* 상품사진 div */
+div#container div#photo {
+    height: 410px;
+}
+
+/* 상품명 div */
+div#container div#productInfo {
+    height: 80px;
+}
+
+div#container div#photo,
+div#container div#productInfo {
+    border: solid 1px black;
+}
+
+div#name,
+div#price {
+	height: 40px;
+}
+
+/* 스크롤 전체 가리기 */
+body{
+    -ms-overflow-style: none;
+    }
+   ::-webkit-scrollbar {
+     display: none;
+}

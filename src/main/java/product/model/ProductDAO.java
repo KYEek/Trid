@@ -39,5 +39,16 @@ public interface ProductDAO {
 	
 	// 관리자 상품 수정 시 이미지 추가
 	int insertProductImage(List<ImageDTO> imageList, int productNo) throws SQLException;
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////////
+	
+	/////////////////////////////////// 카테고리 상품 ///////////////////////////////////////
+	
+	// 카테고리 선택시 상품 리스트 뽑아오는 메소드
+	public List<ProductDTO> selectProductByCategory(Map<String, String> paraMap) throws SQLException;
+	
+	// 검색어 입력시 검색어가 상품명에 포함된 상품 리스트 뽑아오는 메소드
+	public List<ProductDTO> searchProduct(Map<String, String> paraMap) throws SQLException;
 
 }
