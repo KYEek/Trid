@@ -82,7 +82,7 @@
           </li>
           <li>
             <label for="profile"
-              ><button type="button" name="profile" class="li_button">
+              ><button type="button" name="profile" class="li_button" >
                 <span>프로필</span
                 ><svg
                   xmlns="http://www.w3.org/2000/svg"
