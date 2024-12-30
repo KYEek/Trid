@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import board.domain.BoardDTO;
 import common.domain.PagingDTO;
 import product.domain.CategoryDTO;
 
@@ -1231,5 +1233,86 @@ public class ProductDAO_imple implements ProductDAO {
 			
 			return searchProductList;
 		}// end of public List<ProductDTO> searchProduct(Map<String, String> paraMap) throws SQLException ---------------------------
+		
+		
+		
+		// 사용자 추천 상품 리스트 뽑기
+		@Override
+		public List<Map<String, String>> selectRecommendProductList(String productNo) throws SQLException {
+			
+			List<Map<String, String>> recommendProductMapList = new ArrayList<>();
+			
+			try {
+				conn = ds.getConnection();
+				
+				String sql  = "WITH FIRST_IMAGE AS ( "
+							+ "    SELECT "
+							+ "        fk_product_no, "
+							+ "        product_image_path, "
+							+ "        ROW_NUMBER() OVER (PARTITION BY fk_product_no ORDER BY pk_product_image_no ASC) AS row_num "
+							+ "    FROM tbl_product_image "
+							+ " ) "
+							+ " SELECT "
+							+ "    P.pk_product_no AS product_no, "
+							+ "    P.product_name, "
+							+ "    FI.product_image_path AS image_path "
+							+ " FROM "
+							+ "    tbl_product P "
+							+ " JOIN "
+							+ "    tbl_color C ON P.pk_product_no = C.fk_product_no "
+							+ " JOIN "
+							+ "    tbl_category CAT ON P.fk_category_no = CAT.pk_category_no "
+							+ " JOIN "
+							+ "    tbl_product RECOMMEND_PRODUCT ON RECOMMEND_PRODUCT.pk_product_no = ? "
+							+ " JOIN "
+							+ "    tbl_category RECOMMEND_CATEGORY ON RECOMMEND_PRODUCT.fk_category_no = RECOMMEND_CATEGORY.pk_category_no "
+							+ " LEFT JOIN "
+							+ "    FIRST_IMAGE FI ON FI.fk_product_no = P.pk_product_no AND FI.row_num = 1 "
+							+ " WHERE "
+							+ "    CAT.pk_category_no = RECOMMEND_CATEGORY.pk_category_no "
+							+ "    AND CAT.category_gender = RECOMMEND_CATEGORY.category_gender "
+							+ "    AND C.color_name IN ( "
+							+ "        SELECT color_name "
+							+ "        FROM tbl_color "
+							+ "        WHERE fk_product_no = RECOMMEND_PRODUCT.pk_product_no "
+							+ "    ) "
+							+ "    AND P.pk_product_no != RECOMMEND_PRODUCT.pk_product_no "
+							+ "    AND ROWNUM <= 4 "
+							+ " ORDER BY "
+							+ "    DBMS_RANDOM.VALUE ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, productNo);
+				
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					
+					Map<String, String> recommendProductMap = new HashMap<String, String>();
+					
+					recommendProductMap.put("product_no", String.valueOf(rs.getString("product_no")));
+					recommendProductMap.put("product_name", rs.getString("product_name"));
+					recommendProductMap.put("image_path", rs.getString("image_path"));
+					
+					System.out.println(recommendProductMap.get("product_name"));
+					System.out.println(recommendProductMap.get("image_path"));
+					
+					
+					recommendProductMapList.add(recommendProductMap);
+				}
+				
+				
+			} finally {
+				close();
+			}
+			
+			
+			return recommendProductMapList;
+		}
 
+	
+	
+		
+		
 }
