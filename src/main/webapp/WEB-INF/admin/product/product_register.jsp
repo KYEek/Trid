@@ -26,7 +26,7 @@
 
 					<div id="product_register_container">
 
-						<%@ include file="side_navigation.jsp" %>
+						<%@ include file="../side_navigation.jsp" %>
 
 							<div id="main_container">
 
@@ -138,7 +138,7 @@
 
 										<div id="image_register_container">
 											<div id="image_container">
-												<%@ include file="../image_carousel_register.jsp" %>
+												<%@ include file="../../image_carousel_register.jsp" %>
 													<div id="image_frm_container">
 														<input type="hidden" name="fileName" />
 														<button type="button" id="file_upload_button">이미지 추가</button>

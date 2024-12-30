@@ -18,21 +18,37 @@
 <c:set var="adminName" value="${sessionScope.adminName}" />
 
 <div id="admin_side_navigation">
-	<%-- 로고 --%>
-	<div id="logo_container">
-		<img src="${ctxPath}/images/logo/logo.svg" width="200" /> <img src="${ctxPath}/images/logo/admin_logo.svg" width="100" />
+	<div>
+		<%-- 로고 --%>
+		<div id="logo_container">
+			<img src="${ctxPath}/images/logo/logo_white.svg" width="120" /> 
+		</div>
+	
+		<%-- 관리자 메뉴 --%>
+		<div id="admin_menu_container">
+			<span>Admin Menu</span>
+			<a class="menu" href="productManage.trd">
+				<img src="${ctxPath}/images/icon/product.svg" width="30" />
+				<span class="admin_menu">Product Manage</span>
+			</a> 
+			<a class="menu" href="orderManage.trd">
+				<img src="${ctxPath}/images/icon/cart.svg" width="30" />
+				<span class="admin_menu">Order Manage</span>
+			</a> 
+			<a class="menu" href="#">
+				<img src="${ctxPath}/images/icon/user.svg" width="30" />
+				<span class="admin_menu">User Manage</span>
+			</a> 
+			<a class="menu" href="boardManage.trd">
+				<img src="${ctxPath}/images/icon/message.svg" width="30" />
+				<span class="admin_menu">Q&A Manage</span>
+			</a>
+		</div>
 	</div>
 
-	<%-- 관리자 메뉴 --%>
-	<div id="admin_menu_container">
-		<a href="productManage.trd"><span class="admin_menu">상품 관리</span></a> 
-		<a href="#"><span class="admin_menu">주문 관리</span></a>
-		<a href="#"><span class="admin_menu">사용자 관리</span></a> 
-		<a href="#"><span class="admin_menu">질문 관리</span></a>
-	</div>
 
 	<%-- 로그아웃 --%>
-	<form name="logout_frm">
+	<form id="logout_frm" name="logout_frm">
 		<span id="profile">${adminName} 님</span>
 		<button type="button" id="logout_button">로그아웃</button>
 	</form>
