@@ -1,0 +1,107 @@
+
+/* 전체를 감싸는 article */
+article#search_contents {
+	top: 150px;
+}
+
+/* 무엇을 찾고 계신가요? CSS */
+div#coment {
+	text-align: center;
+	margin: 3% 0 1% 0;
+}
+
+div#coment span {
+	font-size: 16pt;
+}
+
+/* 추천 상품 box CSS */
+div#header_menu {
+	text-align: center;
+}
+
+div#header_menu button {
+	border: none;
+	display: inline-block;
+	text-align: center;
+	color: black;
+	background: transparent;
+}
+
+div#header_menu button div {
+	border: 2px solid #EEE;
+	font-size: 10pt;
+	padding: 4px 6px 4px 6px;
+	width: auto;
+	
+}
+
+
+/* 검색바 감싸는 div */
+div#search_box {
+    text-align: center;
+}
+
+/* 검색바 */
+input#search_bar {
+    border-width: 0 0 1px;
+    border: 1px solid rgba(238, 238, 238, .5);
+    outline: none;
+    text-align: center;
+    width: 450px;
+    font-size: 18px;
+
+    margin: 6% 0 6% 0;
+    margin-bottom: 4%;
+}
+
+/* 클릭(포커스) 시 border 제거 */
+input#search_bar:focus {
+    border: none;
+}
+
+/* 추천아이템 텍스트 */
+h6 {
+	font-weight: bold;
+    margin: 1.2% 1.2%;
+}
+
+
+/* 상품 리스트 페이지 CSS 시작 */
+
+/* 상품사진+상품명 감싸는 div */
+div#container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+
+    width: 100%;
+}
+
+/* 상품사진 div */
+div#container div#photo {
+    height: 410px;
+}
+
+/* 상품명 div */
+div#container div#productInfo {
+    height: 80px;
+}
+
+div#container div#photo,
+div#container div#productInfo {
+    border: solid 1px black;
+}
+
+div#name,
+div#price {
+	height: 40px;
+}
+
+/* 스크롤 전체 가리기 */
+body{
+    -ms-overflow-style: none;
+    }
+   ::-webkit-scrollbar {
+     display: none;
+}
+
+/* 상품 리스트 페이지 CSS 끝 */

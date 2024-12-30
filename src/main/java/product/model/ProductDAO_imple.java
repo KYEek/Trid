@@ -20,6 +20,7 @@ import product.domain.ColorDTO;
 import product.domain.ImageDTO;
 import product.domain.ProductDTO;
 import product.domain.ProductDetailDTO;
+import util.StringUtil;
 
 public class ProductDAO_imple implements ProductDAO {
 	
@@ -927,5 +928,198 @@ public class ProductDAO_imple implements ProductDAO {
 		
 		return productDTO;
 	}// end of 사용자 상품 상세 조회 -----
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////////
+	
+	/////////////////////////////////// 카테고리 상품 ///////////////////////////////////////
+	
+	
+	// DB 에서 상품 리스트 뽑아오는 메소드
+		public List<ProductDTO> selectProductByCategory(Map<String, String> paraMap) throws SQLException {
+			
+		    List<ProductDTO> productList = new ArrayList<>();
+
+		    try {
+		        conn = ds.getConnection();
+
+		        StringBuilder sql = new StringBuilder(
+					                " SELECT p.pk_product_no, p.product_name, p.product_price, "
+					              + "        i.product_image_path, i.pk_product_image_no, "
+					              + " 		 c.pk_category_no, c.category_type, "
+					              + "        cr.color_name "
+					              + "        FROM tbl_product p "
+					              + "        JOIN tbl_category c "
+					              + "        ON p.fk_category_no = c.pk_category_no "
+					              + "        JOIN tbl_color cr "
+					              + "        ON p.pk_product_no = cr.fk_product_no "
+					              + "        JOIN tbl_product_image i "
+					              + "        ON p.pk_product_no = i.fk_product_no "
+					              + "  WHERE product_status_code = 1 "
+					              + "        AND i.pk_product_image_no = ( "
+					              + "        SELECT MIN(pk_product_image_no) "
+					              + "        FROM tbl_product_image "
+					              + "  WHERE fk_product_no = p.pk_product_no "
+					              + "  ) "
+		        );
+
+		        // 필터링 조건 추가
+		        if (!StringUtil.isBlank(paraMap.get("choosePrice"))) {
+		            sql.append(" AND p.product_price <= ? "); // 선택 가격 이하 상품만 가져오기
+		        }
+		        if (!StringUtil.isBlank(paraMap.get("chooseColor"))) {
+		            String[] colors = paraMap.get("chooseColor").split(",");
+		            if (colors.length > 0) {
+		                sql.append(" AND cr.color_name IN (");
+		                for (int i = 0; i < colors.length; i++) {
+		                    sql.append("?");
+		                    if (i < colors.length - 1) {
+		                        sql.append(", ");
+		                    }
+		                }
+		                sql.append(")");
+		            }
+		        }
+		        if (!StringUtil.isBlank(paraMap.get("chooseCategory"))) {
+		            sql.append(" and c.pk_category_no = ? ");
+		        }
+		        if (!StringUtil.isBlank(paraMap.get("chooseType"))) {
+		            sql.append(" and c.category_type = ? ");
+		        }
+
+		        pstmt = conn.prepareStatement(sql.toString());
+
+			     // PreparedStatement에 필터 값을 넣어줌
+			     int index = 1; // 인덱스는 1부터 시작
+			     if (!StringUtil.isBlank(paraMap.get("choosePrice"))) {
+			         pstmt.setInt(index++, Integer.parseInt(paraMap.get("choosePrice")));
+			     }
+			     if (!StringUtil.isBlank(paraMap.get("chooseColor"))) {
+			         String[] colors = paraMap.get("chooseColor").split(",");
+			         for (String color : colors) {
+			             pstmt.setString(index++, color.trim());
+			         }
+			     }
+			     if (!StringUtil.isBlank(paraMap.get("chooseCategory"))) {
+			         pstmt.setString(index++, paraMap.get("chooseCategory"));
+			     }
+			     if (!StringUtil.isBlank(paraMap.get("chooseType"))) {
+			         pstmt.setString(index++, paraMap.get("chooseType"));
+			     }
+		        
+		        if (!StringUtil.isBlank(paraMap.get("choosePrice"))) {
+		            System.out.println("choosePrice: " + paraMap.get("choosePrice"));
+		        }
+		        if (!StringUtil.isBlank(paraMap.get("chooseColor"))) {
+		            System.out.println("chooseColor: " + paraMap.get("chooseColor"));
+		        }
+
+		        rs = pstmt.executeQuery();
+
+		        // 결과를 ProductDTO 리스트로 매핑
+		        while (rs.next()) {
+		            ProductDTO product = new ProductDTO();
+		            
+		            product.setProductNo(rs.getInt("pk_product_no"));
+		            product.setProductName(rs.getString("product_name"));
+		            product.setPrice(rs.getInt("product_price"));
+		            
+	                // 이미지 정보 매핑
+	                List<ImageDTO> imageList = new ArrayList<>(); // 이미지 정보를 ProductDTO의 이미지 리스트에 추가
+	                
+	                ImageDTO image = new ImageDTO();
+	                image.setPkProductImageNo(rs.getInt("pk_product_image_no"));
+	                image.setImagePath(rs.getString("product_image_path"));
+	                
+	                imageList.add(image);  // 이미지 리스트에 이미지 하나씩 쌓아주기
+	                
+	                product.setImageList(imageList);
+	                
+	                productList.add(product);
+		        }
+
+		    } finally {
+		        close();
+		    }
+
+		    // 조건에 따라 조회된 상품 리스트를 출력
+		    System.out.println("조회된 상품 수: " + productList.size());
+		    for (ProductDTO product : productList) {
+		        System.out.println(product);
+		    }
+		    
+		    return productList;
+		}// end of public List<ProductDTO> categorySelect(Map<String, String> paraMap) throws SQLException ------------------------
+
+
+		// 검색어 입력시 검색어가 상품명에 포함된 상품 리스트 뽑아오는 메소드
+		@Override
+		public List<ProductDTO> searchProduct(Map<String, String> paraMap) throws SQLException {
+			
+			List<ProductDTO> searchProductList = new ArrayList<>();
+			
+			try {
+				conn = ds.getConnection();
+				
+				String sql = " SELECT  p.pk_product_no, p.product_name, p.product_price,"
+						   + "         i.product_image_path, i.pk_product_image_no, "
+						   + "         c.category_gender "
+						   + " FROM    tbl_product p "
+						   + "         JOIN tbl_category c "
+						   + "         ON p.fk_category_no = c.pk_category_no "
+						   + "         JOIN tbl_product_image i "
+						   + "         ON p.pk_product_no = i.fk_product_no "
+						   + " WHERE   product_status_code = 1 ";
+				
+		        // 검색어 필터링
+		        if (paraMap.get("search_word") != null && !paraMap.get("search_word").trim().isEmpty()) {
+		            sql += " AND p.product_name LIKE ? ";
+		            System.out.println("검색어 조건: " + paraMap.get("search_word"));
+		        } else {
+		            System.out.println("검색어가 비어 있음");
+		        }
+				sql += " ORDER BY  p.pk_product_no ASC";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				if (paraMap.get("search_word") != null && !paraMap.get("search_word").trim().isEmpty()) {
+				    pstmt.setString(1, "%" + paraMap.get("search_word") + "%");
+				    
+				    System.out.println("SQL 쿼리: " + pstmt.toString()); // 확인용 디버깅 메시지
+				}
+				
+				rs = pstmt.executeQuery();
+				
+		         while (rs.next()) {
+
+		        	 ProductDTO product = new ProductDTO();
+
+		        	 product.setProductNo(rs.getInt("pk_product_no"));
+		        	 product.setProductName(rs.getString("product_name"));
+		        	 product.setPrice(rs.getInt("product_price"));
+
+
+	                 // 이미지 정보 매핑
+	                 List<ImageDTO> imageList = new ArrayList<>(); // 이미지 정보를 ProductDTO의 이미지 리스트에 추가
+	                
+	                 ImageDTO image = new ImageDTO();
+	                 image.setPkProductImageNo(rs.getInt("pk_product_image_no"));
+	                 image.setImagePath(rs.getString("product_image_path"));
+	                
+	                 imageList.add(image);  // 이미지 리스트에 이미지 하나씩 쌓아주기
+	                
+	                 product.setImageList(imageList);
+	                
+		             searchProductList.add(product);
+
+		          } // end of while -------------------
+				
+				
+			} finally {
+				close();
+		    }
+			
+			return searchProductList;
+		}// end of public List<ProductDTO> searchProduct(Map<String, String> paraMap) throws SQLException ---------------------------
 
 }
