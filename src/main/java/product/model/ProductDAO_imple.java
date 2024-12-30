@@ -21,7 +21,7 @@ import product.domain.ImageDTO;
 import product.domain.ProductDTO;
 import product.domain.ProductDetailDTO;
 
-public class ProductDAO_imple implements ProductDAO{
+public class ProductDAO_imple implements ProductDAO {
 	
 	private DataSource ds; // DataSource ds 는 아파치톰캣이 제공하는 DBCP(DB Connection Pool)이다.
 	
@@ -559,6 +559,7 @@ public class ProductDAO_imple implements ProductDAO{
 				// ProductDTO에 imageDTO 리스트 저장
 				productDTO.setImageList(imageList);
 				
+				
 			}
 			else {
 				productDTO = null;
@@ -606,13 +607,144 @@ public class ProductDAO_imple implements ProductDAO{
 	 */
 	@Override
 	public int updateProduct(ProductDTO productDTO) throws SQLException {
+		int result = 0;
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			conn.setAutoCommit(false);
+			
+			String sql 	= " update tbl_product set product_name = ?, product_explanation = ?, product_price = ? "
+						+ " where pk_product_no = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, productDTO.getProductName());
+			pstmt.setString(2, productDTO.getExplanation());
+			pstmt.setInt(3, productDTO.getPrice());
+			pstmt.setInt(4, productDTO.getProductNo());
+			
+			if(pstmt.executeUpdate() != 1) {
+				System.out.println("tbl_product update failed");
+				conn.rollback();
+				return 0;
+			}
+			
+			for(ProductDetailDTO productDetailDTO : productDTO.getProductDetailList()) {
+				sql = " update tbl_product_detail set product_inventory = ? "
+					+ " where pk_product_detail_no = ? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setInt(1, productDetailDTO.getInventory());
+				pstmt.setInt(2, productDetailDTO.getPkProductDetailNo());
+				
+				if(pstmt.executeUpdate() != 1) {
+					System.out.println("tbl_product_detail update failed");
+					conn.rollback();
+					return 0;
+				}
+				
+			}
+			
+			for (ImageDTO imageDTO : productDTO.getImageList()) {
+				sql		= " insert into tbl_product_image( pk_product_image_no, fk_product_no, product_image_path, " 
+						+ " product_image_name, product_image_registerday ) "
+						+ " values( pk_product_image_no_seq.nextval, ?, ?, ?, sysdate ) ";
 
+				pstmt = conn.prepareStatement(sql);
+
+				pstmt.setInt(1, productDTO.getProductNo()); // 상품 일련번호
+
+				pstmt.setString(2, imageDTO.getImagePath()); // 이미지 경로
+				pstmt.setString(3, imageDTO.getImageName()); // 이미지 명
+
+				// tbl_product_image의 insert 실패 시
+				if (pstmt.executeUpdate() != 1) {
+					System.out.println("tbl_product_image insert failed");
+					conn.rollback(); // 트랜잭션 롤백
+					return 0;
+				}
+
+			}
+			
+			conn.commit();
+			
+			result = 1;
+			
+		} finally {
+			close();
+		}
+
+		return result;
+	}
+
+	@Override
+	public int deleteProductImage(String pkProductImageNo) throws SQLException {
+		int result = 0;
 		
+		try {
+
+			conn = ds.getConnection();
+
+				String sql 	= " delete from tbl_product_image where pk_product_image_no = ? ";
+
+				pstmt = conn.prepareStatement(sql);
+
+				pstmt.setString(1, pkProductImageNo); // 상품 이미지 일련번호
+
+				result = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
 		
-		return 0;
+		return result;
+	}
+
+	@Override
+	public int insertProductImage(List<ImageDTO> imageList, int productNo) throws SQLException {
+		String sql = "";
+
+		try {
+
+			conn = ds.getConnection();
+
+			conn.setAutoCommit(false);
+
+			// 상품의 모든 이미지 정보를 저장
+			for (ImageDTO imageDTO : imageList) {
+				sql		= " insert into tbl_product_image( pk_product_image_no, fk_product_no, product_image_path, " 
+						+ " product_image_name, product_image_registerday ) "
+						+ " values( pk_product_image_no_seq.nextval, ?, ?, ?, sysdate ) ";
+
+				pstmt = conn.prepareStatement(sql);
+
+				pstmt.setInt(1, productNo); // 상품 일련번호
+
+				pstmt.setString(2, imageDTO.getImagePath()); // 이미지 경로
+				pstmt.setString(3, imageDTO.getImageName()); // 이미지 명
+
+				// tbl_product_image의 insert 실패 시
+				if (pstmt.executeUpdate() != 1) {
+					System.out.println("tbl_product_image insert failed");
+					conn.rollback(); // 트랜잭션 롤백
+					return 0;
+				}
+
+			}
+
+			conn.commit();
+			
+			return 1;
+			
+		} finally {
+			close();
+		}
 
 	}
-	
+
 	
 	// 사용자 상품 상세 조회
 	@Override
@@ -796,6 +928,4 @@ public class ProductDAO_imple implements ProductDAO{
 		return productDTO;
 	}// end of 사용자 상품 상세 조회 -----
 
-	
-	
 }
