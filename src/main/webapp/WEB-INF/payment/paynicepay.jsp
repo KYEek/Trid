@@ -51,52 +51,7 @@
     <!-- <link rel="stylesheet" href="styles.css"> -->
 	<!--결제 api -->
 	<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
-	<script>
-	
-	
-	async function requestPayment() {
-		  const response = await PortOne.requestPayment({
-			// Store ID 설정
-			  storeId: "store-96b0d25f-1d8d-4239-a08e-6efbda0c3e29",
-			  // 채널 키 설정
-			  channelKey: "channel-key-abcd395e-b82e-4b41-be89-02016c0d0995",
-			  paymentId: "payment-"+crypto.randomUUID(),
-			  orderName: "${requestScope.member_name}님의 결제",
-			  totalAmount: 100,
-			  currency: "CURRENCY_KRW",
-			  payMethod: "CARD",
-		  });
-
-		  if (response.code !== undefined) {
-		    // 오류 발생
-		    alert(response.message);
-		    return location.href= sessionStorage.getItem('backURL');
-	 		
-		  }
-
-		  // /payment/complete 엔드포인트를 구현해야 합니다. 다음 목차에서 설명합니다.
-		  const notified = await fetch("complete.trd", {
-		    method: "POST",
-		    headers: { "Content-Type": "application/json" },
-		    // paymentId와 주문 정보를 서버에 전달합니다
-		    body: JSON.stringify({
-		      paymentId: response.paymentId,
-		      // 주문 정보...
-		    }),
-		  }).then(data =>{
-			document.querySelector("div#payment_complete").style.display="block";
-			return true;
-		  }).catch (message =>{ 
-				console.error(message);
-				return false
-			});
-	}
-	document.addEventListener("DOMContentLoaded", function() {
-		if(requestPayment()) {
-			document.querySelector("div#payment_loading_container").style.display ="none";
-		}
-	});
-	</script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/payment/paynicepay.js"></script>
   </head>
   <body>
     <!-- 결제 완료 글자자 -->
