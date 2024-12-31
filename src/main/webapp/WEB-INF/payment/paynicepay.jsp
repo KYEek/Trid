@@ -80,13 +80,20 @@
 		    headers: { "Content-Type": "application/json" },
 		    // paymentId와 주문 정보를 서버에 전달합니다
 		    body: JSON.stringify({
-		      paymentId: paymentId,
+		      paymentId: response.paymentId,
 		      // 주문 정보...
 		    }),
-		  });
-		}
+		  }).then(data =>{
+			return true;
+		  }).catch (message =>{ 
+				console.error(message);
+				return false
+			});
 
 	document.addEventListener("DOMContentLoaded", function() {
+		if(requestPayment()) {
+			document.querySelector("div#payment_loading_container").style.display ="none";
+		}
 	} );
 	</script>
   </head>

@@ -74,7 +74,7 @@ async function getBasketList() {
             <div class="basket_img">
               <a><img src="/Trid/${PRODUCT_IMAGE_PATH}" /></a>
             </div>
-            <div class="basket_product_info">
+            <div class="basket_product_info" data-product_detail_no="${FK_PRODUCT_DETAIL_NO}" >
               <div class="basket_product_info_header">
                 <div><a class="product_link">${PRODUCT_NAME}</a></div>
                 <div id= "basket_delete_${PK_BASKET_NO}" class = "basket_delete">⨉</div>
@@ -324,21 +324,22 @@ document.addEventListener("DOMContentLoaded", function () {
 	        const productPrice = element
 	          .querySelector(".price_text")
 	          .getAttribute("data-price");
-	
+//			console.log(element.querySelector(".price_text"));
 	        let item = {
 	          imgSrc: imgSrc,
 	          productDetailNo: productDetailNo,
 	          productCountNum: productCountNum,
 	          productPrice: productPrice,
 	        };
-	
+
 	        basket_item_arry.push(item);
 	      });
-	      console.log(basket_item_arry);
+//	      console.log(basket_item_arry);
 	      sessionStorage.setItem(
 	        "basket_item_arry",
 	        JSON.stringify(basket_item_arry)
 	      );
+
 	      location.href = "payment/address.trd";
 	  }
     });
