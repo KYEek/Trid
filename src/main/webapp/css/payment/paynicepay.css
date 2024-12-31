@@ -9,6 +9,7 @@ div#payment_complete {
   font-size: 17px;
   background-color: coral;
   display: none;
+  width: 45vw;
 }
 
 div#payment_loading_container {

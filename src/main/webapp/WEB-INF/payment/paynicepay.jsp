@@ -84,17 +84,18 @@
 		      // 주문 정보...
 		    }),
 		  }).then(data =>{
+			document.querySelector("div#payment_complete").style.display="block";
 			return true;
 		  }).catch (message =>{ 
 				console.error(message);
 				return false
 			});
-
+	}
 	document.addEventListener("DOMContentLoaded", function() {
 		if(requestPayment()) {
 			document.querySelector("div#payment_loading_container").style.display ="none";
 		}
-	} );
+	});
 	</script>
   </head>
   <body>
