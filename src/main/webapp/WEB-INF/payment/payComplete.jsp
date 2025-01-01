@@ -1,5 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import ="java.util.HashMap, java.util.Map" %>
+
+ <%
+    Map temp_address_info = (HashMap)session.getAttribute("temp_address_info");
+    String name = (String)temp_address_info.get("member_name");
+    String address = (String)temp_address_info.get("addr_address");
+    String addr_detail = (String)temp_address_info.get("addr_detail");
+    String post_no = (String)temp_address_info.get("addr_post_no");
+    String mobile = (String)temp_address_info.get("member_mobile");
+    session.removeAttribute("temp_address_info");%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -95,10 +105,14 @@
             </div>
             <div>
               <div>배송지</div>
-              <div>모든 배송지 주소</div>
+              <div><%=name %></div>
+              <div><%=address %></div>
+              <div><%=addr_detail %></div>
+              <div > <%=post_no %></div>
+              <div><%=mobile %></div>
             </div>
             <div>
-              <div>주문번호 : <sapn>000111122233454</sapn></div>
+              <div>주문번호 : <sapn>${requestScope.orderNo}</sapn></div>
             </div>
             <div id="order_info_button">
               <div><a href="">주문 정보 보기 </a></div>

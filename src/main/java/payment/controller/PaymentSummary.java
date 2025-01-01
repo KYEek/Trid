@@ -1,5 +1,8 @@
 package payment.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONArray;
 
 import common.Constants;
@@ -26,8 +29,15 @@ public class PaymentSummary extends AbstractController {
 			super.setViewPage("/main.trd");
 			return;
 		}
-		
 
+		Map<String, String> temp_address_info = new HashMap<>();
+		temp_address_info.put("member_name", request.getParameter("member_name")) ;
+		temp_address_info.put("addr_address", request.getParameter("addr_address"));
+		temp_address_info.put("addr_detail", request.getParameter("addr_detail"));
+		temp_address_info.put("addr_post_no", request.getParameter("addr_post_no"));
+		temp_address_info.put("member_mobile", request.getParameter("member_mobile"));
+		
+		session.setAttribute("temp_address_info", temp_address_info);
 		super.setRedirect(false);
 		super.setViewPage(Constants.PAYMENT_SUMMARY);
 

@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.Map, java.util.HashMap"%>
+    <%
+    Map temp_address_info = (HashMap)session.getAttribute("temp_address_info");
+    String name = (String)temp_address_info.get("member_name");
+    String address = (String)temp_address_info.get("addr_address");
+    String addr_detail = (String)temp_address_info.get("addr_detail");
+    String post_no = (String)temp_address_info.get("addr_post_no");
+    String mobile = (String)temp_address_info.get("member_mobile");%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -72,11 +80,11 @@
                   <div>편집</div>
                 </div>
                 <div id="payment_address_info" class="address_list_item">
-                  <div id="payment_address_name">연규영</div>
-                  <div id="payment_address">주소</div>
-                  <div id="payment_address_extra">부가주소</div>
-                  <div id="payment_address_post_num">우편번호</div>
-                  <div id="payment_address_mobile">전화번호</div>
+                  <div id="payment_address_name"><%=name %></div>
+                  <div id="payment_address"><%=address %></div>
+                  <div id="payment_address_extra"><%=addr_detail %></div>
+                  <div id="payment_address_post_num"> <%=post_no %></div>
+                  <div id="payment_address_mobile"><%=mobile %></div>
                 </div>
               </div>
             </div>
