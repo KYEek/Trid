@@ -94,6 +94,8 @@
 			</form>
 		</div>
 
+		<span>총 ${pagingDTO.totalRowCount}개 상품</span>
+
 		<table class="table">
 			<thead>
 				<tr>
