@@ -35,7 +35,7 @@
 				<img src="${ctxPath}/images/icon/cart.svg" width="30" />
 				<span class="admin_menu">Order Manage</span>
 			</a> 
-			<a class="menu" href="#">
+			<a class="menu" href="memberManage.trd">
 				<img src="${ctxPath}/images/icon/user.svg" width="30" />
 				<span class="admin_menu">User Manage</span>
 			</a> 

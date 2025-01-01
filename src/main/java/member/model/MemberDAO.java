@@ -1,8 +1,10 @@
 package member.model;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
+import board.domain.BoardDTO;
 import member.domain.MemberDTO;
 
 
@@ -43,8 +45,13 @@ public interface MemberDAO {
 	// 비밀번호 변경을 처리해주는 메소드
 	int updatePwdEnd(MemberDTO member) throws SQLException;
 
- 
+	// 관리자 회원 리스트 조회 시 전체 회원 수를 구하는 메소드
+	int selectTotalRowCountByAdmin(Map<String, Object> paraMap) throws SQLException;
+
+	// 관리자 회원 리스트 조회 메소드
+	List<MemberDTO> selectMemberListByAdmin(Map<String, Object> paraMap) throws SQLException;
 	
-	
+	// 관리자 회원 상세조회 메소드
+	MemberDTO selectMemberByAdmin(String memberNo) throws SQLException;
 	
 }
