@@ -21,6 +21,7 @@ import member.domain.MemberDTO;
 import mypage.domain.AddressDTO;
 import orders.domain.OrderDTO;
 import orders.domain.OrderDetailDTO;
+import util.StringUtil;
 import util.security.AES256;
 
 public class OrderDAO_imple implements OrderDAO {
@@ -76,24 +77,107 @@ public class OrderDAO_imple implements OrderDAO {
 	 * 주문의 전체 행 개수를 불러오는 메소드
 	 */
 	@Override
-	public int selectTotalRowCount(Map<String, Object> paraMap) throws SQLException {
+	public int selectTotalRowCountByAdmin(Map<String, Object> paraMap) throws SQLException {
 		int totalRowCount = 0;
+		
+		String searchType = (String)paraMap.get("searchType"); // 검색타입 0:주문자명 1:상품명
+		
+		String searchWord = (String)paraMap.get("searchWord");
+		
+		String orderStatus = (String)paraMap.get("orderStatus");
+		
+		String dateMin = (String)paraMap.get("dateMin");
+		
+		String dateMax = (String)paraMap.get("dateMax");
+		
+		int count = 0;
 		
 		try {
 			conn = ds.getConnection();
+
+			String sql 	= " WITH "
+						+ " T AS "
+						+ "	( "
+						+ "  	SELECT * "
+						+ "		FROM ( "
+						+ "			select min(product_name) as product_name, count(*) as total_detail_count, fk_order_no "
+						+ " 		from tbl_order_detail od "
+						+ "			join tbl_product_detail pd on od.fk_product_detail_no = pd.pk_product_detail_no "
+						+ "			join tbl_product p on pd.fk_product_no = p.pk_product_no "
+						+ "			where 1=1 ";
 			
-			String sql = " select count(*) AS total "
-					   + " from tbl_order ";
+			if(!StringUtil.isBlank(searchWord)) {
+				if("1".equals(searchType)) {
+					sql += " and product_name like '%' || ? || '%' ";
+				}
+			}
 			
+			sql += "		group by fk_order_no "
+				+ " 	) "
+				+ " ) "
+				+ " select count(*) as total "
+				+ " from ( "
+				+ " select o.pk_order_no, o.order_date, o.order_status, order_total_price, "
+				+ " m.pk_member_no, m.member_name, m.member_mobile, m.member_email, "
+				+ " a.pk_addr_no, a.addr_post_no, a.addr_address, a.addr_detail, a.addr_extraaddr, "
+				+ " T.product_name "
+				+ " from tbl_order o join tbl_member m on o.fk_member_no = m.pk_member_no "
+				+ " join tbl_addr a on o.fk_addr_no = a.pk_addr_no "
+				+ " join T on T.fk_order_no = o.pk_order_no ";
+			
+			if(!StringUtil.isBlank(searchWord)) {
+				if("0".equals(searchType)) {
+					sql += " and member_name = ? ";
+				}
+			}
+			
+			if(!StringUtil.isBlank(orderStatus)) {
+				sql += " and order_status = ? ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and order_date between to_date(?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and order_date <= to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				sql += " and order_date >= to_date(?, 'yyyy-mm-dd') ";
+			}
+			
+			sql += " ) ";
+
 			pstmt = conn.prepareStatement(sql);
+			
+			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
+				pstmt.setString(++count, searchWord);
+			}
+			
+			if(!StringUtil.isBlank(orderStatus)) {
+				pstmt.setString(++count, orderStatus);
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+			}
 			
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
 				totalRowCount = rs.getInt("total");
 			}
-			
-			
+	
 		} finally {
 			close();
 		}
@@ -105,10 +189,24 @@ public class OrderDAO_imple implements OrderDAO {
 	 * 관리자에서 사용 주문 내역을 불러오는 메소드
 	 */
 	@Override
-	public List<OrderDTO> selectOrderList(Map<String, Object> paraMap) throws SQLException {
+	public List<OrderDTO> selectOrderListByAdmin(Map<String, Object> paraMap) throws SQLException {
 		List<OrderDTO> orderList = new ArrayList<>();
 		
 		PagingDTO pagingDTO = (PagingDTO)paraMap.get("pagingDTO");
+		
+		String searchType = (String)paraMap.get("searchType"); // 검색타입 0:주문자명 1:상품명
+		
+		String searchWord = (String)paraMap.get("searchWord");
+		
+		String sortCategory = (String)paraMap.get("sortCategory") == null ? "" : (String)paraMap.get("sortCategory");
+		
+		String orderStatus = (String)paraMap.get("orderStatus");
+		
+		String dateMin = (String)paraMap.get("dateMin");
+		
+		String dateMax = (String)paraMap.get("dateMax");
+		
+		int count = 0;
 		
 		try {
 			
@@ -119,29 +217,81 @@ public class OrderDAO_imple implements OrderDAO {
 						+ " ( "
 						+ "  	SELECT * "
 						+ "		FROM ( "
-						+ "			select product_name, count(*) over() as total_detail_count, fk_order_no "
+						+ "			select min(product_name) as product_name, count(*) as total_detail_count, fk_order_no "
 						+ "			from tbl_order_detail od join tbl_product_detail pd on od.fk_product_detail_no = pd.pk_product_detail_no "
 						+ "			join tbl_product p on pd.fk_product_no = p.pk_product_no "
-						+ "		) "
-						+ "		WHERE ROWNUM = 1"
-						+ " ) " 
-						+ " select * "
-						+ " from ( "
-						+ " 	select rownum as rnum, o.pk_order_no, o.order_date, o.order_status, order_total_price, "
-						+ " 	m.pk_member_no, m.member_name, m.member_mobile, m.member_email, "
-						+ " 	a.pk_addr_no, a.addr_post_no, a.addr_address, a.addr_detail, a.addr_extraaddr,"
-						+ "		T.product_name, T.total_detail_count "
-						+ " 	from tbl_order o join tbl_member m on o.fk_member_no = m.pk_member_no "
-						+ " 	join tbl_addr a on o.fk_addr_no = a.pk_addr_no "
-						+ "		join T on T.fk_order_no = o.pk_order_no "
-						+ " 	order by o.order_date desc "
-						+ " ) a "
-						+ " where rnum between ? and ? ";
+						+ "			where 1=1 ";
+						
+			if(!StringUtil.isBlank(searchWord)) {
+				if("1".equals(searchType)) {
+					sql += " and product_name like '%' || ? || '%' ";
+				}
+			}
+			
+			sql += "		group by fk_order_no "
+				+ " 	) "
+				+ " ) " 
+				+ " select * "
+				+ " from ( "
+				+ " 	select ROWNUM as rnum, o.pk_order_no, o.order_date, o.order_status, order_total_price, "
+				+ " 	m.pk_member_no, m.member_name, m.member_mobile, m.member_email, "
+				+ " 	a.pk_addr_no, a.addr_post_no, a.addr_address, a.addr_detail, a.addr_extraaddr,"
+				+ "		T.product_name, T.total_detail_count "
+				+ " 	from tbl_order o join tbl_member m on o.fk_member_no = m.pk_member_no "
+				+ " 	join tbl_addr a on o.fk_addr_no = a.pk_addr_no "
+				+ "		join T on T.fk_order_no = o.pk_order_no ";
+			
+			if(!StringUtil.isBlank(searchWord)) {
+				if("0".equals(searchType)) {
+					sql += " and member_name = ? ";
+				}
+			}
+			
+			if(!StringUtil.isBlank(orderStatus)) {
+				sql += " and order_status = ? ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and order_date between to_date(?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and order_date <= to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				sql += " and order_date >= to_date(?, 'yyyy-mm-dd') ";
+			}
+			
+			sql += " 	order by o.order_date desc "
+				+ " ) a "
+				+ " where rnum between ? and ? ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setInt(1, pagingDTO.getFirstRow());
-			pstmt.setInt(2, pagingDTO.getLastRow());
+			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
+				pstmt.setString(++count, searchWord);
+			}
+			
+			if(!StringUtil.isBlank(orderStatus)) {
+				pstmt.setString(++count, orderStatus);
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+			}
+			
+			pstmt.setInt(++count, pagingDTO.getFirstRow());
+			pstmt.setInt(++count, pagingDTO.getLastRow());
 			
 			rs = pstmt.executeQuery();
 			
@@ -185,7 +335,7 @@ public class OrderDAO_imple implements OrderDAO {
 	 * 관리자에서 주문 상세 내역을 불러오는 메소드
 	 */
 	@Override
-	public OrderDTO selectOrderByAdmin(String orderNo) throws SQLException {
+	public OrderDTO selectOrderByAdminByAdmin(String orderNo) throws SQLException {
 		OrderDTO orderDTO = new OrderDTO();
 		
 		try {
@@ -231,6 +381,9 @@ public class OrderDAO_imple implements OrderDAO {
 				addrDTO.setAddress(rs.getString("addr_address"));
 				addrDTO.setDetail(rs.getString("addr_detail"));
 				addrDTO.setExtraaddr(rs.getString("addr_extraaddr"));
+				
+				orderDTO.setMemberDTO(memberDTO);
+				orderDTO.setAddressDTO(addrDTO);
 				
 			}
 			// 공통 주문내역 조회 실패 시 null 반환 
@@ -280,7 +433,9 @@ public class OrderDAO_imple implements OrderDAO {
 			if(orderDetailList.size() < 1) {
 				System.out.println("tbl_order_detail select failed");
 				return null;
-			}			
+			}
+			
+			orderDTO.setOrderDetailList(orderDetailList);
 		
 		} catch(UnsupportedEncodingException | GeneralSecurityException e) {
 			e.printStackTrace();
@@ -295,7 +450,7 @@ public class OrderDAO_imple implements OrderDAO {
 	 * 관리자에서 주문 상태를 변경하는 메소드
 	 */
 	@Override
-	public int updateOrderStatus(String orderNo, String orderStatus) throws SQLException {
+	public int updateOrderStatusByAdmin(String orderNo, String orderStatus) throws SQLException {
 		int result = 0;
 		
 		try {

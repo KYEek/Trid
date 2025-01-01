@@ -2,7 +2,8 @@ package util;
 
 public class StringUtil {
 
-	public StringUtil(){};
+	// 생성자 노출 방지
+	private StringUtil() {};
 	
 	// 공백 과 NULL 을 체크하는 메소드
 	public static boolean isBlank(String str) {

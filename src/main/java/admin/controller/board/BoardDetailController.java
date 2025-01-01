@@ -11,7 +11,11 @@ import common.Constants;
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import util.StringUtil;
 
+/*
+ * 관리자 Q&A 상세 조회 및 답변 추가 컨트롤러
+ */
 public class BoardDetailController extends AbstractController {
 
 	private final BoardDAO boardDAO = new BoardDAO_imple(); // BoardDAO 초기화
@@ -25,25 +29,21 @@ public class BoardDetailController extends AbstractController {
 			return;
 		}
 
-		// POST 요청인 경우
+		// POST 요청인 경우 답변 수정 및 등록
 		if ("POST".equalsIgnoreCase(method)) {
 			Map<String, String> paraMap = new HashMap<>();
 			
 			String pkQuestionNo = request.getParameter("pkQuestionNo"); // 질문 일련번호
 			String questionAnswer = request.getParameter("questionAnswer"); // 답변
 			
-			if(questionAnswer == null || questionAnswer.isBlank()) {
-				request.setAttribute("message", "질문 수정을 실패했습니다.");
-				request.setAttribute("loc", Constants.HISTORY_BACK);
-
-				super.setRedirect(false);
-				super.setViewPage(Constants.MESSAGE_PAGE);
+			// 답변 내용 유효성 검사
+			if(StringUtil.isBlank(questionAnswer)) {
+				handleBoardUpdateFail(request);
 				return;
 			}
 			 
 			paraMap.put("pkQuestionNo", pkQuestionNo);
 			paraMap.put("questionAnswer", questionAnswer);
-
 			
 			try {
 				// 질문 수정 요청
@@ -51,11 +51,7 @@ public class BoardDetailController extends AbstractController {
 				
 				// 질문 수정 실패 시
 				if (result != 1) {
-					request.setAttribute("message", "질문 수정을 실패했습니다.");
-					request.setAttribute("loc", Constants.HISTORY_BACK);
-
-					super.setRedirect(false);
-					super.setViewPage(Constants.MESSAGE_PAGE);
+					handleBoardUpdateFail(request);
 					return;
 				}
 				
@@ -64,19 +60,18 @@ public class BoardDetailController extends AbstractController {
 
 			} catch (SQLException e) {
 				e.printStackTrace();
-				super.setRedirect(true);
-				super.setViewPage(Constants.ERROR_URL);
+				super.handleServerError();
 			}
 
 		}
-		// GET 요청인 경우
+		// GET 요청인 경우 Q&A 상세 조회
 		else {
-			
-			String questionNo = request.getParameter("questionNo");
+			String questionNo = request.getParameter("questionNo"); // 질문 일련번호
 			
 			try {
-				BoardDTO boardDTO = boardDAO.selectQuestionDetailByAdmin(questionNo);
+				BoardDTO boardDTO = boardDAO.selectQuestionDetailByAdmin(questionNo); // 질문 상세 조회
 				
+				// BoardDTO 확인
 				if(boardDTO == null) {
 					super.handleMessage(request, "해당 질문이 존재하지 않습니다.", Constants.ADMIN_BOARD_MANAGE_URL);
 					return;
@@ -89,12 +84,22 @@ public class BoardDetailController extends AbstractController {
 			}
 			catch(SQLException e ) {
 				e.printStackTrace();
-				super.setRedirect(true);
-				super.setViewPage(Constants.ERROR_URL);
+				super.handleServerError();
 			}
 			
 		}
 
+	}
+	
+	/*
+	 * 답변 등록 실패 시 이벤트를 처리하기 위한 메소드
+	 */
+	private void handleBoardUpdateFail(HttpServletRequest request) {
+		request.setAttribute("message", "답변 등록/수정을 실패했습니다.");
+		request.setAttribute("loc", Constants.HISTORY_BACK);
+
+		super.setRedirect(false);
+		super.setViewPage(Constants.MESSAGE_PAGE);
 	}
 	
 }

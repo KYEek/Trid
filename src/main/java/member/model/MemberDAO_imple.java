@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.Context;
@@ -13,7 +15,10 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import board.domain.BoardDTO;
+import common.domain.PagingDTO;
 import member.domain.MemberDTO;
+import util.StringUtil;
 import util.security.AES256;
 import util.security.Sha256;
 
@@ -465,5 +470,341 @@ public class MemberDAO_imple implements MemberDAO {
 		return result;// 업데이트가 성공되어졌다면 result 값은 1이 나온다.
 		
 	}// end of public boolean updatePwdEnd(MemberDTO member) throws SQLException-------------
+
+	
+	// 관리자 회원 리스트 조회 시 전체 회원 수를 구하는 메소드
+	@Override
+	public int selectTotalRowCountByAdmin(Map<String, Object> paraMap) throws SQLException {
+		int totalRowCount = 0; // 전체 행 개수를 저장하는 변수
+		
+		String searchType = (String)paraMap.get("searchType"); // 검색 타입 0: 회원명, 1: 이메일
+		
+		String searchWord = (String)paraMap.get("searchWord"); // 검색어
+		
+		String memberGender = (String)paraMap.get("memberGender"); // 회원 성별
+		
+		String memberIdle = (String)paraMap.get("memberIdle"); // 회원 휴면 상태 1 : 비휴면, 0 :휴면 (6개월 기준)
+		
+		String memberStatus = (String)paraMap.get("memberStatus"); // 회원 상태 1 : 활성,  0: 탈퇴,  2: 정지
+		
+		String dateMin = (String)paraMap.get("dateMin"); // 가입일자 최소값
+		
+		String dateMax = (String)paraMap.get("dateMax"); // 가입일자 최대값
+		
+		int count = 0; // 위치홀더 개수를 저장하는 변수
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql 	= " select count(*) as total "
+						+ " from tbl_member "
+						+ " where 1=1 ";
+			
+			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
+				switch(searchType) {
+					case "0" : {
+						sql += " and member_name like '%' || ? || '%' ";
+						break;
+					}
+					case "1" : {
+						sql += " and member_email = ? ";
+						break;
+					}
+				}
+			}
+			
+			if(!StringUtil.isBlank(memberGender)) {
+				sql += " and member_gender = ? ";
+			}
+			
+			if(!StringUtil.isBlank(memberIdle)) {
+				sql += " and member_idle = ? ";
+			}
+			
+			if(!StringUtil.isBlank(memberStatus)) {
+				sql += " and member_status = ? ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and member_registerday between to_date(?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and member_registerday <= to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				sql += " and member_registerday >= to_date(?, 'yyyy-mm-dd') ";
+			}
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
+				if("1".equals(searchType)) {
+					pstmt.setString(++count, aes.encrypt(searchWord));
+				}
+				else {
+					pstmt.setString(++count, searchWord);	
+				}
+			}
+			
+			if(!StringUtil.isBlank(memberGender)) {
+				pstmt.setString(++count, memberGender);
+			}
+			
+			if(!StringUtil.isBlank(memberIdle)) {
+				pstmt.setString(++count, memberIdle);
+			}
+			
+			if(!StringUtil.isBlank(memberStatus)) {
+				pstmt.setString(++count, memberStatus);
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				totalRowCount = rs.getInt("total");
+			}
+			
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+
+		return totalRowCount;
+		
+	} // selectTotalRowCountByAdmin(Map<String, Object> paraMap) throws SQLException
+
+	
+	// 관리자 회원 리스트 조회 메소드
+	@Override
+	public List<MemberDTO> selectMemberListByAdmin(Map<String, Object> paraMap) throws SQLException {
+		List<MemberDTO> memberList = new ArrayList<>(); // MemberDTO 리스트
+		
+		PagingDTO pagingDTO = (PagingDTO)paraMap.get("pagingDTO");
+		
+		String searchType = (String)paraMap.get("searchType"); // 검색 타입 0: 회원명, 1: 이메일
+		
+		String searchWord = (String)paraMap.get("searchWord"); // 검색어
+		
+		// 정렬 타입 0: 회원명 오름차순, 1: 회원명 내림차순, 2:가입일 오름차순, 3: 가입일 내림차순
+		String sortCategory = (String)paraMap.get("sortCategory") == null ? "" : (String)paraMap.get("sortCategory"); 
+		
+		String memberGender = (String)paraMap.get("memberGender"); // 회원 성별
+		
+		String memberIdle = (String)paraMap.get("memberIdle"); // 회원 휴면 상태 1 : 비휴면, 0 :휴면 (6개월 기준)
+		
+		String memberStatus = (String)paraMap.get("memberStatus"); // 회원 상태 1 : 활성,  0: 탈퇴,  2: 정지
+		
+		String dateMin = (String)paraMap.get("dateMin"); // 가입일자 최소값
+		
+		String dateMax = (String)paraMap.get("dateMax"); // 가입일자 최대값
+		
+		int count = 0; // 위치홀더 개수를 저장하는 변수
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql 	= " SELECT A.* "
+						+ " FROM "
+						+ " ( "
+						+ " 	select ROWNUM as rnum, pk_member_no, member_email, member_name, member_mobile, member_gender, "
+						+ " 	member_birthday, member_status, member_idle, member_registerday, member_pwdchangeday, member_updateday "
+						+ " 	from tbl_member "
+						+ " 	where 1=1 ";
+	
+			
+			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
+				switch(searchType) {
+					case "0" : {
+						sql += " and member_name like '%' || ? || '%' ";
+						break;
+					}
+					case "1" : {
+						sql += " and member_email = ? ";
+						break;
+					}
+				}
+			}
+			
+			if(!StringUtil.isBlank(memberGender)) {
+				sql += " and member_gender = ? ";
+			}
+			
+			if(!StringUtil.isBlank(memberIdle)) {
+				sql += " and member_idle = ? ";
+			}
+			
+			if(!StringUtil.isBlank(memberStatus)) {
+				sql += " and member_status = ? ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and member_registerday between to_date(?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and member_registerday <= to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				sql += " and member_registerday >= to_date(?, 'yyyy-mm-dd') ";
+			}
+			
+			switch(sortCategory) {
+				case "0" : {
+					sql += " order by member_name "; 
+					break;	
+				}
+				case "1" : {
+					sql += " order by member_name desc "; 
+					break;
+				}
+				case "2" : {
+					sql += " order by member_registerday ";
+					break;
+				}
+				case "3" : {
+					sql += " order by member_registerday desc ";
+					break;
+				}
+				default : {
+					sql += " order by member_registerday desc ";
+					break;
+				}
+			}
+			
+			sql += " ) A "
+					+ " WHERE rnum between ? and ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
+				if("1".equals(searchType)) {
+					pstmt.setString(++count, aes.encrypt(searchWord));
+				}
+				else {
+					pstmt.setString(++count, searchWord);	
+				}
+			}
+			
+			if(!StringUtil.isBlank(memberGender)) {
+				pstmt.setString(++count, memberGender);
+			}
+			
+			if(!StringUtil.isBlank(memberIdle)) {
+				pstmt.setString(++count, memberIdle);
+			}
+			
+			if(!StringUtil.isBlank(memberStatus)) {
+				pstmt.setString(++count, memberStatus);
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+			}
+			
+			pstmt.setInt(++count, pagingDTO.getFirstRow()); // 현재 페이지의 첫 레코드의 번호
+			pstmt.setInt(++count, pagingDTO.getLastRow()); // 현재 페이지의 마지막 레코드의 번호
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				MemberDTO memberDTO = new MemberDTO();
+				
+				memberDTO.setPk_member_no(rs.getInt("pk_member_no"));
+				memberDTO.setMember_email(aes.decrypt(rs.getString("member_email")));
+				memberDTO.setMember_name(rs.getString("member_name"));
+				memberDTO.setMember_mobile(rs.getString("member_mobile"));
+				memberDTO.setMember_gender(rs.getInt("member_gender"));
+				memberDTO.setMember_birthday(rs.getString("member_birthday"));
+				memberDTO.setMember_status(rs.getInt("member_status"));
+				memberDTO.setMember_idle(rs.getInt("member_idle"));
+				memberDTO.setMember_registerday(rs.getString("member_registerday"));
+				memberDTO.setMember_pwdchangeday(rs.getString("member_pwdchangeday"));
+				memberDTO.setMember_updateday(rs.getString("member_updateday"));
+				
+				memberList.add(memberDTO);
+			}
+			
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return memberList;
+	}
+
+	// 관리자 회원 상세조회 메소드
+	@Override
+	public MemberDTO selectMemberByAdmin(String memberNo) throws SQLException {
+		MemberDTO memberDTO = new MemberDTO();
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql 	= " select pk_member_no, member_email, member_name, member_mobile, member_gender, "
+						+ " member_birthday, member_status, member_idle, member_registerday, member_pwdchangeday, member_updateday "
+						+ " from tbl_member "
+						+ " where pk_member_no = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, memberNo);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				memberDTO.setPk_member_no(rs.getInt("pk_member_no"));
+				memberDTO.setMember_email(aes.decrypt(rs.getString("member_email")));
+				memberDTO.setMember_name(rs.getString("member_name"));
+				memberDTO.setMember_mobile(aes.decrypt(rs.getString("member_mobile")));
+				memberDTO.setMember_gender(rs.getInt("member_gender"));
+				memberDTO.setMember_birthday(rs.getString("member_birthday"));
+				memberDTO.setMember_status(rs.getInt("member_status"));
+				memberDTO.setMember_idle(rs.getInt("member_idle"));
+				memberDTO.setMember_registerday(rs.getString("member_registerday"));
+				memberDTO.setMember_pwdchangeday(rs.getString("member_pwdchangeday"));
+				memberDTO.setMember_updateday(rs.getString("member_updateday"));
+			}
+			else {
+				memberDTO = null;
+			}
+			
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return memberDTO;
+	}
 
 }

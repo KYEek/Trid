@@ -64,18 +64,18 @@
 					<div>
 						<label for="privateStatus">비밀글 여부</label>
 						<select class="private_select" name="privateStatus">
-						    <option value="0">전체</option>
-						    <option value="1">공개글</option>
-						    <option value="2">비밀글</option>
+						    <option value="">전체</option>
+						    <option value="0">공개글</option>
+						    <option value="1">비밀글</option>
 						</select>
 					</div> 
 					
 					<div>
 						<label for="answerStatus">답변상태</label>
 						<select class="answer_select" name="answerStatus">
-						    <option value="0">전체</option>
-						    <option value="1">답변대기</option>
-						    <option value="2">답변완료</option>
+						    <option value="">전체</option>
+						    <option value="0">답변대기</option>
+						    <option value="1">답변완료</option>
 						</select>
 					</div> 
 				</div>
@@ -98,6 +98,7 @@
 				<tr>
 					<th scope="col">질문 일련번호</th>
 					<th scope="col">회원 일련번호</th>
+					<th scope="col">회원명</th>
 					<th scope="col">제목</th>
 					<th scope="col">비밀글여부</th>
 					<th scope="col">답변상태</th>
@@ -110,6 +111,7 @@
 						<tr class="question_item">
 							<td>${boardDTO.pk_question_no}</td>
 							<td>${boardDTO.fk_member_no}</td>
+							<td>${boardDTO.memberName}</td>
 							<td>${boardDTO.question_title}</td>
 
 							<c:choose>
@@ -149,8 +151,8 @@
 		let oldSearchWord = "${requestScope.searchWord}"; // 검색어
 		let oldSortCategory = "${requestScope.sortCategory}"; // 정렬 번호 0:최신순 1:오래된순
 		
-		let oldPrivateStatus = "${requestScope.privateStatus}"; // 비밀글 여부 번호 0:전체 1:공개글 2:비밀글
-		let oldAnswerStatus = "${requestScope.answerStatus}"; // 답변 여부 번호 0:전체 1:답변대기 2:답변완료
+		let oldPrivateStatus = "${requestScope.privateStatus}"; // 비밀글 여부 번호 0:공개글 1:비밀글 
+		let oldAnswerStatus = "${requestScope.answerStatus}"; // 답변 여부 번호 0:답변대기 1:답변완료
 		
 		let oldDateMin = "${requestScope.dateMin}"; // 기존 최소 등록일
 		let oldDateMax = "${requestScope.dateMax}"; // 기존 최대 등록일

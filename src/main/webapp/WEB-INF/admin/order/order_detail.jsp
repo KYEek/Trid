@@ -24,24 +24,24 @@
 	<%-- OrderDTO --%>
 	<c:set var="orderDTO" value="${requestScope.orderDTO}" />
 	<%-- MemberDTO --%>
-	<c:set var="memberDTO" value="${requestScope.productDTO.memberDTO}" />
+	<c:set var="memberDTO" value="${requestScope.orderDTO.memberDTO}" />
 	<%-- AddressDTO --%>
-	<c:set var="addrDTO" value="${requestScope.productDTO.addressDTO}" />
+	<c:set var="addrDTO" value="${requestScope.orderDTO.addressDTO}" />
 	<%-- OrderDetailDTO List --%>
-	<c:set var="orderDetailList" value="${requestScope.productDTO.orderDetailList}" />	
+	<c:set var="orderDetailList" value="${requestScope.orderDTO.orderDetailList}" />	
 
 	<%-- 상품 상세 --%>
 	<div id="product_manage_container">
 
 		<%-- 관리자 사이드 네비게이션 --%>
-		<%@ include file="side_navigation.jsp"%>
+		<%@ include file="../side_navigation.jsp"%>
 
 		<div id="main_container">
 		
 			<div id="item_container">
 			
 				<div id="detail_header">
-					<h2>상품 상세조회</h2>
+					<h2>주문 상세조회</h2>
 					<div id="header_buttons">
 						<%-- 돌아가기 버튼을 클릭 시 이전 페이지로 돌아간다. --%>
 						<a id="return" href="orderManage.trd">돌아가기</a> 
@@ -59,20 +59,27 @@
 					</div>
 				
 					<select id="order_status_select">
-					
-					
-								<option value="0">결제완료</option>
-					
-					
-								<option value="1">상품준비</option>
-					
-					
-								<option value="2">배송중</option>
-					
-					
-								<option value="3">배송완료</option>
-					
+						<option value="0">결제완료</option>
+						<option value="1">상품준비</option>
+						<option value="2">배송중</option>
+						<option value="3">배송완료</option>
 					</select>
+					
+					<div>
+						${memberDTO.member_name}
+					</div>
+					
+					<div>
+						${addrDTO.address}
+					</div>
+					
+					<c:forEach var="orderDetailDTO" items="${orderDetailList}">
+						${orderDetailDTO.orderDetailPrice}<br>
+						${orderDetailDTO.orderDetailQuantity}<br>
+						${orderDetailDTO.productName}<br>
+						${orderDetailDTO.productNo}<br>
+						${orderDetailDTO.productSize}<br>
+					</c:forEach>
 	
 					<button onclick="updateOrder(${orderDTO.pkOrderNo})">주문 상태 수정</button>
 	

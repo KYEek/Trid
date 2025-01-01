@@ -264,29 +264,11 @@ public class BoardDAO_imple implements BoardDAO {
 			}
 			
 			if(!StringUtil.isBlank(privateStatus)) {
-				switch(privateStatus) {
-					case "1" : {
-						sql += " and question_isprivate = 0 ";
-						break;
-					}
-					case "2" : {
-						sql += " and question_isprivate = 1 ";
-						break;
-					}
-				}
+				sql += " and question_isprivate = ? ";
 			}
 			
 			if(!StringUtil.isBlank(answerStatus)) {
-				switch(answerStatus) {
-					case "1" : {
-						sql += " and question_status = 0 ";
-						break;
-					}
-					case "2" : {
-						sql += " and question_status = 1 ";
-						break;
-					}
-				}
+				sql += " and question_status = ? ";
 			}
 			
 			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
@@ -305,6 +287,14 @@ public class BoardDAO_imple implements BoardDAO {
 			
 			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
 				pstmt.setString(++count, searchWord);
+			}
+			
+			if(!StringUtil.isBlank(privateStatus)) {
+				pstmt.setString(++count, privateStatus);
+			}
+			
+			if(!StringUtil.isBlank(answerStatus)) {
+				pstmt.setString(++count, answerStatus);
 			}
 			
 			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
@@ -385,29 +375,11 @@ public class BoardDAO_imple implements BoardDAO {
 			}
 			
 			if(!StringUtil.isBlank(privateStatus)) {
-				switch(privateStatus) {
-					case "1" : {
-						sql += " and question_isprivate = 0 ";
-						break;
-					}
-					case "2" : {
-						sql += " and question_isprivate = 1 ";
-						break;
-					}
-				}
+				sql += " and question_isprivate = ? ";
 			}
 			
 			if(!StringUtil.isBlank(answerStatus)) {
-				switch(answerStatus) {
-					case "1" : {
-						sql += " and question_status = 0 ";
-						break;
-					}
-					case "2" : {
-						sql += " and question_status = 1 ";
-						break;
-					}
-				}
+				sql += " and question_status = ? ";
 			}
 			
 			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
@@ -443,6 +415,14 @@ public class BoardDAO_imple implements BoardDAO {
 			
 			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
 				pstmt.setString(++count, searchWord);
+			}
+			
+			if(!StringUtil.isBlank(privateStatus)) {
+				pstmt.setString(++count, privateStatus);
+			}
+			
+			if(!StringUtil.isBlank(answerStatus)) {
+				pstmt.setString(++count, answerStatus);
 			}
 			
 			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {

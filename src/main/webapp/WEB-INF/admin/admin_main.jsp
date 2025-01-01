@@ -45,7 +45,7 @@
 		<div id="admin_menu_container">
 			<a href="productManage.trd"><span class="admin_menu">상품 관리</span></a> 
 			<a href="orderManage.trd"><span class="admin_menu">주문 관리</span></a> 
-			<a href="#"><span class="admin_menu">사용자 관리</span></a> 
+			<a href="memberManage.trd"><span class="admin_menu">사용자 관리</span></a> 
 			<a href="boardManage.trd"><span class="admin_menu">질문 관리</span></a>
 		</div>
 
