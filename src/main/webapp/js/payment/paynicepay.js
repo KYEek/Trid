@@ -53,60 +53,65 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelector("span#total_price").textContent = total_price;
 
   //장바구니 목록의 값들을 저장할 배열
-  const productCountNum = [];
-  const productDetailNo = [];
-  const productPrice = [];
+  const orderDetailArr = [];
 
   const basket_item_arry = JSON.parse(basket_item_arry_str);
 
+  console.log(basket_item_arry);
   basket_item_arry.forEach((item) => {
-    productCountNum.push(item["productCountNum"]);
-    productDetailNo.push(item["productDetailNo"]);
-    productPrice.push(item["productPrice"]);
+    const orderDetail = {};
+    orderDetail["productCountNum"] = item["productCountNum"];
+    orderDetail["productDetailNo"] = item["productDetailNo"];
+    orderDetail["productPrice"] = item["productPrice"];
+    console.log(orderDetail);
+    orderDetailArr.push(orderDetail);
   });
-  console.log(productCountNum);
-  console.log(productDetailNo);
-  console.log(productPrice);
-
+  console.log(orderDetailArr);
   //결제 완료 버튼
   const pay_completed = document.querySelector("div#basket_footer_next_button");
 
   //데이터 전송을 위한 폼 생성성
   const form = document.createElement("form");
+  document.body.appendChild(form);
   form.method = "POST";
   form.action = "/Trid/payment/paymentCompleted.trd";
 
-  const input_countnum = document.createElement("input");
-  input_countnum.type = "hidden";
-  input_countnum.name = "productCountNum";
-  input_countnum.value = JSON.stringify(productCountNum);
+  const input_orderDetailArr = document.createElement("input");
+  input_orderDetailArr.type = "hidden";
+  input_orderDetailArr.name = "orderDetailArr";
+  input_orderDetailArr.value = JSON.stringify(orderDetailArr);
 
-  const input_detailnum = document.createElement("input");
-  input_countnum.type = "hidden";
-  input_countnum.name = "productDetailNo";
-  input_countnum.value = JSON.stringify(productDetailNo);
+  // const input_countnum = document.createElement("input");
+  // input_countnum.type = "hidden";
+  // input_countnum.name = "productCountNum";
+  // input_countnum.value = JSON.stringify(productCountNum);
 
-  const input_pricd = document.createElement("input");
-  input_countnum.type = "hidden";
-  input_countnum.name = "productPrice";
-  input_countnum.value = JSON.stringify(productPrice);
+  // const input_detailnum = document.createElement("input");
+  // input_detailnum.type = "hidden";
+  // input_detailnum.name = "productDetailNo";
+  // input_detailnum.value = JSON.stringify(productDetailNo);
+
+  // const input_pricd = document.createElement("input");
+  // input_pricd.type = "hidden";
+  // input_pricd.name = "productPrice";
+  // input_pricd.value = JSON.stringify(productPrice);
 
   const input_selected_address_no = document.createElement("input");
-  input_countnum.type = "hidden";
-  input_countnum.name = "selected_address_no";
-  input_countnum.value = selected_address_no;
+  input_selected_address_no.type = "hidden";
+  input_selected_address_no.name = "selected_address_no";
+  input_selected_address_no.value = selected_address_no;
 
   const input_total_price = document.createElement("input");
-  input_countnum.type = "hidden";
-  input_countnum.name = "total_price";
-  input_countnum.value = total_price;
+  input_total_price.type = "hidden";
+  input_total_price.name = "total_price";
+  input_total_price.value = total_price;
 
-  form.appendChild(input_countnum);
-  form.appendChild(input_detailnum);
-  form.appendChild(input_pricd);
+  form.appendChild(input_orderDetailArr);
+  // form.appendChild(input_countnum);
+  // form.appendChild(input_detailnum);
+  // form.appendChild(input_pricd);
   form.appendChild(input_selected_address_no);
   form.appendChild(input_total_price);
-
   pay_completed.addEventListener("click", (e) => {
     form.submit();
   });

@@ -40,7 +40,6 @@ public class PaymentComple extends AbstractController {
 					jsonData.append(line);
 				}
 			}
-//			System.out.println(jsonData.toString());
 			JSONObject jsonObj = new JSONObject(jsonData.toString());			
 			System.out.println(jsonObj.getString("paymentId"));
 			request.setAttribute("result", result);
