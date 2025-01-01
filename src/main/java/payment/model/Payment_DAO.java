@@ -5,6 +5,6 @@ import java.util.Map;
 
 public interface Payment_DAO {
 
-	int insertorderDate(Map<String, String> orderData, Map<String, String> orderDetailData) throws SQLException;
+	int insertOrderDate(Map<String, String> orderData, Map<String, String> orderDetailData) throws SQLException;
 
 }

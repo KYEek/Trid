@@ -2,10 +2,12 @@ package payment.model;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Map;
 
 import javax.naming.Context;
@@ -70,24 +72,31 @@ public class Payment_DAO_imple implements Payment_DAO {
 	}// end of private void close()---------------
 
 	@Override
-	public int insertorderDate(Map<String, String> orderData, Map<String, String> orderDetailData) throws SQLException {
+	public int insertOrderDate(Map<String, String> orderData, Map<String, String> orderDetailData) throws SQLException {
 
-		int result = 0;
-
+		int result_order_no = 0;
+		CallableStatement cstmt = null;
 		conn = ds.getConnection();
 
-		sql = " insert into tbl_order (PK_ORDER_NO, FK_MEMBER_NO, FK_ADDR_NO, ORDER_STATUS, ORDER_TOTAL_PRICE) values(PK_ORDER_NO_SEQ.nextval, ?, ?, 0 , ?) ";
-		
-		pstmt = conn.prepareStatement(sql);
-		pstmt.setInt(1, Integer.parseInt(orderData.get("")));
-
+		sql = " {call insertOrderNo(?, ?, ?, ?, ?)} ";
 		try {
+		cstmt = conn.prepareCall(sql);
+		cstmt.setString(1, orderDetailData.get("orderDetailArr"));
+		cstmt.setInt(2, Integer.parseInt(orderData.get("selected_address_no")));
+		cstmt.setInt(3, Integer.parseInt(orderData.get("total_price")));
+		cstmt.setInt(4, Integer.parseInt(orderData.get("member_No")));
+		cstmt.registerOutParameter(5, Types.NUMERIC);
+		
+		cstmt.execute();
+		
+		result_order_no = cstmt.getInt(5);
+		
 
 		} finally {
 			close();
 		}
 
-		return result;
+		return result_order_no;
 	}
 
 }

@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const address_list_main = document.querySelector("#address_list_main"); //주소목록이 표시되는 div
   let html = "";
   const address_arr = []; //주소목록을 담을 배열
+  const selected_addr = {};
 
   //주소목록을 가져와서 출력해주는 함수
 //  fetch("json/address.json")
@@ -26,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="address_list_item_text">${item["member_mobile"]}</div>
               </div>
             </li>`;
+			insertAddressInfo(selected_addr, item);
         if (item["addr_isdefault"] == "1") {
           sessionStorage.setItem("selected_address_no", item["pk_addr_no"]);
           address_info_and_select.innerHTML = ` <div>${item["addr_address"]}${item["addr_extraaddr"]}</div>
@@ -106,3 +108,13 @@ document.addEventListener("DOMContentLoaded", function () {
       this.location.href = "summary.trd";
     });
 });
+
+
+
+function insertAddressInfo(selected_addr, item) {
+	selected_addr["member_name"] = item["member_name"];
+	selected_addr["addr_address"] = item["addr_address"];
+	selected_addr["addr_detail"] = item["addr_detail"];
+	selected_addr["addr_post_no"] = item["addr_post_no"];
+	selected_addr["member_mobile"] = item["member_mobile"];
+}

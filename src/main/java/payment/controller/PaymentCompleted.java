@@ -53,8 +53,14 @@ public class PaymentCompleted extends AbstractController {
 			orderData.put("selected_address_no", request.getParameter("selected_address_no"));
 			orderData.put("total_price", request.getParameter("total_price"));
 			orderData.put("member_No", String.valueOf(member.getPk_member_no()));
-//			int result = pdao.insertorderDate(orderData, orderDetailData);
+			//sql문을 실행해서 주문번호를 불러온다
+			int resultOrderNo = pdao.insertOrderDate(orderData, orderDetailData);
 			System.out.println(orderData.toString());
+			System.out.println(resultOrderNo);
+			request.setAttribute("orderNo", resultOrderNo);
+			
+			super.setRedirect(false);
+			super.setViewPage(Constants.PAYMENT_COMPLETED);
 		}
 
 	}
