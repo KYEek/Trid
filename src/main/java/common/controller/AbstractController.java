@@ -84,4 +84,12 @@ public abstract class AbstractController implements InterCommand {
 
 	}// end of public boolean checkLogin(HttpServletRequest request) {} ----------
 	
+	/*
+	 * 서버 예외가 발생할 경우 에러페이지로 포워드하는 메소드
+	 */
+	public void handleServerError() {
+		setRedirect(true);
+		setViewPage(Constants.ERROR_URL);
+	}
+	
 }
