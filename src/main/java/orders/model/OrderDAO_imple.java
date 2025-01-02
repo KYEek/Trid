@@ -484,7 +484,23 @@ public class OrderDAO_imple implements OrderDAO {
 		try {
 			conn = ds.getConnection();
 			
-			String sql = " with order_detail as( "
+			
+			String sql = " select FK_ORDER_NO, ORDER_DATE, ORDER_STATUS, ORDER_TOTAL_PRICE, FK_PRODUCT_DETAIL_NO, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
+					+ " from ( "
+					+ " with order_info as ( "
+					+ " select PK_ORDER_DETAIL_NO, FK_ORDER_NO, FK_MEMBER_NO, FK_ADDR_NO, ORDER_DATE, ORDER_STATUS, ORDER_TOTAL_PRICE, FK_PRODUCT_DETAIL_NO, ORDER_DETAIL_PRICE, ORDER_DETAIL_QUANTITY, (order_detail_price * order_detail_quantity) as product_total_price "
+					+ " from tbl_order "
+					+ " join tbl_order_detail "
+					+ " on pk_order_no = fk_order_no) "
+					+ " select row_number() over(partition by PK_ORDER_DETAIL_NO order by PRODUCT_IMAGE_NAME)as rownumber ,FK_ORDER_NO, ORDER_DATE, ORDER_STATUS, ORDER_TOTAL_PRICE, FK_PRODUCT_DETAIL_NO, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME, FK_MEMBER_NO "
+					+ " from order_info "
+					+ " join select_basket_product_info product_info "
+					+ " on order_info.fk_product_detail_no = product_info.PRODUCT_DETAIL_NO "
+					+ " ) "
+					+ " where rownumber = 1 and fk_member_no = ? "
+					+ " order by fk_order_no desc ";
+			
+			/*String sql = " with order_detail as( "
 					+ " select PK_ORDER_DETAIL_NO, FK_ORDER_NO, FK_PRODUCT_DETAIL_NO, product_price, PRODUCT_DETAIL_NO, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
 					+ " from ( "
 					+ " select row_number() over(partition by PK_ORDER_DETAIL_NO order by PRODUCT_IMAGE_NAME)as rownumber, PK_ORDER_DETAIL_NO, FK_ORDER_NO, FK_PRODUCT_DETAIL_NO, (ORDER_DETAIL_PRICE * ORDER_DETAIL_QUANTITY) product_price, PRODUCT_DETAIL_NO, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
@@ -513,16 +529,24 @@ public class OrderDAO_imple implements OrderDAO {
 					+ " on PK_ORDER_NO = FK_ORDER_NO "
 					+ " order by pk_order_no "
 					+ " where fk_member_no = ? "
-					+ " order by pk_order_no desc ";
+					+ " order by pk_order_no desc ";*/
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt. setInt(1, pk_member_no);
 			
 			rs = pstmt.executeQuery();
+			jsonArr = new JSONArray();
 			
 			while(rs.next()) {
 				JSONObject json = new JSONObject();
-				json.put("", rs.getInt(pk_member_no))
+				json.put("FK_ORDER_NO", rs.getInt("FK_ORDER_NO"));
+				json.put("ORDER_DATE", rs.getString("ORDER_DATE"));
+				json.put("ORDER_STATUS", rs.getInt("ORDER_STATUS"));
+				json.put("ORDER_TOTAL_PRICE", rs.getInt("ORDER_TOTAL_PRICE"));
+				json.put("FK_PRODUCT_DETAIL_NO", rs.getInt("FK_PRODUCT_DETAIL_NO"));
+				json.put("PRODUCT_IMAGE_PATH", rs.getString("PRODUCT_IMAGE_PATH"));
+				json.put("PRODUCT_IMAGE_NAME", rs.getString("PRODUCT_IMAGE_NAME"));
+				jsonArr.put(json);
 			}
 			
 		}

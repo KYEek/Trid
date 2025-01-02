@@ -45,8 +45,10 @@
     ></script>
 	<!-- 유저의 주소정보를 저장 -->
     <script type="text/javascript">
-		const addrListStr = `${requestScope.addrList}`;
-		const addrList = JSON.parse(addrListStr);
+// 	json데이터를 불러오기	
+    	let orderListStr = `${requestScope.orderList}`;
+    	orderListStr = orderListStr.replaceAll("\\", "\\\\");
+		const orderList = JSON.parse(orderListStr);
 	</script>
     <!-- 유저 js -->
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/order/orderList.js"></script>

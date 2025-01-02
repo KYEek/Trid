@@ -31,7 +31,10 @@ public class OrdersController extends AbstractController {
 			return;
 		}
 		
+		//sql에서 값을 가져오기
 		orderList = odao.selectOrderListByMember(member.getPk_member_no());
+		request.setAttribute("orderList", orderList.toString());
+		
 		
 		super.setRedirect(false);
 		super.setViewPage(Constants.ORDERS_PAGE);
