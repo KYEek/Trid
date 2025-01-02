@@ -1,0 +1,39 @@
+@charset "UTF-8";
+:root {
+  --border-var: 0.7px solid black;
+}
+
+h1 {
+  font-size: 17pt;
+  font-weight: lighter;
+}
+div#paymanet_main {
+  display: flex;
+  margin-left: 7vw;
+  margin-right: 7vw;
+  padding-top: 5vh;
+  height: 100%;
+  font-size: 17px;
+}
+
+div#payment_detail {
+  width: 40%;
+}
+
+div#payment_product_list {
+  display: flex;
+  padding-left: auto;
+  width: 60%;
+}
+
+div#payment_shipment_method {
+  padding: 2vh 2vw;
+}
+
+div#payment_pay_method {
+  text-align: center;
+}
+.payment_content_container {
+  width: 30vw;
+  border: var(--border-var);
+}

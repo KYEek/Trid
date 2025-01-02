@@ -1,0 +1,30 @@
+@charset "UTF-8";
+
+div#payment_complete {
+  margin-top: 3vh;
+  margin-left: 7vw;
+  margin-right: 7vw;
+  display: inline-block;
+  padding: 2vh 2vw;
+  font-size: 17px;
+  background-color: coral;
+  display: none;
+  width: 45vw;
+}
+
+div#payment_loading_container {
+  padding-top: 45vh;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+img#payment_loading {
+  width: 10vw;
+  height: 10vh;
+}
