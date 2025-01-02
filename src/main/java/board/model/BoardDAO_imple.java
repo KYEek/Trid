@@ -15,6 +15,7 @@ import javax.sql.DataSource;
 
 import board.domain.BoardDTO;
 import common.domain.PagingDTO;
+import util.StringUtil;
 
 
 public class BoardDAO_imple implements BoardDAO {
@@ -219,15 +220,320 @@ public class BoardDAO_imple implements BoardDAO {
 		
 		return boardDTO;
 	}// end of Q&A 게시판에 질문을 상세조회하는 메소드 
+	
+	/*
+	 * 관리자 Q&A 관리페이지의 전체 행 개수를 불러오는 메소드
+	 */
+	@Override
+	public int selectTotalRowCountByAdmin(Map<String, Object> paraMap) throws SQLException {
+		
+		int totalRowCount = 0;
+		
+		String searchType = (String)paraMap.get("searchType");
+		
+		String searchWord = (String)paraMap.get("searchWord");
+		
+		String privateStatus = (String)paraMap.get("privateStatus");
+		
+		String answerStatus = (String)paraMap.get("answerStatus");
+		
+		String dateMin = (String)paraMap.get("dateMin");
+		
+		String dateMax = (String)paraMap.get("dateMax");
+		
+		int count = 0;
+		
+		try {
+			conn = ds.getConnection();
+
+			String sql 	= " select count(*) as total "
+						+ " from tbl_question q join tbl_member m on q.fk_member_no = m.pk_member_no "
+						+ " where 1=1 ";
+			
+			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
+				switch(searchType) {
+					case "0" : {
+						sql += " and question_title like '%' || ? || '%' ";
+						break;
+					}
+					case "1" : {
+						sql += " and member_name = ? ";
+						break;
+					}
+				}
+			}
+			
+			if(!StringUtil.isBlank(privateStatus)) {
+				sql += " and question_isprivate = ? ";
+			}
+			
+			if(!StringUtil.isBlank(answerStatus)) {
+				sql += " and question_status = ? ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and question_registerday between to_date(?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and question_registerday <= to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				sql += " and question_registerday >= to_date(?, 'yyyy-mm-dd') ";
+			}
+
+			pstmt = conn.prepareStatement(sql);
+			
+			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
+				pstmt.setString(++count, searchWord);
+			}
+			
+			if(!StringUtil.isBlank(privateStatus)) {
+				pstmt.setString(++count, privateStatus);
+			}
+			
+			if(!StringUtil.isBlank(answerStatus)) {
+				pstmt.setString(++count, answerStatus);
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				totalRowCount = rs.getInt("total");
+			}
+	
+		} finally {
+			close();
+		}
+		
+		return totalRowCount;
+	}
+	
+	/*
+	 * 관리자 Q&A 관리페이지 질문 리스트를 조회하는 메소드
+	 */
+	@Override
+	public List<BoardDTO> selectQuestionListByAdmin(Map<String, Object> paraMap) throws SQLException {
+		
+		List<BoardDTO> boardList = new ArrayList<>();
+		
+		PagingDTO pagingDTO = (PagingDTO)paraMap.get("pagingDTO");
+		
+		String searchType = (String)paraMap.get("searchType");
+		
+		String searchWord = (String)paraMap.get("searchWord");
+		
+		String sortCategory = (String)paraMap.get("sortCategory") == null ? "" : (String)paraMap.get("sortCategory");
+		
+		String privateStatus = (String)paraMap.get("privateStatus");
+		
+		String answerStatus = (String)paraMap.get("answerStatus");
+		
+		String dateMin = (String)paraMap.get("dateMin");
+		
+		String dateMax = (String)paraMap.get("dateMax");
+		
+		System.out.println(searchType);
+		
+		try {
+			conn = ds.getConnection();
+
+			String sql 	= " SELECT A.* "
+						+ " FROM ( "
+								+ " select ROWNUM AS RN, "
+								+ " q.pk_question_no , q.question_title, q.question_content, q.question_answer, "
+								+ " q.question_status, q.question_isprivate, q.question_registerday, "
+								+ " m.pk_member_no, m.member_name "
+								+ " from tbl_question q join tbl_member m on q.fk_member_no = m.pk_member_no "
+								+ " where 1=1 ";
+			
+			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
+				switch(searchType) {
+					case "0" : {
+						sql += " and question_title like '%' || ? || '%' ";
+						break;
+					}
+					case "1" : {
+						sql += " and member_name = ? ";
+						break;
+					}
+				}
+			}
+			
+			if(!StringUtil.isBlank(privateStatus)) {
+				sql += " and question_isprivate = ? ";
+			}
+			
+			if(!StringUtil.isBlank(answerStatus)) {
+				sql += " and question_status = ? ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and question_registerday between to_date(?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and question_registerday <= to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				sql += " and question_registerday >= to_date(?, 'yyyy-mm-dd') ";
+			}
+			
+			switch(sortCategory) {
+				case "0" : 
+					sql += " order by question_registerday desc "; 
+					break;
+				case "1" : 
+					sql += " order by question_registerday "; 
+					break;
+				default : 
+					sql += " order by question_registerday desc "; 
+					break;
+			}
+				
+			sql += " ) A "
+					+ " WHERE A.RN between ? and ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			int count = 0;
+			
+			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
+				pstmt.setString(++count, searchWord);
+			}
+			
+			if(!StringUtil.isBlank(privateStatus)) {
+				pstmt.setString(++count, privateStatus);
+			}
+			
+			if(!StringUtil.isBlank(answerStatus)) {
+				pstmt.setString(++count, answerStatus);
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+			}
+			
+			pstmt.setInt(++count, pagingDTO.getFirstRow()); // 현재 페이지의 첫 레코드의 번호
+			pstmt.setInt(++count, pagingDTO.getLastRow()); // 현재 페이지의 마지막 레코드의 번호
+		
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				BoardDTO boardDTO = new BoardDTO();
+				
+				// BoardDTO 저장
+				boardDTO.setPk_question_no(rs.getInt("pk_question_no"));
+				boardDTO.setQuestion_title(rs.getString("question_title"));
+				boardDTO.setQuestion_content(rs.getString("question_content"));
+				boardDTO.setQuestion_answer(rs.getString("question_answer"));
+				boardDTO.setQuestion_status(rs.getInt("question_status"));
+				boardDTO.setQuestion_isprivate(rs.getInt("question_isprivate"));
+				boardDTO.setQuestion_registerday(rs.getString("question_registerday"));
+				boardDTO.setFk_member_no(rs.getInt("pk_member_no"));
+				boardDTO.setMemberName(rs.getString("member_name"));
+				
+				boardList.add(boardDTO);
+		
+			}
+			
+			System.out.println(sql);
+	
+		} finally {
+			close();
+		}
+		
+		return boardList;
+	}
 
 
+	// Q&A 게시판의 질문에 대해 답변 및 답변 상태를 수정하는 메소드
+	@Override
+	public int updateQuestion(Map<String, String> paraMap) throws SQLException {
+		int result = 0;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql 	= " update tbl_question set question_answer = ? , question_status = 1 "
+						+ " where pk_question_no = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, paraMap.get("questionAnswer")); // 질문 답변
+			pstmt.setString(2, paraMap.get("pkQuestionNo")); // 질문 일련번호
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close();
+		}
+		
+		return result;
+	} // Q&A 게시판의 질문에 대해 답변 및 답변 상태를 수정하는 메소드
 
-	
-
-
-	
-	
-	
-	
+	// 관리자가 Q&A 게시판 질문을 상세조회하는 메소드
+	@Override
+	public BoardDTO selectQuestionDetailByAdmin(String questionNo) throws SQLException {
+		BoardDTO boardDTO = new BoardDTO();
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql 	= " select q.pk_question_no, q.question_title, q.question_content, q.question_answer, "
+						+ " q.question_status, q.question_isprivate, to_char(q.question_registerday, 'yyyy-mm-dd') as question_registerday, "
+						+ " p.member_name "
+						+ " from tbl_question q "
+						+ " join tbl_member p on q.fk_member_no = p.pk_member_no "
+						+ " and q.pk_question_no = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, questionNo);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				boardDTO.setPk_question_no(rs.getInt("pk_question_no"));
+				boardDTO.setQuestion_title(rs.getString("question_title"));
+				boardDTO.setQuestion_content(rs.getString("question_content"));
+				
+				boardDTO.setQuestion_answer(rs.getString("question_answer"));
+				boardDTO.setQuestion_status(rs.getInt("question_status"));
+				boardDTO.setQuestion_isprivate(rs.getInt("question_isprivate"));
+				boardDTO.setQuestion_registerday(rs.getString("question_registerday"));
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return boardDTO;
+	}
 	
 }

@@ -91,35 +91,5 @@ public class AdminDAO_imple implements AdminDAO {
 		
 		return adminDTO;
 	}
-
-	/*
-	 * 세션의 adminId가 유효한 값인지 확인하는 메소드
-	 * adminId를 통해 관리자를 조회하여 계정이 존재하면 1이 반환된다.
-	 */
-	@Override
-	public int selectCountAdmin(String adminId) throws SQLException {
-		int result = 0;
-		
-		try {
-			conn = ds.getConnection();
-			
-			String sql = " select count(*) as count from tbl_admin where pk_admin_id = ? ";
-			
-			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setString(1, adminId);
-			
-			rs = pstmt.executeQuery();	
-			
-			if(rs.next()) {
-				result = rs.getInt("count");
-			}
-			
-		} finally {
-			close();
-		}
-		
-		return result;
-	}
 	
 }

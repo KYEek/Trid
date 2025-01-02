@@ -27,13 +27,11 @@ public class LoginController extends AbstractController {
 		// POST 요청인 경우 관리자 로그인 처리
 		if ("POST".equalsIgnoreCase(method)) {
 			String adminId = request.getParameter("adminId"); // 관리자 아이디
-			
-			String password = request.getParameter("password"); // 관리자 비밀번호
-
+			String password = request.getParameter("password"); // 관리자 비밀번
 			String encryptPw = Sha256.encrypt(password); // 비밀번호 암호화
 
 			try {
-				AdminDTO adminDTO = adminDAO.selectAdmin(adminId, encryptPw);
+				AdminDTO adminDTO = adminDAO.selectAdmin(adminId, encryptPw); // 관리자 로그인 검사
 
 				// 로그인 실패 시 사용자 알림
 				if (adminDTO == null) {
@@ -49,8 +47,7 @@ public class LoginController extends AbstractController {
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
-				super.setRedirect(true);
-				super.setViewPage(Constants.ERROR_URL);
+				super.handleServerError();
 			}
 
 		}

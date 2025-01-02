@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.Context;
@@ -13,8 +15,10 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import common.Constants;
+import board.domain.BoardDTO;
+import common.domain.PagingDTO;
 import member.domain.MemberDTO;
+import util.StringUtil;
 import util.security.AES256;
 import util.security.Sha256;
 
@@ -26,7 +30,7 @@ public class MemberDAO_imple implements MemberDAO {
 	private ResultSet rs;
 
 	private AES256 aes;
-
+ 
 	// 생성자
 	public MemberDAO_imple() {
 
@@ -35,7 +39,7 @@ public class MemberDAO_imple implements MemberDAO {
 			Context envContext = (Context) initContext.lookup("java:/comp/env");
 			ds = (DataSource) envContext.lookup("jdbc/semioracle");
 
-			aes = new AES256(Constants.KEY);
+			aes = new AES256("trid3333#gclass$");
 			// SecretMyKey.KEY 은 우리가 만든 암호화/복호화 키이다.
 
 		} catch (NamingException e) {
@@ -68,7 +72,7 @@ public class MemberDAO_imple implements MemberDAO {
 	// 회원가입을 해주는 메소드(tbl_member 테이블에 insert)
 	@Override
 	public int registerMember(MemberDTO member) throws SQLException {
-
+		
 		int result = 0;
 
 		try {
@@ -101,10 +105,10 @@ public class MemberDAO_imple implements MemberDAO {
 	}// end of public int registerMember(MemberDTO member) throws SQLException
 		// -----------------
 
-	// 로그인 처리
+	// 로그인 처리를 해주는 메소드
 	@Override
 	public MemberDTO login(Map<String, String> paraMap) throws SQLException {
-
+		
 		MemberDTO member = null;
 
 		try {
@@ -120,7 +124,8 @@ public class MemberDAO_imple implements MemberDAO {
 			
 			pstmt.setString(1, aes.encrypt(paraMap.get("member_email")));
 			pstmt.setString(2, Sha256.encrypt(paraMap.get("member_password")));
-
+			
+			
 			rs = pstmt.executeQuery();
 
 			if (rs.next()) {
@@ -187,5 +192,619 @@ public class MemberDAO_imple implements MemberDAO {
 		return member;
 	}// end of public MemberVO login(Map<String, String> paraMap) throws
 		// SQLException---------
+
+	
+	
+	
+
+	// 회원 탈퇴를 처리해주는 메소드
+	@Override
+	public int memberDelete(Map<String, String> paraMap) throws SQLException {
+
+		int result = 0;
+		
+		conn = ds.getConnection();
+		
+		String sql = " update tbl_member set member_status = 0 "
+				   + " where member_status = 1 and member_password = ? and pk_member_no = ? ";
+		
+		pstmt = conn.prepareStatement(sql);
+		try {
+			pstmt.setString(1, Sha256.encrypt(paraMap.get("member_password")));
+		
+			pstmt.setInt(2, Integer.parseInt(paraMap.get("pk_member_no")) );
+			
+			result = pstmt.executeUpdate();
+		
+		} finally {
+			close();
+		}
+		
+		return result;
+		
+	}
+
+	
+	// 이메일을 수정 해주는 메소드
+	@Override
+	public int updateEmail(MemberDTO member) throws SQLException {
+		
+		int result = 0; // 업데이트가 성공되어졌는지 알기위한 용도
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " update tbl_member set member_email = ? "
+					   + " where pk_member_no = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+	        
+	        pstmt.setString(1, aes.encrypt(member.getMember_email()) );  // 이메일을 AES256 알고리즘으로 양방향 암호화 시킨다. 
+	        pstmt.setInt(2, member.getPk_member_no() ); 
+	        
+	        result = pstmt.executeUpdate();
+	        
+		}catch(GeneralSecurityException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		      
+		} finally {
+			close();
+		}
+		
+		return result;// 업데이트가 성공되어졌다면 result 값은 1이 나온다.
+	}
+
+	// email 중복검사(현재 해당 사용자가 사용중인 email 이라면 true, 새로운 비밀번호이라면 false)
+	@Override
+	public boolean emailDuplicateCheck2(Map<String, String> paraMap) throws SQLException{
+
+		boolean isExists = false;
+	      
+	      try {// 이메일은 다른 사용자와 중복되면 안된다.(현재 사용자가 해당 이메일을 사용하고 있는지와 다른 사용자가 해당 이메일을 사용하고 있는지 모두 확인해야한다.)
+	         conn = ds.getConnection();
+	         
+	         String sql = " select pk_member_no "
+	         			+ " from tbl_member "
+	         			+ " where pk_member_no = ? and member_email = ? ";
+	         
+	         pstmt = conn.prepareStatement(sql); 
+	         pstmt.setString(1, paraMap.get("pkNum"));
+	         pstmt.setString(2, aes.encrypt(paraMap.get("newEmail")));
+	         
+	         rs = pstmt.executeQuery();
+	         
+	         isExists = rs.next(); // 행이 있으면(사용자가 현재 사용중인 email) true,
+	                               // 행이 없으면(사용자가 사용하고 있지 않은 email) false
+	         
+	      } catch(GeneralSecurityException | UnsupportedEncodingException e) {
+				e.printStackTrace();
+		  } finally {
+	         close();
+	      }
+	      
+	      return isExists;
+	}
+
+	// email 중복검사 (tbl_member 테이블에서 email 이 존재하면 true 를 리턴해주고, email 이 존재하지 않으면 false 를 리턴한다)
+	@Override
+	public boolean emailDuplicateCheck(String newEmail) throws SQLException {
+
+		boolean isExists = false;
+		
+		try {
+			  conn = ds.getConnection();
+			  
+			  String sql = " select member_email "
+			  		     + " from tbl_member "
+			  		     + " where member_email = ? ";
+			  
+			  pstmt = conn.prepareStatement(sql);
+			  pstmt.setString(1, aes.encrypt(newEmail));
+			  
+			  rs = pstmt.executeQuery();
+			  
+			  isExists = rs.next(); // 행이 있으면(중복된 email) true,
+			                        // 행이 없으면(사용가능한 email) false
+			  
+		} catch(GeneralSecurityException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return isExists;
+		
+	}
+
+	// 현재 비밀번호를 알아와서 웹에 들어온 비밀번호 값과 같은지 다른지 비교해주는 페이지
+	@Override
+	public boolean currentPwdCheck(MemberDTO member) throws SQLException{
+		
+		boolean isExists = false;
+		
+		try {
+			  conn = ds.getConnection();
+			  
+			  String sql = " select pk_member_no , member_password "
+			  			 + " from tbl_member "
+			  			 + " where pk_member_no = ? and member_password = ? ";
+			  
+			  pstmt = conn.prepareStatement(sql);
+			  pstmt.setInt(1, member.getPk_member_no());
+			  pstmt.setString(2, Sha256.encrypt(member.getMember_password()));
+			  
+			  rs = pstmt.executeQuery();
+			  
+			  isExists = rs.next(); // 행이 있으면(존재하는 사용자) true,
+              						// 행이 없으면(존재하지 않는 사용자) false
+			  
+		} finally {
+			close();
+		}
+		
+		return isExists;
+	}
+
+	// 전화번호를 수정해주는 메소드
+	@Override
+	public int updateMobile(MemberDTO member) throws SQLException {
+		
+		int result = 0; // 업데이트가 성공되어졌는지 알기위한 용도
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " update tbl_member set member_mobile = ? "
+					   + " where pk_member_no = ? ";
+			
+			pstmt = conn.prepareStatement(sql);// 우편배달부
+	        
+	        pstmt.setString(1, aes.encrypt(member.getMember_mobile()) );  // 전화번호를 AES256 알고리즘으로 양방향 암호화 시킨다. 
+	        pstmt.setInt(2, member.getPk_member_no() ); 
+	        
+	        result = pstmt.executeUpdate();
+	        
+		}catch(GeneralSecurityException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		      
+		} finally {
+			close();
+		}
+	//	System.out.println(result);
+		
+		return result;// 업데이트가 성공되어졌다면 result 값은 1이 나온다.
+	}
+
+	// 새로운 전화번호가 tbl_member 에서 사용중인 전화번호인지 체크해주는 메소드
+	@Override
+	public boolean MobileDuplicateCheck(Map<String, String> paraMap) throws SQLException {
+		
+		 boolean isExists = false;
+		    
+		    try {
+		        conn = ds.getConnection();
+		        
+		        // 두 컬럼 모두 조회
+		        String sql = " SELECT pk_member_no, member_mobile "
+		                   + " FROM tbl_member "
+		                   + " WHERE member_mobile = ? ";  
+		        
+		        pstmt = conn.prepareStatement(sql);
+		        pstmt.setString(1, aes.encrypt(paraMap.get("newMobile")));
+		        
+		        
+		        rs = pstmt.executeQuery();
+		        
+		        // 결과가 있고, 그 결과의 pk_member_no가 현재 사용자와 다르다면(false) 
+		        // 다른 사용자가 그 번호를 사용하고 있다는 의미.
+		        if(rs.next()) {
+		            String isPkNum = rs.getString("pk_member_no");
+		            isExists = !isPkNum.equals(paraMap.get("pkNum"));
+		        }
+		        else {// 다른 사용자가 사용하고 있지 않다면(사용가능한 전화번호라면 true)
+		        	isExists = true;
+		        }
+		        
+		    } catch(GeneralSecurityException | UnsupportedEncodingException e) {
+		        e.printStackTrace();
+		    } finally {
+		        close();
+		    }
+		    
+		    return isExists;
+	}
+
+	// 비밀번호 찾기(이메일을 입력 받아서 해당 사용자가 존재하는지 유무를 알려준다)
+	@Override
+	public boolean isUserExist(Map<String, String> paraMap) throws SQLException {
+		
+		boolean isUserExist = false;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select member_email "
+					   + " from tbl_member "
+					   + " where member_status = 1 and member_email = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, aes.encrypt(paraMap.get("email")));
+			rs = pstmt.executeQuery();
+			
+			isUserExist = rs.next();
+			
+		} catch (GeneralSecurityException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		System.out.println(isUserExist);
+		return isUserExist;
+	}// end of public boolean isUserExist(Map<String, String> paraMap) throws SQLException-------------------------
+
+	
+	// 비밀번호 변경을 처리해주는 메소드
+	@Override
+	public int updatePwdEnd(MemberDTO member) throws SQLException {
+		
+		int result = 0; // 업데이트가 성공되어졌는지 알기위한 용도
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " update tbl_member set member_password = ? "
+					   + " where pk_member_no = ? ";
+			
+			pstmt = conn.prepareStatement(sql);// 우편배달부
+	        
+			pstmt.setString(1, Sha256.encrypt(member.getMember_password()));
+	        pstmt.setInt(2, member.getPk_member_no() ); 
+	        
+	        result = pstmt.executeUpdate();
+	           
+		} finally {
+			close();
+		}
+//		System.out.println(result);
+		
+		return result;// 업데이트가 성공되어졌다면 result 값은 1이 나온다.
+		
+	}// end of public boolean updatePwdEnd(MemberDTO member) throws SQLException-------------
+
+	
+	// 관리자 회원 리스트 조회 시 전체 회원 수를 구하는 메소드
+	@Override
+	public int selectTotalRowCountByAdmin(Map<String, Object> paraMap) throws SQLException {
+		int totalRowCount = 0; // 전체 행 개수를 저장하는 변수
+		
+		String searchType = (String)paraMap.get("searchType"); // 검색 타입 0: 회원명, 1: 이메일
+		
+		String searchWord = (String)paraMap.get("searchWord"); // 검색어
+		
+		String memberGender = (String)paraMap.get("memberGender"); // 회원 성별
+		
+		String memberIdle = (String)paraMap.get("memberIdle"); // 회원 휴면 상태 1 : 비휴면, 0 :휴면 (6개월 기준)
+		
+		String memberStatus = (String)paraMap.get("memberStatus"); // 회원 상태 1 : 활성,  0: 탈퇴,  2: 정지
+		
+		String dateMin = (String)paraMap.get("dateMin"); // 가입일자 최소값
+		
+		String dateMax = (String)paraMap.get("dateMax"); // 가입일자 최대값
+		
+		int count = 0; // 위치홀더 개수를 저장하는 변수
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql 	= " select count(*) as total "
+						+ " from tbl_member "
+						+ " where 1=1 ";
+			
+			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
+				switch(searchType) {
+					case "0" : {
+						sql += " and member_name like '%' || ? || '%' ";
+						break;
+					}
+					case "1" : {
+						sql += " and member_email = ? ";
+						break;
+					}
+				}
+			}
+			
+			if(!StringUtil.isBlank(memberGender)) {
+				sql += " and member_gender = ? ";
+			}
+			
+			if(!StringUtil.isBlank(memberIdle)) {
+				sql += " and member_idle = ? ";
+			}
+			
+			if(!StringUtil.isBlank(memberStatus)) {
+				sql += " and member_status = ? ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and member_registerday between to_date(?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and member_registerday <= to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				sql += " and member_registerday >= to_date(?, 'yyyy-mm-dd') ";
+			}
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
+				if("1".equals(searchType)) {
+					pstmt.setString(++count, aes.encrypt(searchWord));
+				}
+				else {
+					pstmt.setString(++count, searchWord);	
+				}
+			}
+			
+			if(!StringUtil.isBlank(memberGender)) {
+				pstmt.setString(++count, memberGender);
+			}
+			
+			if(!StringUtil.isBlank(memberIdle)) {
+				pstmt.setString(++count, memberIdle);
+			}
+			
+			if(!StringUtil.isBlank(memberStatus)) {
+				pstmt.setString(++count, memberStatus);
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+			}
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				totalRowCount = rs.getInt("total");
+			}
+			
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+
+		return totalRowCount;
+		
+	} // selectTotalRowCountByAdmin(Map<String, Object> paraMap) throws SQLException
+
+	
+	// 관리자 회원 리스트 조회 메소드
+	@Override
+	public List<MemberDTO> selectMemberListByAdmin(Map<String, Object> paraMap) throws SQLException {
+		List<MemberDTO> memberList = new ArrayList<>(); // MemberDTO 리스트
+		
+		PagingDTO pagingDTO = (PagingDTO)paraMap.get("pagingDTO");
+		
+		String searchType = (String)paraMap.get("searchType"); // 검색 타입 0: 회원명, 1: 이메일
+		
+		String searchWord = (String)paraMap.get("searchWord"); // 검색어
+		
+		// 정렬 타입 0: 회원명 오름차순, 1: 회원명 내림차순, 2:가입일 오름차순, 3: 가입일 내림차순
+		String sortCategory = (String)paraMap.get("sortCategory") == null ? "" : (String)paraMap.get("sortCategory"); 
+		
+		String memberGender = (String)paraMap.get("memberGender"); // 회원 성별
+		
+		String memberIdle = (String)paraMap.get("memberIdle"); // 회원 휴면 상태 1 : 비휴면, 0 :휴면 (6개월 기준)
+		
+		String memberStatus = (String)paraMap.get("memberStatus"); // 회원 상태 1 : 활성,  0: 탈퇴,  2: 정지
+		
+		String dateMin = (String)paraMap.get("dateMin"); // 가입일자 최소값
+		
+		String dateMax = (String)paraMap.get("dateMax"); // 가입일자 최대값
+		
+		int count = 0; // 위치홀더 개수를 저장하는 변수
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql 	= " SELECT A.* "
+						+ " FROM "
+						+ " ( "
+						+ " 	select ROWNUM as rnum, pk_member_no, member_email, member_name, member_mobile, member_gender, "
+						+ " 	member_birthday, member_status, member_idle, member_registerday, member_pwdchangeday, member_updateday "
+						+ " 	from tbl_member "
+						+ " 	where 1=1 ";
+	
+			
+			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
+				switch(searchType) {
+					case "0" : {
+						sql += " and member_name like '%' || ? || '%' ";
+						break;
+					}
+					case "1" : {
+						sql += " and member_email = ? ";
+						break;
+					}
+				}
+			}
+			
+			if(!StringUtil.isBlank(memberGender)) {
+				sql += " and member_gender = ? ";
+			}
+			
+			if(!StringUtil.isBlank(memberIdle)) {
+				sql += " and member_idle = ? ";
+			}
+			
+			if(!StringUtil.isBlank(memberStatus)) {
+				sql += " and member_status = ? ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and member_registerday between to_date(?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and member_registerday <= to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				sql += " and member_registerday >= to_date(?, 'yyyy-mm-dd') ";
+			}
+			
+			switch(sortCategory) {
+				case "0" : {
+					sql += " order by member_name "; 
+					break;	
+				}
+				case "1" : {
+					sql += " order by member_name desc "; 
+					break;
+				}
+				case "2" : {
+					sql += " order by member_registerday ";
+					break;
+				}
+				case "3" : {
+					sql += " order by member_registerday desc ";
+					break;
+				}
+				default : {
+					sql += " order by member_registerday desc ";
+					break;
+				}
+			}
+			
+			sql += " ) A "
+					+ " WHERE rnum between ? and ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			if(!StringUtil.isBlank(searchType) && !StringUtil.isBlank(searchWord)) {
+				if("1".equals(searchType)) {
+					pstmt.setString(++count, aes.encrypt(searchWord));
+				}
+				else {
+					pstmt.setString(++count, searchWord);	
+				}
+			}
+			
+			if(!StringUtil.isBlank(memberGender)) {
+				pstmt.setString(++count, memberGender);
+			}
+			
+			if(!StringUtil.isBlank(memberIdle)) {
+				pstmt.setString(++count, memberIdle);
+			}
+			
+			if(!StringUtil.isBlank(memberStatus)) {
+				pstmt.setString(++count, memberStatus);
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+			}
+			
+			pstmt.setInt(++count, pagingDTO.getFirstRow()); // 현재 페이지의 첫 레코드의 번호
+			pstmt.setInt(++count, pagingDTO.getLastRow()); // 현재 페이지의 마지막 레코드의 번호
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				MemberDTO memberDTO = new MemberDTO();
+				
+				memberDTO.setPk_member_no(rs.getInt("pk_member_no"));
+				memberDTO.setMember_email(aes.decrypt(rs.getString("member_email")));
+				memberDTO.setMember_name(rs.getString("member_name"));
+				memberDTO.setMember_mobile(rs.getString("member_mobile"));
+				memberDTO.setMember_gender(rs.getInt("member_gender"));
+				memberDTO.setMember_birthday(rs.getString("member_birthday"));
+				memberDTO.setMember_status(rs.getInt("member_status"));
+				memberDTO.setMember_idle(rs.getInt("member_idle"));
+				memberDTO.setMember_registerday(rs.getString("member_registerday"));
+				memberDTO.setMember_pwdchangeday(rs.getString("member_pwdchangeday"));
+				memberDTO.setMember_updateday(rs.getString("member_updateday"));
+				
+				memberList.add(memberDTO);
+			}
+			
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return memberList;
+	}
+
+	// 관리자 회원 상세조회 메소드
+	@Override
+	public MemberDTO selectMemberByAdmin(String memberNo) throws SQLException {
+		MemberDTO memberDTO = new MemberDTO();
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql 	= " select pk_member_no, member_email, member_name, member_mobile, member_gender, "
+						+ " member_birthday, member_status, member_idle, member_registerday, member_pwdchangeday, member_updateday "
+						+ " from tbl_member "
+						+ " where pk_member_no = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, memberNo);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				memberDTO.setPk_member_no(rs.getInt("pk_member_no"));
+				memberDTO.setMember_email(aes.decrypt(rs.getString("member_email")));
+				memberDTO.setMember_name(rs.getString("member_name"));
+				memberDTO.setMember_mobile(aes.decrypt(rs.getString("member_mobile")));
+				memberDTO.setMember_gender(rs.getInt("member_gender"));
+				memberDTO.setMember_birthday(rs.getString("member_birthday"));
+				memberDTO.setMember_status(rs.getInt("member_status"));
+				memberDTO.setMember_idle(rs.getInt("member_idle"));
+				memberDTO.setMember_registerday(rs.getString("member_registerday"));
+				memberDTO.setMember_pwdchangeday(rs.getString("member_pwdchangeday"));
+				memberDTO.setMember_updateday(rs.getString("member_updateday"));
+			}
+			else {
+				memberDTO = null;
+			}
+			
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return memberDTO;
+	}
 
 }

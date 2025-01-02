@@ -113,12 +113,12 @@ div.message {
                 <button class="login" type="button" onclick="goLogin()">로그인</button>
             </div>
         <br>
-            <button type="button" onclick="">비밀번호를 잊으셨습니까?</button>
+            <button type="button" onclick="findPwd()">비밀번호를 잊으셨습니까?</button>
         </form>
 
         <div class="register">
             <h4>계정이 필요하세요?</h4>
-            <button type="submit" onclick="">등록</button>
+            <button type="submit" onclick="goRegister()">등록</button>
         </div>
     </div>
 </body>

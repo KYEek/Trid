@@ -1,0 +1,108 @@
+/* 관리 페이지 최상위 컨테이너 */
+div.main_container {
+	width: 100%;
+	height: 100vh;
+	display: flex;
+	font-family: "Pretendard";
+}
+
+/* 우측 메인 컨테이너 */
+div.content_container {
+	padding: 20px 20px 20px 30px;
+	width: 100%;
+}
+
+/* 관리 페이지 헤더 */
+div.manage_header {
+	width: 100%;
+	margin-bottom: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+/* 관리 대상 명 */
+input.manage_name {
+	padding: 5px;
+	border: none;
+	border-bottom: solid 1px;
+	outline: none;
+	text-align: end;
+}
+
+form#sort_frm {
+	width: 100%;
+}
+
+/* 카테고리 검색 컨테이너 */
+div.search_container {
+	width: 100%;
+	margin-bottom: 30px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+/* 카테고리 선택 컨테이너 */
+div.manage_category {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+div.category_box {
+	display: flex;
+	align-items: center;
+}
+
+select#category_select {
+	margin-right: 20px;
+}
+
+/* 범위로 카테고리를 잡는 요소 컨테이너 */
+div.range {
+	margin-right: 20px;
+	display: flex;
+	align-items: center;
+}
+
+div.range > span {
+	font-weight: bold;
+	margin-right: 5px;
+}
+
+div.range > input {
+	width: 80px;
+}
+
+div.range > input[type="date"] {
+	width: 120px;
+}
+
+select#sort_select {
+	margin-right: 20px;
+}
+
+/* 검색 버튼 */
+button#search_button {
+	margin-right: 20px;
+	background-color: white;
+}
+
+/* 추가 버튼 */
+a.register_button {
+	margin-left: 30px;
+	text-decoration: none;
+	color: black;
+}
+
+/* 리스트 요소 호버링 */
+tr.product_item:hover {
+	background-color: rgb(217, 217, 255);
+}
+
+/* 모든 select 태그 패딩 */
+select {
+	padding: 5px;
+}

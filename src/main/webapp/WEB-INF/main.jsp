@@ -79,6 +79,8 @@ div.header-links > a.header-link {
               /></a>
             </li>
             
+            <jsp:include page="category/hamburger_category.jsp" />
+            
             <!-- 메인푸터 -->
             <li class="list_size">
               <footer>
@@ -147,6 +149,8 @@ div.header-links > a.header-link {
               /></a>
             </li>
             
+            <jsp:include page="category/hamburger_category.jsp" />
+            
             <!-- 메인푸터 -->
             <li class="h-100 w-100">
               <footer>
@@ -207,6 +211,10 @@ div.header-links > a.header-link {
 		$(this).on('click', function(e) {
 			e.preventDefault();
 			$(this).toggleClass('active-' + (index + 1));
+			
+			// 카테고리 메뉴 토글
+			$('div.category_box').toggleClass('show');
+	        $('ul.clothing_box').toggleClass('show');
 		});
 	});
 </script>
