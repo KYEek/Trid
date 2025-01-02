@@ -15,6 +15,9 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import common.Constants;
 import common.domain.PagingDTO;
 import member.domain.MemberDTO;
@@ -471,6 +474,64 @@ public class OrderDAO_imple implements OrderDAO {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public JSONArray selectOrderListByMember(int pk_member_no) throws SQLException {
+		
+		JSONArray jsonArr = null;
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " with order_detail as( "
+					+ " select PK_ORDER_DETAIL_NO, FK_ORDER_NO, FK_PRODUCT_DETAIL_NO, product_price, PRODUCT_DETAIL_NO, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
+					+ " from ( "
+					+ " select row_number() over(partition by PK_ORDER_DETAIL_NO order by PRODUCT_IMAGE_NAME)as rownumber, PK_ORDER_DETAIL_NO, FK_ORDER_NO, FK_PRODUCT_DETAIL_NO, (ORDER_DETAIL_PRICE * ORDER_DETAIL_QUANTITY) product_price, PRODUCT_DETAIL_NO, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
+					+ " from tbl_order_detail "
+					+ " join select_basket_product_info "
+					+ " on product_detail_no = fk_product_detail_no) "
+					+ " where rownumber = 1 "
+					+ " ) "
+					+ " "
+					+ " select PK_ORDER_NO, ORDER_TOTAL_PRICE, SUM_PRODUC_PRICE, ORDER_STATUS, ORDER_DATE, FK_ADDR_NO, PRODUCT_DETAIL_NO, PRODUCT_PRICE, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
+					+ " from order_detail "
+					+ "  "
+					+ " join ( "
+					+ "    with product_price as ( "
+					+ "    select fk_order_no, sum(product_price) as product_price "
+					+ "    from ( "
+					+ "    select fk_order_no, (order_detail_price * order_detail_quantity) product_price "
+					+ "    from tbl_order_detail "
+					+ "    ) "
+					+ "    group by fk_order_no) "
+					+ "    select PK_ORDER_NO, FK_MEMBER_NO, FK_ADDR_NO, ORDER_DATE, ORDER_STATUS, ORDER_TOTAL_PRICE, PRODUCT_PRICE as sum_produc_price "
+					+ "    from tbl_order "
+					+ "    join product_price "
+					+ "    on fk_order_no = pk_order_no "
+					+ " ) "
+					+ " on PK_ORDER_NO = FK_ORDER_NO "
+					+ " order by pk_order_no "
+					+ " where fk_member_no = ? "
+					+ " order by pk_order_no desc ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt. setInt(1, pk_member_no);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				JSONObject json = new JSONObject();
+				json.put("", rs.getInt(pk_member_no))
+			}
+			
+		}
+		finally {
+			close();
+		}
+		
+		
+		return jsonArr;
 	}
 	
 }

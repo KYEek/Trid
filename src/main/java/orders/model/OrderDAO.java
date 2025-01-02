@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+
 import orders.domain.OrderDTO;
 
 public interface OrderDAO {
@@ -19,5 +21,8 @@ public interface OrderDAO {
 
 	// 관리자에서 주문 상태를 변경하는 메소드
 	int updateOrderStatusByAdmin(String orderNo, String orderStatus) throws SQLException;
+
+	// 유저의 주문 정보를 불러온다
+	JSONArray selectOrderListByMember(int pk_member_no) throws SQLException;
 
 }
