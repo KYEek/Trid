@@ -60,6 +60,8 @@
 
 	
 				</div>
+				
+				<a href="memberLoginHistory.trd?memberNo=${memberDTO.pk_member_no}">로그인 이력 조회</a>
 			
 			</div>
 			
