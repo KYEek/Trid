@@ -1,7 +1,11 @@
 package common.controller;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import common.Constants;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import member.domain.MemberDTO;
 
@@ -90,6 +94,27 @@ public abstract class AbstractController implements InterCommand {
 	public void handleServerError() {
 		setRedirect(true);
 		setViewPage(Constants.ERROR_URL);
+	}
+	
+	/*
+	 * AJAX JSON 응답 처리 메소드
+	 */
+	public void handelJsonResponse(HttpServletResponse response, String message) {
+		try {
+			setJsonResponse(true); // 클라이언트로 단순 응답 처리
+
+		    response.setContentType("application/json"); // JSON 타입으로 MIME 설정
+		    response.setCharacterEncoding("UTF-8");
+			
+		    String jsonData = "{\"message\":\"" + message + "\"}";
+		    
+		    PrintWriter out = response.getWriter();
+		    out.print(jsonData);
+		    out.flush();
+		} catch (IOException e) {
+			handleServerError();
+		}
+
 	}
 	
 }

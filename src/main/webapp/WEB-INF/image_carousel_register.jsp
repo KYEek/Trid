@@ -9,7 +9,8 @@
 	</div>
 	<div class="thumbnail-container">
 	</div>
-	<span id="image_name"></span>
+	<span id="image_name">
+	</span>
 </div>
 
 <script>
@@ -51,19 +52,6 @@
 			$thumbnails.eq(0).addClass('active');
 
 			removeImage();
-		});
-
-		$(document).on("click", "button#reset", function () {
-
-			fileList = new DataTransfer();
-			$("input#image_input").files = null;
-
-			$slides.remove();
-			$thumbnails.remove();
-
-
-			currentIndex = 0;
-			totalSlides = $slides.length;
 		});
 
 	});

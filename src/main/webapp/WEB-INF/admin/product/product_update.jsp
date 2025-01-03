@@ -17,6 +17,7 @@
 
 <%-- js --%>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.7.1.min.js"></script>
+<script src="${ctxPath}/js/admin/util.js"></script>
 <script src="${ctxPath}/js/admin/product.js"></script>
 
 </head>
@@ -177,13 +178,36 @@
 				$("input:hidden[name='inventory']").val(str_inventory);
 
 				$("input:hidden[name='productDetailNoArr']").val(str_productDetailNo);
+				
+				$("input#image_input").val("");
+				
+				const formData = new FormData(document.product_register_frm);
+				
+				for(file of fileList.items){
+					formData.append('images[]', file.getAsFile());
+				}
+				
+			 	$.ajax({
+			 		url:"productUpdate.trd",
+			 		method:"POST",
+			 		data : formData,
+			 		processData: false,
+			 		contentType: false,
+			 		dataType: "json",
+			 		success : function(json) {
+			 			if(json.message == "success"){
+			 				alert("상품수정을 성공했습니다.");
+			 				location.href="productManage.trd";
+			 			}
+			 			else {
+			 				alert("상품수정을 실패하였습니다.");
+			 			}
+			 		},
+			 		error : function (xhr, status, error) {
+			            console.error("AJAX 요청 실패:", error);
+			 		}
+			 	});
 
-				const register_frm = document.product_register_frm;
-
-				register_frm.method = "post";
-				register_frm.action = "productUpdate.trd";
-
-				register_frm.submit();
 			});
 
 

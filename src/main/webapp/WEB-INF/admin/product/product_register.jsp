@@ -181,14 +181,37 @@
 
 				$("input:hidden[name='colorName']").val(colorNameArr);
 				$("input:hidden[name='colorCode']").val(colorCodeArr);
+			
+				$("input#image_input").val("");
+				
+				const formData = new FormData(document.product_register_frm);
+				
+				for(file of fileList.items){
+					formData.append('images[]', file.getAsFile());
+				}
+				
+			 	$.ajax({
+			 		url:"productRegister.trd",
+			 		method:"POST",
+			 		data : formData,
+			 		processData: false,
+			 		contentType: false,
+			 		dataType: "json",
+			 		success : function(json) {
+			 			if(json.message == "success"){
+			 				alert("상품등록을 성공했습니다.");
+			 				location.href="productManage.trd";
+			 			}
+			 			else {
+			 				alert("상품등록을 실패하였습니다.");
+			 			}
+			 		},
+			 		error : function (xhr, status, error) {
+			            console.error("AJAX 요청 실패:", error);
+			 		}
+			 	});
 
-				const register_frm = document.product_register_frm;
-				register_frm.method = "post";
-				register_frm.action = "productRegister.trd";
-
-				register_frm.submit();
 			});
-
 
 			$("input[name='colorName']").change(function () {
 				console.log($("input[name='colorName']:checked").val());

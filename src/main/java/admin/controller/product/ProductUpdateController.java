@@ -37,15 +37,15 @@ public class ProductUpdateController extends AbstractController {
 		if ("POST".equalsIgnoreCase(method)) {
 			
 			try {
-				
 				// 이미지 파일을 지정된 경로에 저장 후 이미지 정보가 담긴 ImageDTO list 반환
 				List<ImageDTO> imageList = FileComponent.saveImages(request); 
+				
+				String message = "";
 
 				// 상품 이미지가 존재하는지 확인
 				if (imageList.size() < 1) {
 					System.out.println("[ERROR] : imageList is empty");
-					handleProductUpdateFail(request);
-					return;
+					message = "failed";
 				}
 				
 				// 이미지를 제외한 정보 저장
@@ -57,13 +57,9 @@ public class ProductUpdateController extends AbstractController {
 				int result = productDAO.updateProduct(productDTO);
 
 				// 상품 수정 실패 시
-				if (result != 1) {
-					handleProductUpdateFail(request);
-					return;
-				}
-
-				// 상품 수정 성공 시
-				super.handleMessage(request, "상품 수정을 성공했습니다.", Constants.ADMIN_PRODUCT_DETAIL_URL + "?productNo=" + productDTO.getProductNo());
+				message = (result == 1) ? "success" : "failed";
+				
+				super.handelJsonResponse(response, message);
 
 			} catch (SQLException | NumberFormatException | IOException | ServletException e ) {
 				e.printStackTrace();
@@ -147,17 +143,6 @@ public class ProductUpdateController extends AbstractController {
 		
 		return productDTO;
 
-	}
-	
-	/*
-	 * 상품 수정 실패 시 이벤트를 처리하기 위한 메소드
-	 */
-	private void handleProductUpdateFail(HttpServletRequest request) {
-		request.setAttribute("message", "상품수정을 실패했습니다.");
-		request.setAttribute("loc", Constants.HISTORY_BACK);
-
-		super.setRedirect(false);
-		super.setViewPage(Constants.MESSAGE_PAGE);
 	}
 
 }
