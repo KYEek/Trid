@@ -12,6 +12,7 @@
 			<div class="menu-trigger">
 				<span></span> <span></span>
 			</div>
+			<jsp:include page="category/hamburger_category.jsp" />
 		</div>
 
 		<!-- 로고 -->
@@ -27,7 +28,7 @@
 		<!-- 검색창 -->
 		<div class="header-search-container">
 			<div class="search-bar">
-				<a class="search-bar-link" href="${pageContext.request.contextPath}/category/search.trd">검색</a>
+				<a class="search-bar-link" href="${pageContext.request.contextPath}/product/search.trd">검색</a>
 			</div>
 		</div>
 
