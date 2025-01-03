@@ -16,6 +16,7 @@
 
 <%-- js --%>
 <script type="text/javascript" src="${ctxPath}/js/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js"></script>
 </head>
 
 <body>
@@ -49,7 +50,13 @@
 		</div>
 
 		<%-- 통계 --%>
-		<div class="dashboard_container"></div>
+		<div class="dashboard_container">
+		<div style="width: 800px;"><canvas id="acquisitions"></canvas></div>
+
+    <!-- <script type="module" src="dimensions.js"></script> -->
+    <script type="module" src="acquisitions.js"></script>
+		
+		</div>
 		<%-- 통계 --%>
 		<div class="dashboard_container"></div>
 	</div>
