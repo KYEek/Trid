@@ -27,10 +27,12 @@ public class Login extends AbstractController {
 		if("POST".equalsIgnoreCase(method)) { 
 			String member_email = request.getParameter("email");
 			String member_password = request.getParameter("pwd");
+			String clientIp = request.getRemoteAddr();
 			
 			Map<String , String> paraMap = new HashMap<>();
 			paraMap.put("member_email", member_email);
 			paraMap.put("member_password", member_password);
+			paraMap.put("clientIp", clientIp);
 			
 			MemberDTO loginuser = mdao.login(paraMap);
 			

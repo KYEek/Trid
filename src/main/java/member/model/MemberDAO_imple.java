@@ -117,8 +117,8 @@ public class MemberDAO_imple implements MemberDAO {
 
 			String sql 	= " select pk_member_no, member_email, member_name, member_mobile, member_gender, member_birthday, member_idle, to_char(member_registerday, 'yyyy-mm-dd') as member_registerday, "
 						+ " member_pwdchangeday, to_char(member_updateday, 'yyyy-mm-dd') as member_updateday,"
-						+ " (select ROUND(MONTHS_BETWEEN(sysdate, max(login_date))) from tbl_login where fk_member_no = pk_member_no) as lastlogingap " 
-						+ " from tbl_member join tbl_login on pk_member_no = fk_member_no "
+						+ " (select NVL(ROUND(MONTHS_BETWEEN(sysdate, max(login_date))), 0) from tbl_login where fk_member_no = pk_member_no) as lastlogingap " 
+						+ " from tbl_member "
 						+ " where member_email = ? and member_password = ? "
 						+ " and member_status = 1 ";
 
@@ -174,7 +174,7 @@ public class MemberDAO_imple implements MemberDAO {
 					
 					pstmt.setInt(1, member.getPk_member_no()); // 회원 일련번호
 					pstmt.setString(2, rs.getString("Member_email")); // 암호화된 이메일
-					pstmt.setString(3, paraMap.get("login_client_ip")); // 접속 IP
+					pstmt.setString(3, paraMap.get("clientIp")); // 접속 IP
 					
 					// 회원 로그인 기록 삽입 실패 시 로그인 실패 처리
 					if(pstmt.executeUpdate() != 1) {
@@ -190,6 +190,8 @@ public class MemberDAO_imple implements MemberDAO {
 		} finally {
 			close();
 		}
+		
+		//System.out.println(member.getMember_name());
 
 		return member;
 	}// end of public MemberVO login(Map<String, String> paraMap) throws
@@ -884,6 +886,82 @@ public class MemberDAO_imple implements MemberDAO {
 		}
 		
 		return historyList;
+	}
+	
+	// 휴면 상태를 해제해주는 메소드
+	@Override
+	public int UpdateMemberIdle(String memberNo, String clientip) throws SQLException {
+
+	      String email = "";
+	      
+	      try {
+		      conn = ds.getConnection();
+		      
+		      conn.setAutoCommit(false);
+		      
+		      String sql = " update tbl_member set member_idle = 1 "
+		                 + " where pk_member_no = ? ";
+		      
+		      pstmt = conn.prepareStatement(sql);
+	      
+		      pstmt.setString(1, memberNo);
+	         
+		      if(pstmt.executeUpdate() != 1) {
+		    	  System.out.println("[ERROR] tbl_member update failed");
+		    	  conn.rollback();
+		    	  return 0;
+		      }
+		      
+		      sql = " select member_email "
+		      	  + " from tbl_member "
+		      	  + " where pk_member_no = ? ";
+		      
+		      pstmt = conn.prepareStatement(sql);
+		      
+		      pstmt.setString(1, memberNo);
+		      
+		      rs = pstmt.executeQuery();
+		      
+		      if(rs.next()) {
+		    	  email = rs.getString("member_email");
+		      }
+		      else {
+		    	  conn.rollback();
+		    	  System.out.println("[ERROR] tbl_member select failed");
+		    	  return 0;
+		      }
+		      
+		      sql = " insert into tbl_login"
+		      	  + " ( "
+		      	  + " pk_login_no "
+		      	  + " fk_member_no "
+		      	  + " login_member_email "
+		      	  + " login_date "
+		      	  + " login_client_ip "
+		      	  + " ) "
+		      	  + " values(pk_login_no_seq.nextval, ?, ?, sysdate, ? ) " ;
+		      
+		      pstmt = conn.prepareStatement(sql);
+		      
+		      pstmt.setString(1, memberNo);
+		      pstmt.setString(2, email);
+		      pstmt.setString(3, clientip);
+		      
+		      pstmt.executeUpdate();
+		      
+		      if(pstmt.executeUpdate() != 1) {
+		    	  conn.rollback();
+		    	  System.out.println("[ERROR] tbl_login insert failed");
+		    	  return 0;
+		      }
+		      
+		      conn.commit();
+		      
+	      } finally {
+	         close();
+	      }
+	      
+	      return 1;
 	}
 
 }
