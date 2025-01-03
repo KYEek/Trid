@@ -25,13 +25,6 @@
 			</div>
 		</div>
 
-		<!-- 검색창 -->
-		<div class="header-search-container">
-			<div class="search-bar">
-				<a class="search-bar-link" href="${pageContext.request.contextPath}/product/search.trd">검색</a>
-			</div>
-		</div>
-
 		<!-- 네비게이션 -->
 		<div class="header-links">
 		<c:if test="${empty sessionScope.loginuser}">

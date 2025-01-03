@@ -1056,24 +1056,24 @@ public class ProductDAO_imple implements ProductDAO {
 		        conn = ds.getConnection();
 
 		        StringBuilder sql = new StringBuilder(
-					                " SELECT p.pk_product_no, p.product_name, p.product_price, "
-					              + "        i.product_image_path, i.pk_product_image_no, "
-					              + " 		 c.pk_category_no, c.category_type, "
-					              + "        cr.color_name "
-					              + "        FROM tbl_product p "
-					              + "        JOIN tbl_category c "
-					              + "        ON p.fk_category_no = c.pk_category_no "
-					              + "        JOIN tbl_color cr "
-					              + "        ON p.pk_product_no = cr.fk_product_no "
-					              + "        JOIN tbl_product_image i "
-					              + "        ON p.pk_product_no = i.fk_product_no "
-					              + "  WHERE product_status_code = 1 "
-					              + "        AND i.pk_product_image_no = ( "
-					              + "        SELECT MIN(pk_product_image_no) "
-					              + "        FROM tbl_product_image "
-					              + "  WHERE fk_product_no = p.pk_product_no "
-					              + "  ) "
-		        );
+					                    " SELECT  p.pk_product_no, p.product_name, p.product_price, "
+					                  + "         i.product_image_path, i.pk_product_image_no, "
+					                  + "         c.pk_category_no, c.category_type, "
+					                  + "         cr.color_name "
+					                  + " FROM    tbl_product p "
+					                  + "         JOIN tbl_category c "
+					                  + "         ON p.fk_category_no = c.pk_category_no "
+					                  + "         JOIN tbl_color cr "
+					                  + "         ON p.pk_product_no = cr.fk_product_no "
+					                  + "         JOIN tbl_product_image i "
+					                  + "         ON p.pk_product_no = i.fk_product_no "
+					                  + " WHERE   product_status_code = 1 "
+					                  + " AND     i.pk_product_image_no ="
+					                  + " ( "
+					                  + "  SELECT  MIN(pk_product_image_no) "
+					                  + "  FROM    tbl_product_image "
+					                  + "  WHERE   fk_product_no = p.pk_product_no "
+					                  + " ) " );
 
 		        // 필터링 조건 추가
 		        if (!StringUtil.isBlank(paraMap.get("choosePrice"))) {
@@ -1084,7 +1084,7 @@ public class ProductDAO_imple implements ProductDAO {
 		            if (colors.length > 0) {
 		                sql.append(" AND cr.color_name IN (");
 		                for (int i = 0; i < colors.length; i++) {
-		                    sql.append("?");
+		                    sql.append(" ? ");
 		                    if (i < colors.length - 1) {
 		                        sql.append(", ");
 		                    }
@@ -1109,7 +1109,7 @@ public class ProductDAO_imple implements ProductDAO {
 			     if (!StringUtil.isBlank(paraMap.get("chooseColor"))) {
 			         String[] colors = paraMap.get("chooseColor").split(",");
 			         for (String color : colors) {
-			             pstmt.setString(index++, color.trim());
+			             pstmt.setString(index++, color.trim().toUpperCase());
 			         }
 			     }
 			     if (!StringUtil.isBlank(paraMap.get("chooseCategory"))) {
@@ -1127,6 +1127,7 @@ public class ProductDAO_imple implements ProductDAO {
 		        }
 
 		        rs = pstmt.executeQuery();
+		        
 
 		        // 결과를 ProductDTO 리스트로 매핑
 		        while (rs.next()) {
@@ -1150,16 +1151,13 @@ public class ProductDAO_imple implements ProductDAO {
 	                productList.add(product);
 		        }
 
-		    } finally {
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        System.out.println("SQL 실행 중 오류 발생: " + e.getMessage());
+		    }   finally {
 		        close();
 		    }
 
-		    // 조건에 따라 조회된 상품 리스트를 출력
-		    System.out.println("조회된 상품 수: " + productList.size());
-		    for (ProductDTO product : productList) {
-		        System.out.println(product);
-		    }
-		    
 		    return productList;
 		}// end of public List<ProductDTO> categorySelect(Map<String, String> paraMap) throws SQLException ------------------------
 
@@ -1173,15 +1171,21 @@ public class ProductDAO_imple implements ProductDAO {
 			try {
 				conn = ds.getConnection();
 				
-				String sql = " SELECT  p.pk_product_no, p.product_name, p.product_price,"
-						   + "         i.product_image_path, i.pk_product_image_no, "
-						   + "         c.category_gender "
-						   + " FROM    tbl_product p "
-						   + "         JOIN tbl_category c "
-						   + "         ON p.fk_category_no = c.pk_category_no "
-						   + "         JOIN tbl_product_image i "
-						   + "         ON p.pk_product_no = i.fk_product_no "
-						   + " WHERE   product_status_code = 1 ";
+				String sql = " SELECT   p.pk_product_no, p.product_name, p.product_price, "
+						   + "          i.product_image_path, i.pk_product_image_no, "
+						   + "          c.category_gender "
+						   + " FROM     tbl_product p "
+						   + "          JOIN tbl_category c "
+						   + "          ON p.fk_category_no = c.pk_category_no "
+						   + "          JOIN tbl_product_image i "
+						   + "          ON p.pk_product_no = i.fk_product_no "
+						   + " WHERE    product_status_code = 1 "
+						   + " AND      i.pk_product_image_no = "
+						   + " ( "
+						   + "  SELECT   MIN(pk_product_image_no) "
+						   + "  FROM     tbl_product_image "
+						   + "  WHERE    fk_product_no = p.pk_product_no "
+						   + " ) ";
 				
 		        // 검색어 필터링
 		        if (paraMap.get("search_word") != null && !paraMap.get("search_word").trim().isEmpty()) {
@@ -1194,6 +1198,7 @@ public class ProductDAO_imple implements ProductDAO {
 				
 				pstmt = conn.prepareStatement(sql);
 				
+				// 검색어 파라미터 매핑
 				if (paraMap.get("search_word") != null && !paraMap.get("search_word").trim().isEmpty()) {
 				    pstmt.setString(1, "%" + paraMap.get("search_word") + "%");
 				    
@@ -1203,7 +1208,7 @@ public class ProductDAO_imple implements ProductDAO {
 				rs = pstmt.executeQuery();
 				
 		         while (rs.next()) {
-
+		        	 // 상품 정보 매핑
 		        	 ProductDTO product = new ProductDTO();
 
 		        	 product.setProductNo(rs.getInt("pk_product_no"));
@@ -1311,8 +1316,89 @@ public class ProductDAO_imple implements ProductDAO {
 			return recommendProductMapList;
 		}
 
-	
-	
+		// 추천 상품 리스트 출력 메소드
+		@Override
+		public List<ProductDTO> RandomProducts() throws SQLException {
+			
+		    List<ProductDTO> randomProductList = new ArrayList<>();
+		    
+		    try {
+		        conn = ds.getConnection();
+
+		        String sql = " SELECT p.pk_product_no, p.product_name, p.product_price, "
+		                   + "        i.product_image_path, i.pk_product_image_no "
+		                   + " FROM   tbl_product p "
+		                   + " JOIN   tbl_product_image i "
+		                   + " ON     p.pk_product_no = i.fk_product_no "
+		                   + " WHERE  product_status_code = 1 "
+		                   + " AND    i.pk_product_image_no = "
+		                   + "        ( "
+		                   + "		  SELECT MIN(pk_product_image_no"
+		                   + "		  ) "
+		                   + "        FROM tbl_product_image "
+		                   + "        WHERE fk_product_no = p.pk_product_no) "
+		                   + " ORDER BY DBMS_RANDOM.VALUE "; // 랜덤으로 섞어서 가져옴
+
+		        pstmt = conn.prepareStatement(sql);
+
+		        rs = pstmt.executeQuery();
+
+		        while (rs.next()) {
+		        	// 상품 정보 매핑
+		            ProductDTO product = new ProductDTO();
+		            product.setProductNo(rs.getInt("pk_product_no"));
+		            product.setProductName(rs.getString("product_name"));
+		            product.setPrice(rs.getInt("product_price"));
+
+		            // 이미지 정보 매핑
+		            List<ImageDTO> imageList = new ArrayList<>();
+		            ImageDTO image = new ImageDTO();
+		            image.setPkProductImageNo(rs.getInt("pk_product_image_no"));
+		            image.setImagePath(rs.getString("product_image_path"));
+		            imageList.add(image);
+
+		            product.setImageList(imageList);
+		            randomProductList.add(product);
+		        }
+		    } finally {
+		        close();
+		    }
+
+		    return randomProductList;
+		}
 		
+		
+		// 햄버거 메뉴 카테고리 클릭시 해당 카테고리 상품페이지로 이동 메소드
+		@Override
+		public List<CategoryDTO> HamburgerCategory() throws SQLException {
+			List<CategoryDTO> Categories = new ArrayList<>();
+			
+			try {
+				conn = ds.getConnection();
+				
+				String sql 	= " select pk_category_no, category_name, category_gender, category_type "
+							+ " from tbl_category ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					CategoryDTO categoryDTO = new CategoryDTO();
+					
+					categoryDTO.setPkCategoryNo(rs.getInt("pk_category_no")); // 카테고리 일련번호
+					categoryDTO.setCategoryName(rs.getString("category_name")); // 카테고리 명
+					categoryDTO.setGender(rs.getInt("category_gender")); // 카테고리 성별 0:남자 1:여자
+					categoryDTO.setType(rs.getInt("category_type")); // 카테고리 상의/하의 0:상의, 1:하의
+					
+					Categories.add(categoryDTO);
+				}
+				
+			} finally {
+				close();
+			}
+			
+			return Categories;
+		}
 		
 }
