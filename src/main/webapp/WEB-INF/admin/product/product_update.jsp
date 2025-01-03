@@ -17,7 +17,7 @@
 
 <%-- js --%>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.7.1.min.js"></script>
-<script src="${ctxPath}/js/admin/product_update.js"></script>
+<script src="${ctxPath}/js/admin/product.js"></script>
 
 </head>
 
@@ -157,6 +157,12 @@
 			}
 
 			$(document).on("click", "#product_register_button", function () {
+				
+				// 제츨 요소 유효성 검사
+				if(!validateProductDetailsOnUpdate()) {
+					return false;
+				}
+				
 				const arr_inventory = [];
 				const productDetailNoArr= [];
 				
