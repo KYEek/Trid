@@ -29,6 +29,13 @@
 	
 		
 		$(document).on("click", "button#submit_button", function() {
+			const answer = $("textarea#questionAnswer").val();
+			
+			if(answer == "" || answer.lenght > 100) {
+				alert("올바른 답변을 입력하세요 (최대 100글자)");
+				return false;
+			}
+			
 			const frm = document.answer_frm;
 			frm.action = "boardDetail.trd";
 			frm.method = "post";

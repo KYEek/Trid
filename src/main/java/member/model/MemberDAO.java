@@ -60,4 +60,16 @@ public interface MemberDAO {
    // 관리자 회원 로그인 기록 리스트 조회 메소드
    List<Map<String, String>> selectLoginHistoryByAdmin(Map<String, Object> paraMap) throws SQLException;
    
+	// 관리자 회원 리스트 조회 메소드
+	List<MemberDTO> selectMemberListByAdmin(Map<String, Object> paraMap) throws SQLException;
+	
+	// 관리자 회원 상세조회 메소드
+	MemberDTO selectMemberByAdmin(String memberNo) throws SQLException;
+	
+	// 관리자 회원 로그인 기록 행 개수
+	int selectLoginHistoryTotalRowCount(String memberNo) throws SQLException;
+
+	// 관리자 회원 로그인 기록 리스트 조회 메소드
+	List<Map<String, String>> selectLoginHistoryByAdmin(Map<String, Object> paraMap) throws SQLException;
+	
 }

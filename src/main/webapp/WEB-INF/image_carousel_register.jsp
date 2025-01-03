@@ -9,7 +9,8 @@
 	</div>
 	<div class="thumbnail-container">
 	</div>
-	<span id="image_name"></span>
+	<span id="image_name">
+	</span>
 </div>
 
 <script>
@@ -19,6 +20,8 @@
 	let totalSlides = $slides.length;
 	let touchStartY = 0;
 	let touchEndY = 0;
+	
+	let totalSize = 0;
 
 	let fileList = new DataTransfer();
 
@@ -51,19 +54,6 @@
 			removeImage();
 		});
 
-		$(document).on("click", "button#reset", function () {
-
-			fileList = new DataTransfer();
-			$("input#image_input").files = null;
-
-			$slides.remove();
-			$thumbnails.remove();
-
-
-			currentIndex = 0;
-			totalSlides = $slides.length;
-		});
-
 	});
 
 	function moveToSlide(newIndex) {
@@ -94,6 +84,17 @@
 				console.log(`${index}번째 파일:`, file); // 각 파일 정보 확인
 
 				let reader = new FileReader();
+				
+				// 이미지 파일 유효성 검사
+				if(!validateImage(file)) {
+					return;					
+				}
+				
+				// 이미지 파일 유효성 검사
+				if(totalSize + file.size >= 1024 * 1024 * 20) {
+					alert("첨부 이미지 파일들의 총합 크기는 20MB를 넘을 수 없습니다.");
+					return;
+				}
 
 				reader.onload = function (e) {
 
@@ -120,6 +121,8 @@
 				};
 
 				reader.readAsDataURL(file);
+				
+				totalSize += file.size;
 
 			});
 
@@ -129,9 +132,14 @@
 
 	function removeImage() {
 		const newFileList = new DataTransfer();
+		
+		totalSize = 0;
 
 		Array.from(fileList.files).filter((_, i) => i !== currentIndex)
-			.forEach(file => newFileList.items.add(file));
+			.forEach(file => {
+				newFileList.items.add(file);
+				totalSize += file.size;
+			});
 
 		fileList = newFileList;
 

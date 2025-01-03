@@ -16,7 +16,6 @@
 
 <%-- js --%>
 <script type="text/javascript" src="${ctxPath}/js/jquery-3.7.1.min.js"></script>
-<script type="text/javascript" src="${ctxPath}/js/admin/admin_main.js"></script>
 </head>
 
 <body>
@@ -54,6 +53,18 @@
 		<%-- 통계 --%>
 		<div class="dashboard_container"></div>
 	</div>
+	
+	<script>
+		$(document).ready(function () {
+		    // 로그아웃 이벤트 처리
+		    $(document).on("click", "button#logout_button", () => {
+		        const frm = document.logout_frm;
+		        frm.method = "post";
+		        frm.action = "logout.trd";
+		        frm.submit();
+		    });
+		});
+	</script>
 
 </body>
 
