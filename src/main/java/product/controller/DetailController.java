@@ -23,6 +23,17 @@ public class DetailController extends AbstractController {
 		
 		String method = request.getMethod(); // HTTP method
 		
+		/*
+		String referer = request.getHeader("referer");
+		// referer = request.getHeader("referer"); 은 이전 페이지의 URL 을 가져오는 것이다.
+
+		if (referer == null) {
+			// referer == null 은 웹브라우저 주소창에 URL 을 직접 입력하고 들어온 경우
+			super.handleMessage(request, "잘못된 접근입니다.", Constants.CATEGORY_LIST_PAGE);
+			return;
+		}
+		*/
+		
 		// GET 요청인 경우
 		if("GET".equalsIgnoreCase(method)) {
 
@@ -35,16 +46,17 @@ public class DetailController extends AbstractController {
 				// 추천 상품 리스트 뽑기
 				List<Map<String, String>> recommendProductMapList = productDAO.selectRecommendProductList(productNo);
 				
-				// productDTO가 존재하지 않는다면?
-				if(productDTO == null) {
-					super.handleMessage(request, "요청하신 상품이 존재하지 않습니다.", Constants.CATEGORY_LIST_PAGE);
-				}
-				
 				request.setAttribute("productDTO", productDTO);
 				request.setAttribute("recommendProductMapList", recommendProductMapList);
 				
-				super.setRedirect(false);
-				super.setViewPage(Constants.PRODUCT_DETAIL_PAGE);
+				// productDTO가 존재하지 않는다면?
+				if(productDTO == null) {
+					super.handleMessage(request, "요청하신 상품이 존재하지 않습니다.", Constants.CATEGORY_LIST_URL);
+				}
+				else {
+					super.setRedirect(false);
+					super.setViewPage(Constants.PRODUCT_DETAIL_PAGE);
+				}
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -53,10 +65,10 @@ public class DetailController extends AbstractController {
 			}
 			
 		}
-		// GET 요청이 아닌 경우 관리자 상품 상세 URL로 이동
+		// GET 요청이 아닌 경우 상품 리스트 페이지로 이동
 		else {
 			super.setRedirect(true);
-			super.setViewPage(Constants.ADMIN_PRODUCT_DETAIL_URL);
+			super.setViewPage(Constants.CATEGORY_LIST_PAGE);
 		}
 
 		

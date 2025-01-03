@@ -17,6 +17,8 @@ function go_detail(pk_question_no, question_isprivate, is_writer) {
 	
 }// end of 리스트 상세로 보내는 함수
 
+
+// 등록하기 페이지로 보내는 함수
 function go_register() {
 
 	location.href=`/Trid/board/register.trd`;
