@@ -41,11 +41,11 @@ public class RegisterController extends AbstractController {
 			member.setMember_password(member_password);
 			member.setMember_name(member_name);
 			member.setMember_mobile(member_mobile);
-//			member.setMember_gender(0);
-//			member.setMember_birthday(member_birthday);
-//			member.setMember_registerday(member_registerday);
-//			member.setMember_pwdchangeday(member_pwdchangeday);
-//			member.setMember_updateday(member_updateday);
+			member.setMember_gender(Integer.parseInt(member_gender));
+			member.setMember_birthday(member_birthday);
+			member.setMember_registerday(member_registerday);
+			member.setMember_pwdchangeday(member_pwdchangeday);
+			member.setMember_updateday(member_updateday);
 			
 			// ==== 회원가입이 성공되어지면 "회원가입 성공" 이라는 alert 를 띄우고 시작페이지로 이동한다. === // 
 			String message = "";
