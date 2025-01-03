@@ -20,4 +20,7 @@ public interface BasketDAO {
 
 	//장바구니 삽입 메서드
 	int insertBasket(int productDetailNum, int pk_member_no) throws SQLException;
+
+	//기존 장바구니에 있는 상품인지 확인
+	int checkDuplicate(int productDetailNum, int pk_member_no) throws SQLException;
 }

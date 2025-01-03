@@ -72,12 +72,15 @@ public class BasketDAO_imple implements BasketDAO {
 		
 		try {
 			
-			sql = " select PK_BASKET_NO, FK_MEMBER_NO, FK_PRODUCT_DETAIL_NO, BASKET_QUANTITY, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_INVENTORY, PRODUCT_NAME, PRODUCT_PRICE, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
+			sql = " with a as "
+					+ " (select row_number() over(partition by PK_BASKET_NO order by PRODUCT_IMAGE_NAME) as rownumber, PK_BASKET_NO, FK_MEMBER_NO, FK_PRODUCT_DETAIL_NO, BASKET_QUANTITY, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_INVENTORY, PRODUCT_NAME, PRODUCT_PRICE, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
 					+ " from tbl_basket "
 					+ " join select_basket_product_info "
 					+ " on FK_PRODUCT_DETAIL_NO = PRODUCT_DETAIL_NO "
-					+ " where fk_member_no = ? "
-					+ " order by pk_basket_no desc ";
+					+ " where fk_member_no = ?) "
+					+ " select PK_BASKET_NO, FK_MEMBER_NO, FK_PRODUCT_DETAIL_NO, BASKET_QUANTITY, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_INVENTORY, PRODUCT_NAME, PRODUCT_PRICE, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
+					+ " from a "
+					+ " where rownumber = 1 ";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, pk_member_no);
@@ -211,6 +214,39 @@ public class BasketDAO_imple implements BasketDAO {
 			pstmt.setInt(1, pk_member_no);
 			pstmt.setInt(2, productDetailNum);
 			result = pstmt.executeUpdate();
+
+		} finally {
+			close();
+		}
+
+		return result;
+	}
+
+	//기존 장바구니에 있는 상품인지 확인
+	@Override
+	public int checkDuplicate(int productDetailNum, int pk_member_no) throws SQLException {
+		
+		conn = ds.getConnection();
+
+		int result = 0;
+
+		try {
+			
+			System.out.println(productDetailNum);
+			
+			System.out.println(pk_member_no);
+			
+			sql = " select PK_BASKET_NO "
+					+ " from tbl_basket "
+					+ " where fk_member_no = ? and fk_product_detail_no = ? ";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, pk_member_no);
+			pstmt.setInt(2, productDetailNum);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				result = rs.getInt("PK_BASKET_NO");
+			}
 
 		} finally {
 			close();

@@ -74,7 +74,7 @@ async function getBasketList() {
             <div class="basket_img">
               <a><img src="/Trid/${PRODUCT_IMAGE_PATH}" /></a>
             </div>
-            <div class="basket_product_info">
+            <div class="basket_product_info" data-product_detail_no="${FK_PRODUCT_DETAIL_NO}" >
               <div class="basket_product_info_header">
                 <div><a class="product_link">${PRODUCT_NAME}</a></div>
                 <div id= "basket_delete_${PK_BASKET_NO}" class = "basket_delete">⨉</div>
@@ -188,6 +188,7 @@ function hideLoading(loading_box) {
 document.addEventListener("DOMContentLoaded", function () {
   const basket_list = document.querySelector("div#basket_list");
   const loading_box = document.getElementById("roading_container");
+  const next_button = document.querySelector("#basket_footer_next_button");
   //장바구니 목록을 가져오기—
   getBasketList().then((html) => {
     basket_list.innerHTML = html;
@@ -307,4 +308,39 @@ document.addEventListener("DOMContentLoaded", function () {
     },
     true
   );
+  
+  //계속 버튼 클릭시 결제페이지로 이동 개수가 0 이 아니고
+  next_button.addEventListener("click", (e) => {
+	if(Number(document.querySelector("span#total_price").textContent) > 0) {
+	      const basket_item_arry = [];
+	      const basket_item_list = document.querySelectorAll("div.basket_item");
+	      basket_item_list.forEach((element) => {
+	        const imgSrc = element.querySelector(".basket_img img").src;
+	        const productDetailNo = element
+	          .querySelector(".basket_product_info")
+	          .getAttribute("data-product_detail_no");
+	        const productCountNum =
+	          element.querySelector(".pruduct_count_num").textContent;
+	        const productPrice = element
+	          .querySelector(".price_text")
+	          .getAttribute("data-price");
+//			console.log(element.querySelector(".price_text"));
+	        let item = {
+	          imgSrc: imgSrc,
+	          productDetailNo: productDetailNo,
+	          productCountNum: productCountNum,
+	          productPrice: productPrice,
+	        };
+
+	        basket_item_arry.push(item);
+	      });
+//	      console.log(basket_item_arry);
+	      sessionStorage.setItem(
+	        "basket_item_arry",
+	        JSON.stringify(basket_item_arry)
+	      );
+
+	      location.href = "payment/address.trd";
+	  }
+    });
 });

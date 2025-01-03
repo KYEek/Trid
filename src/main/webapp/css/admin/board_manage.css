@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+div#search_box {
+	margin-bottom : 10px;
+}
+
+select#search_type{
+	padding: 5px;
+}
+
+input#search_word {
+	padding: 5px;
+	border: none;
+	border-bottom: solid 1px;
+	outline: none;
+	text-align: end;
+}
+
+/* 리스트 요소 호버링 */
+tr.question_item:hover {
+	background-color: rgb(217, 217, 255);
+}

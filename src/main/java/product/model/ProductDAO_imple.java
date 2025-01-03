@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import board.domain.BoardDTO;
 import common.domain.PagingDTO;
 import product.domain.CategoryDTO;
 
@@ -80,7 +82,7 @@ public class ProductDAO_imple implements ProductDAO {
 			
 			
 			////// 상품 테이블 PK를 미리 추출 //////
-			String sql = " select pk_category_no_seq.nextval as pk_product_no from dual ";
+			String sql = " select pk_product_no_seq.nextval as pk_product_no from dual ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -250,6 +252,14 @@ public class ProductDAO_imple implements ProductDAO {
 		
 		String categoryNo = (String)paraMap.get("categoryNo");
 		
+		String priceMin = (String)paraMap.get("priceMin");
+		
+		String priceMax = (String)paraMap.get("priceMax");
+		
+		String dateMin = (String)paraMap.get("dateMin");
+		
+		String dateMax = (String)paraMap.get("dateMax");
+		
 		int count = 0;
 		
 		try {
@@ -259,22 +269,72 @@ public class ProductDAO_imple implements ProductDAO {
 						+ " from tbl_product p join tbl_category c on p.fk_category_no = c.pk_category_no "
 						+ " where 1=1 ";
 			
-			if(searchWord != null && !searchWord.isBlank()) {
+			if(!StringUtil.isBlank(searchWord)) {
 				sql += " and product_name like '%' || ? || '%' ";
 			}
 			
-			if(categoryNo != null && !categoryNo.isBlank()) {
+			if(!StringUtil.isBlank(categoryNo)) {
 				sql += " and pk_category_no = ? ";
+			}
+			
+			if(!StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				sql += " and product_price between ? and ? ";
+			}
+			
+			if(StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				sql += " and product_price <= ? ";
+			}
+			
+			if(!StringUtil.isBlank(priceMin) && StringUtil.isBlank(priceMax)) {
+				sql += " and product_price >= ? ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and product_registerday between to_date(?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and product_registerday <= to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				sql += " and product_registerday >= to_date(?, 'yyyy-mm-dd') ";
 			}
 
 			pstmt = conn.prepareStatement(sql);
 			
-			if(searchWord != null && !searchWord.isBlank()) {
+			if(!StringUtil.isBlank(searchWord)) {
 				pstmt.setString(++count, searchWord);
 			}
 			
-			if(categoryNo != null && !categoryNo.isBlank()) {
+			if(!StringUtil.isBlank(categoryNo)) {
 				pstmt.setString(++count, categoryNo);
+			}
+			
+			if(!StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				pstmt.setString(++count, priceMin);
+				pstmt.setString(++count, priceMax);
+			}
+			
+			if(StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				pstmt.setString(++count, priceMax);
+			}
+			
+			if(!StringUtil.isBlank(priceMin) && StringUtil.isBlank(priceMax)) {
+				pstmt.setString(++count, priceMin);
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
 			}
 			
 			rs = pstmt.executeQuery();
@@ -306,6 +366,14 @@ public class ProductDAO_imple implements ProductDAO {
 		
 		String sortCategory = (String)paraMap.get("sortCategory") == null ? "" : (String)paraMap.get("sortCategory");
 		
+		String priceMin = (String)paraMap.get("priceMin");
+		
+		String priceMax = (String)paraMap.get("priceMax");
+		
+		String dateMin = (String)paraMap.get("dateMin");
+		
+		String dateMax = (String)paraMap.get("dateMax");
+		
 		try {
 			conn = ds.getConnection();
 
@@ -322,46 +390,92 @@ public class ProductDAO_imple implements ProductDAO {
 								+ " c.pk_category_no, c.category_name, c.category_type, c.category_gender "
 								+ " from tbl_product p join tbl_category c on c.pk_category_no = p.fk_category_no ";
 			
-			if(searchWord != null && !searchWord.isBlank()) {
+			if(!StringUtil.isBlank(searchWord)) {
 				sql += " and product_name like '%' || ? || '%' ";
 			}
 			
-			if(categoryNo != null && !categoryNo.isBlank()) {
+			if(!StringUtil.isBlank(categoryNo)) {
 				sql += " and pk_category_no = ? ";
 			}
 			
-		switch(sortCategory) {
-			case "0" : {sql += " order by p.product_registerday desc "; break;}
-			case "1" : {sql += " order by p.product_registerday "; break;}
-			case "2" : {sql += " order by p.product_price desc "; break;}
-			case "3" : {sql += " order by p.product_price "; break;}
-			default : {sql += " order by p.product_registerday desc "; break;}
-		}
+			if(!StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				sql += " and product_price between ? and ? ";
+			}
+			
+			if(StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				sql += " and product_price <= ? ";
+			}
+			
+			if(!StringUtil.isBlank(priceMin) && StringUtil.isBlank(priceMax)) {
+				sql += " and product_price >= ? ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				sql += " and product_registerday between to_date(?, 'yyyy-mm-dd') and to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				System.out.println(dateMin);
+				sql += " and product_registerday <= to_date(?, 'yyyy-mm-dd hh24:mi:ss') ";
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				sql += " and product_registerday >= to_date(?, 'yyyy-mm-dd') ";
+			}
+			
+			switch(sortCategory) {
+				case "0" : {sql += " order by p.product_registerday desc "; break;}
+				case "1" : {sql += " order by p.product_registerday "; break;}
+				case "2" : {sql += " order by p.product_price desc "; break;}
+				case "3" : {sql += " order by p.product_price "; break;}
+				default : {sql += " order by p.product_registerday desc "; break;}
+			}
 				
-			
-			
 			sql += " ) A "
 					+ " ) "
 					+ " SELECT * FROM T  WHERE T.RN between ? and ? ";
 			
-
 			pstmt = conn.prepareStatement(sql);
 			
 			int count = 0;
 			
-			if(searchWord != null && !searchWord.isBlank()) {
+			if(!StringUtil.isBlank(searchWord)) {
 				pstmt.setString(++count, searchWord);
 			}
 			
-			if(categoryNo != null && !categoryNo.isBlank()) {
+			if(!StringUtil.isBlank(categoryNo)) {
 				pstmt.setString(++count, categoryNo);
+			}
+			
+			if(!StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				pstmt.setString(++count, priceMin);
+				pstmt.setString(++count, priceMax);
+			}
+			
+			if(StringUtil.isBlank(priceMin) && !StringUtil.isBlank(priceMax)) {
+				pstmt.setString(++count, priceMax);
+			}
+			
+			if(!StringUtil.isBlank(priceMin) && StringUtil.isBlank(priceMax)) {
+				pstmt.setString(++count, priceMin);
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(StringUtil.isBlank(dateMin) && !StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMax + " 23:59:59");
+			}
+			
+			if(!StringUtil.isBlank(dateMin) && StringUtil.isBlank(dateMax)) {
+				pstmt.setString(++count, dateMin);
 			}
 			
 			pstmt.setInt(++count, pagingDTO.getFirstRow()); // 현재 페이지의 첫 레코드의 번호
 			pstmt.setInt(++count, pagingDTO.getLastRow()); // 현재 페이지의 마지막 레코드의 번호
 		
-			
-
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -389,8 +503,6 @@ public class ProductDAO_imple implements ProductDAO {
 				productList.add(productDTO);
 		
 			}
-			
-			System.out.println(sql);
 	
 		} finally {
 			close();
@@ -1121,5 +1233,86 @@ public class ProductDAO_imple implements ProductDAO {
 			
 			return searchProductList;
 		}// end of public List<ProductDTO> searchProduct(Map<String, String> paraMap) throws SQLException ---------------------------
+		
+		
+		
+		// 사용자 추천 상품 리스트 뽑기
+		@Override
+		public List<Map<String, String>> selectRecommendProductList(String productNo) throws SQLException {
+			
+			List<Map<String, String>> recommendProductMapList = new ArrayList<>();
+			
+			try {
+				conn = ds.getConnection();
+				
+				String sql  = "WITH FIRST_IMAGE AS ( "
+							+ "    SELECT "
+							+ "        fk_product_no, "
+							+ "        product_image_path, "
+							+ "        ROW_NUMBER() OVER (PARTITION BY fk_product_no ORDER BY pk_product_image_no ASC) AS row_num "
+							+ "    FROM tbl_product_image "
+							+ " ) "
+							+ " SELECT "
+							+ "    P.pk_product_no AS product_no, "
+							+ "    P.product_name, "
+							+ "    FI.product_image_path AS image_path "
+							+ " FROM "
+							+ "    tbl_product P "
+							+ " JOIN "
+							+ "    tbl_color C ON P.pk_product_no = C.fk_product_no "
+							+ " JOIN "
+							+ "    tbl_category CAT ON P.fk_category_no = CAT.pk_category_no "
+							+ " JOIN "
+							+ "    tbl_product RECOMMEND_PRODUCT ON RECOMMEND_PRODUCT.pk_product_no = ? "
+							+ " JOIN "
+							+ "    tbl_category RECOMMEND_CATEGORY ON RECOMMEND_PRODUCT.fk_category_no = RECOMMEND_CATEGORY.pk_category_no "
+							+ " LEFT JOIN "
+							+ "    FIRST_IMAGE FI ON FI.fk_product_no = P.pk_product_no AND FI.row_num = 1 "
+							+ " WHERE "
+							+ "    CAT.pk_category_no = RECOMMEND_CATEGORY.pk_category_no "
+							+ "    AND CAT.category_gender = RECOMMEND_CATEGORY.category_gender "
+							+ "    AND C.color_name IN ( "
+							+ "        SELECT color_name "
+							+ "        FROM tbl_color "
+							+ "        WHERE fk_product_no = RECOMMEND_PRODUCT.pk_product_no "
+							+ "    ) "
+							+ "    AND P.pk_product_no != RECOMMEND_PRODUCT.pk_product_no "
+							+ "    AND ROWNUM <= 4 "
+							+ " ORDER BY "
+							+ "    DBMS_RANDOM.VALUE ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, productNo);
+				
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					
+					Map<String, String> recommendProductMap = new HashMap<String, String>();
+					
+					recommendProductMap.put("product_no", String.valueOf(rs.getString("product_no")));
+					recommendProductMap.put("product_name", rs.getString("product_name"));
+					recommendProductMap.put("image_path", rs.getString("image_path"));
+					
+					System.out.println(recommendProductMap.get("product_name"));
+					System.out.println(recommendProductMap.get("image_path"));
+					
+					
+					recommendProductMapList.add(recommendProductMap);
+				}
+				
+				
+			} finally {
+				close();
+			}
+			
+			
+			return recommendProductMapList;
+		}
 
+	
+	
+		
+		
 }

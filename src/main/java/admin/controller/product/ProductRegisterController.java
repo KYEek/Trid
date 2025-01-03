@@ -1,15 +1,16 @@
 package admin.controller.product;
 
-import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import common.Constants;
+import common.component.FileComponent;
 import common.controller.AbstractController;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 import product.domain.CategoryDTO;
 import product.domain.ColorDTO;
 import product.domain.ImageDTO;
@@ -36,140 +37,131 @@ public class ProductRegisterController extends AbstractController {
 
 		// POST 요청인 경우 상품 추가 처리
 		if ("POST".equalsIgnoreCase(method)) {
-			List<ImageDTO> imageList = new ArrayList<>();
-
-			if(request.getParts().size() > 0) {
-				
-				String path = "/images/product_images";
-			
-				String uploadPath = request.getServletContext().getRealPath(path);
-				
-				File uploadDir = new File(uploadPath);
-				
-				// 해당 경로에 디렉토리가 존재하는 확인
-				if (!uploadDir.exists()) {
-					uploadDir.mkdir();
-				}
-				
-				// 파일 업로드 처리
-				for (Part part : request.getParts()) {
-					if (part.getSubmittedFileName() != null && !part.getSubmittedFileName().isBlank()) {
-						ImageDTO imageDTO = new ImageDTO();
-
-						String fileName = part.getSubmittedFileName(); // 이미지 파일명 지정
-
-						String imagePath = uploadPath + File.separator + fileName; // 이미지 파일 경로
-
-						// ImageDTO에 이미지 정보 저장
-						imageDTO.setImagePath(path +  File.separator + fileName);
-						imageDTO.setImageName(fileName);
-
-						// 지정된 경로에 이미지 저장
-						part.write(imagePath);
-
-						imageList.add(imageDTO);
-					}
-				}
-			}
-
-
-			////////////////////////// 이미지를 제외한 정보 저장 ////////////////////////////////
 
 			try {
+				// 이미지 파일을 지정된 경로에 저장 후 이미지 정보가 담긴 ImageDTO list 반환
+				List<ImageDTO> imageList = FileComponent.saveImages(request); 
 
-				// DTO, DTO List 초기화
-				ProductDTO productDTO = new ProductDTO(); // 상품 DTO 초기화
-
-				CategoryDTO categoryDTO = new CategoryDTO(); // 카테고리 DTO 초기화
-
-				List<ColorDTO> colorList = new ArrayList<>(); // 상품 색상 리스트
-
-				List<ProductDetailDTO> productDetailList = new ArrayList<>(); // 상품 상세 리스트
-
-				// Request에서 정보 추출
-
-				String[] inventoryArr = request.getParameter("inventory").split(","); // 재고 배열 (100, 100, 100, 100) 사이즈 순서에 맞추어 형성
-
-				String[] colorNameArr = request.getParameter("colorName").split(","); // 색상명 (red, blue) 배열
-
-				String[] colorCodeArr = request.getParameter("colorCode").split(","); // 색상코드 (#ffffff, #000000) 배열
-
-				String productName = request.getParameter("productName"); // 상품 명
-
-				String explanation = request.getParameter("explanation"); // 상품 설명
-
-				int categoryNo = Integer.parseInt(request.getParameter("categoryNo")); // 카테고리 일련번호
-
-				int price = Integer.parseInt(request.getParameter("price")); // 상품 가격
-
-				// 리스트를 순회하며 DTO에 정보 저장
-
-				// 상품의 색상들을 ColorDTO List에 저장
-				for (int i = 0; i < colorNameArr.length; i++) {
-					ColorDTO colorDTO = new ColorDTO();
-					colorDTO.setColorName(colorNameArr[i]);
-					colorDTO.setColorCode(colorCodeArr[i]);
-
-					colorList.add(colorDTO);
+				// 상품 이미지가 존재하는지 확인
+				if (imageList.size() < 1) {
+					System.out.println("[ERROR] : imageList is empty");
+					handleProductRegisterFail(request);
+					return;
 				}
 
-				// 사이즈 (0, 1, 2, 3) 순서에 맞추어 재고 입력
-				for (int i = 0; i < 4; i++) {
-					ProductDetailDTO productDetailDTO = new ProductDetailDTO();
-					productDetailDTO.setSize(i);
-					productDetailDTO.setInventory(Integer.parseInt(inventoryArr[i]));
-
-					productDetailList.add(productDetailDTO);
-				}
-
-				categoryDTO.setPkCategoryNo(categoryNo);
-
-				productDTO.setProductName(productName);
-				productDTO.setExplanation(explanation);
-				productDTO.setPrice(price);
-
-				productDTO.setColorList(colorList);
-				productDTO.setProductDetailList(productDetailList);
-				productDTO.setCategoryDTO(categoryDTO);
+				//  이미지를 제외한 정보 저장
+				ProductDTO productDTO = createProductDTO(request);
+			
 				productDTO.setImageList(imageList);
-
+				
 				// DB에 상품 추가 요청
 				int result = productDAO.insertProduct(productDTO);
 
 				// 상품 등록 실패 시
 				if (result != 1) {
-					request.setAttribute("message", "상품등록을 실패했습니다.");
-					request.setAttribute("loc", Constants.HISTORY_BACK);
-
-					super.setRedirect(false);
-					super.setViewPage(Constants.MESSAGE_PAGE);
+					handleProductRegisterFail(request);
 					return;
 				}
 
 				// 상품 등록 성공 시
 				super.handleMessage(request, "상품 등록을 성공했습니다.", Constants.ADMIN_PRODUCT_MANAGE_URL);
 
-			} catch (SQLException e) {
+			} catch (SQLException | NumberFormatException | IOException | ServletException e ) {
 				e.printStackTrace();
-				super.setRedirect(true);
-				super.setViewPage(Constants.ERROR_URL);
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
+				super.handleServerError();
 			}
 
 		}
 		// GET 요청인 경우 상품 추가 페이지로 이동
-		
-		// TODO try catch
 		else {
-			List<CategoryDTO> categoryList = productDAO.selectCategoryList();
+			try {
+				List<CategoryDTO> categoryList = productDAO.selectCategoryList();
 
-			request.setAttribute("categoryList", categoryList);
+				request.setAttribute("categoryList", categoryList);
 
-			super.setRedirect(false);
-			super.setViewPage(Constants.ADMIN_PRODUCT_REGISTER_PAGE);
+				super.setRedirect(false);
+				super.setViewPage(Constants.ADMIN_PRODUCT_REGISTER_PAGE);
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+				super.handleServerError();
+			}
+			
 		}
 
+	}
+	
+	/*
+	 * POST 요청 파라미터에서 받은 값들을 ProductDTO에 저장하여 반환하는 메소드
+	 * ImageDTO, ColorDTO, CategoryDTO,  
+	 */
+	private ProductDTO createProductDTO(HttpServletRequest request) {
+		// DTO, DTO List 초기화
+		ProductDTO productDTO = new ProductDTO(); // 상품 DTO 초기화
+
+		CategoryDTO categoryDTO = new CategoryDTO(); // 카테고리 DTO 초기화
+
+		List<ColorDTO> colorList = new ArrayList<>(); // 상품 색상 리스트
+
+		List<ProductDetailDTO> productDetailList = new ArrayList<>(); // 상품 상세 리스트
+
+		// Request에서 정보 추출
+		String[] inventoryArr = request.getParameter("inventory").split(","); // 재고 배열 (100, 100, 100, 100) 사이즈 순서에 맞추어 형성
+
+		String[] colorNameArr = request.getParameter("colorName").split(","); // 색상명 (red, blue) 배열
+
+		String[] colorCodeArr = request.getParameter("colorCode").split(","); // 색상코드 (#ffffff, #000000) 배열
+
+		String productName = request.getParameter("productName"); // 상품명
+
+		String explanation = request.getParameter("explanation"); // 상품 설명
+
+		int categoryNo = Integer.parseInt(request.getParameter("categoryNo")); // 카테고리 일련번호
+
+		int price = Integer.parseInt(request.getParameter("price")); // 상품 가격
+
+		// 리스트를 순회하며 DTO에 정보 저장
+
+		// 상품의 색상들을 ColorDTO List에 저장
+		for (int i = 0; i < colorNameArr.length; i++) {
+			ColorDTO colorDTO = new ColorDTO();
+			colorDTO.setColorName(colorNameArr[i]);
+			colorDTO.setColorCode(colorCodeArr[i]);
+
+			colorList.add(colorDTO);
+		}
+
+		// 사이즈 (0, 1, 2, 3) 순서에 맞추어 재고 입력
+		for (int i = 0; i < 4; i++) {
+			ProductDetailDTO productDetailDTO = new ProductDetailDTO();
+			productDetailDTO.setSize(i);
+			productDetailDTO.setInventory(Integer.parseInt(inventoryArr[i]));
+
+			productDetailList.add(productDetailDTO);
+		}
+
+		categoryDTO.setPkCategoryNo(categoryNo);
+
+		productDTO.setProductName(productName);
+		productDTO.setExplanation(explanation);
+		productDTO.setPrice(price);
+
+		productDTO.setColorList(colorList);
+		productDTO.setProductDetailList(productDetailList);
+		productDTO.setCategoryDTO(categoryDTO);
+		
+		return productDTO;
+	}
+	
+	/*
+	 * 상품 등록 실패 시 이벤트를 처리하기 위한 메소드
+	 */
+	private void handleProductRegisterFail(HttpServletRequest request) {
+		request.setAttribute("message", "상품등록을 실패했습니다.");
+		request.setAttribute("loc", Constants.HISTORY_BACK);
+
+		super.setRedirect(false);
+		super.setViewPage(Constants.MESSAGE_PAGE);
 	}
 
 }

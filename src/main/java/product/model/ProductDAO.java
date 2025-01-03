@@ -33,13 +33,15 @@ public interface ProductDAO {
 	
 	// 사용자 상품 상세 조회
 	ProductDTO selectProductByMember(String productNo) throws SQLException;
-
+	
+	// 사용자 추천 상품 리스트 뽑기
+	List<Map<String, String>> selectRecommendProductList(String productNo) throws SQLException;
+	
 	// 관리자 상품 수정 시 이미지 삭제
 	int deleteProductImage(String pkProductImageNo) throws SQLException;
 	
 	// 관리자 상품 수정 시 이미지 추가
 	int insertProductImage(List<ImageDTO> imageList, int productNo) throws SQLException;
-	
 	
 	/////////////////////////////////////////////////////////////////////////////////////
 	
@@ -50,5 +52,8 @@ public interface ProductDAO {
 	
 	// 검색어 입력시 검색어가 상품명에 포함된 상품 리스트 뽑아오는 메소드
 	public List<ProductDTO> searchProduct(Map<String, String> paraMap) throws SQLException;
+
+	
+
 
 }

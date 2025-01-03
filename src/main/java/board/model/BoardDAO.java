@@ -21,5 +21,19 @@ public interface BoardDAO {
 	
 	// Q&A 게시판에 질문을 상세조회하는 메소드
 	BoardDTO selectQuestionDetail(Map<String, String> paraMap) throws SQLException;
+
+	// 관리자 //
+	
+	// 관리자 Q&A 관리페이지의 전체 행 개수를 불러오는 메소드
+	int selectTotalRowCountByAdmin(Map<String, Object> paraMap) throws SQLException;
+	
+	// 관리자 Q&A 관리페이지 질문 리스트를 조회하는 메소드
+	List<BoardDTO> selectQuestionListByAdmin(Map<String, Object> paraMap) throws SQLException;
+	
+	// 관리자 Q&A 게시판 질문을 상세조회하는 메소드
+	BoardDTO selectQuestionDetailByAdmin(String questionNo) throws SQLException;
+	
+	// Q&A 게시판의 질문에 대해 답변 및 답변 상태를 수정하는 메소드
+	int updateQuestion(Map<String, String> paraMap) throws SQLException;
 	
 }

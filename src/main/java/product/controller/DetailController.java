@@ -1,7 +1,11 @@
 package product.controller;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import board.domain.BoardDTO;
 import common.Constants;
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,14 +30,18 @@ public class DetailController extends AbstractController {
 			String productNo = request.getParameter("productNo");
 			
 			try {
+				// 상품 상세 알아오기
 				ProductDTO productDTO = productDAO.selectProductByMember(productNo);
+				// 추천 상품 리스트 뽑기
+				List<Map<String, String>> recommendProductMapList = productDAO.selectRecommendProductList(productNo);
 				
 				// productDTO가 존재하지 않는다면?
 				if(productDTO == null) {
-					super.handleMessage(request, "요청하신 상품이 존재하지 않습니다.", Constants.ADMIN_PRODUCT_MANAGE_URL);	// 나중에 상품 리스트 페이지로 보내기
+					super.handleMessage(request, "요청하신 상품이 존재하지 않습니다.", Constants.CATEGORY_LIST_PAGE);
 				}
 				
 				request.setAttribute("productDTO", productDTO);
+				request.setAttribute("recommendProductMapList", recommendProductMapList);
 				
 				super.setRedirect(false);
 				super.setViewPage(Constants.PRODUCT_DETAIL_PAGE);
