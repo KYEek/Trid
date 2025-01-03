@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
   for (item of basket_item_arry) {
     total_price +=
       Number(item["productPrice"]) * Number(item["productCountNum"]);
-    imghtml += ` <img src="${item["imgSrc"]}" />`;
+    imghtml += ` <img src="/Trid/${item["imgSrc"]}" />`;
   }
   total_price = total_price + 3000;
   sessionStorage.setItem("total_price", total_price);

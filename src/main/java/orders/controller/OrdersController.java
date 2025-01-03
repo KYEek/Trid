@@ -20,6 +20,7 @@ public class OrdersController extends AbstractController {
 		String method = request.getMethod();
 		HttpSession session = request.getSession();
 		MemberDTO member = (MemberDTO) session.getAttribute("loginuser");
+		//주문 정보를 담기 위한 배열
 		JSONArray orderList = null;
 		
 		
@@ -31,10 +32,9 @@ public class OrdersController extends AbstractController {
 			return;
 		}
 		
-		//sql에서 값을 가져오기
+		//sql에서 주문 값을 가져오기
 		orderList = odao.selectOrderListByMember(member.getPk_member_no());
 		request.setAttribute("orderList", orderList.toString());
-		
 		
 		super.setRedirect(false);
 		super.setViewPage(Constants.ORDERS_PAGE);

@@ -476,6 +476,7 @@ public class OrderDAO_imple implements OrderDAO {
 		return result;
 	}
 
+	// 유저의 주문 정보를 불러온다
 	@Override
 	public JSONArray selectOrderListByMember(int pk_member_no) throws SQLException {
 		
@@ -500,36 +501,7 @@ public class OrderDAO_imple implements OrderDAO {
 					+ " where rownumber = 1 and fk_member_no = ? "
 					+ " order by fk_order_no desc ";
 			
-			/*String sql = " with order_detail as( "
-					+ " select PK_ORDER_DETAIL_NO, FK_ORDER_NO, FK_PRODUCT_DETAIL_NO, product_price, PRODUCT_DETAIL_NO, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
-					+ " from ( "
-					+ " select row_number() over(partition by PK_ORDER_DETAIL_NO order by PRODUCT_IMAGE_NAME)as rownumber, PK_ORDER_DETAIL_NO, FK_ORDER_NO, FK_PRODUCT_DETAIL_NO, (ORDER_DETAIL_PRICE * ORDER_DETAIL_QUANTITY) product_price, PRODUCT_DETAIL_NO, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
-					+ " from tbl_order_detail "
-					+ " join select_basket_product_info "
-					+ " on product_detail_no = fk_product_detail_no) "
-					+ " where rownumber = 1 "
-					+ " ) "
-					+ " "
-					+ " select PK_ORDER_NO, ORDER_TOTAL_PRICE, SUM_PRODUC_PRICE, ORDER_STATUS, ORDER_DATE, FK_ADDR_NO, PRODUCT_DETAIL_NO, PRODUCT_PRICE, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
-					+ " from order_detail "
-					+ "  "
-					+ " join ( "
-					+ "    with product_price as ( "
-					+ "    select fk_order_no, sum(product_price) as product_price "
-					+ "    from ( "
-					+ "    select fk_order_no, (order_detail_price * order_detail_quantity) product_price "
-					+ "    from tbl_order_detail "
-					+ "    ) "
-					+ "    group by fk_order_no) "
-					+ "    select PK_ORDER_NO, FK_MEMBER_NO, FK_ADDR_NO, ORDER_DATE, ORDER_STATUS, ORDER_TOTAL_PRICE, PRODUCT_PRICE as sum_produc_price "
-					+ "    from tbl_order "
-					+ "    join product_price "
-					+ "    on fk_order_no = pk_order_no "
-					+ " ) "
-					+ " on PK_ORDER_NO = FK_ORDER_NO "
-					+ " order by pk_order_no "
-					+ " where fk_member_no = ? "
-					+ " order by pk_order_no desc ";*/
+			
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt. setInt(1, pk_member_no);
@@ -556,6 +528,76 @@ public class OrderDAO_imple implements OrderDAO {
 		
 		
 		return jsonArr;
-	}
-	
+	}//end of public JSONArray selectOrderListByMember(int pk_member_no) throws SQLException ----------------------------------------------------
+
+	// 유저의 주문 상세 정보를 불러온다
+	@Override
+	public JSONArray selectOrderDetail(int pk_member_no, int orderNO) throws SQLException {
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		conn = ds.getConnection();
+		
+		String sql = " with order_detail as( "
+				+ " select PK_ORDER_DETAIL_NO, FK_ORDER_NO, FK_PRODUCT_DETAIL_NO, product_price, PRODUCT_DETAIL_NO, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
+				+ " from ( "
+				+ " select row_number() over(partition by PK_ORDER_DETAIL_NO order by PRODUCT_IMAGE_NAME)as rownumber, PK_ORDER_DETAIL_NO, FK_ORDER_NO, FK_PRODUCT_DETAIL_NO, (ORDER_DETAIL_PRICE * ORDER_DETAIL_QUANTITY) product_price, PRODUCT_DETAIL_NO, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
+				+ " from tbl_order_detail "
+				+ " join select_basket_product_info "
+				+ " on product_detail_no = fk_product_detail_no) "
+				+ " where rownumber = 1  "
+				+ " ) "
+				+ "  "
+				+ " select PK_ORDER_NO, ORDER_TOTAL_PRICE, SUM_PRODUC_PRICE, ORDER_STATUS, ORDER_DATE, FK_ADDR_NO, PRODUCT_DETAIL_NO, PRODUCT_PRICE, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME, product_no "
+				+ " from order_detail "
+				+ "  "
+				+ " join ( "
+				+ "    with product_price as ( "
+				+ "    select fk_order_no, sum(product_price) as product_price "
+				+ "    from ( "
+				+ "    select fk_order_no, (order_detail_price * order_detail_quantity) product_price "
+				+ "    from tbl_order_detail "
+				+ "    ) "
+				+ "    group by fk_order_no) "
+				+ "    select PK_ORDER_NO, FK_MEMBER_NO, FK_ADDR_NO, ORDER_DATE, ORDER_STATUS, ORDER_TOTAL_PRICE, PRODUCT_PRICE as sum_produc_price "
+				+ "    from tbl_order "
+				+ "    join product_price "
+				+ "    on fk_order_no = pk_order_no "
+				+ " ) "
+				+ " on PK_ORDER_NO = FK_ORDER_NO "
+				+ " where fk_member_no = ? and pk_order_no = ? "
+				+ " order by pk_order_no desc ";	
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, pk_member_no);
+			pstmt.setInt(2, orderNO);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				JSONObject json = new JSONObject();
+				json.put("PK_ORDER_NO", rs.getInt("PK_ORDER_NO"));
+				json.put("ORDER_TOTAL_PRICE", rs.getInt("ORDER_TOTAL_PRICE"));
+				json.put("SUM_PRODUC_PRICE", rs.getInt("SUM_PRODUC_PRICE"));
+				json.put("ORDER_STATUS", rs.getInt("ORDER_STATUS"));
+				json.put("ORDER_DATE", rs.getString("ORDER_DATE"));
+				json.put("FK_ADDR_NO", rs.getInt("FK_ADDR_NO"));
+				json.put("PRODUCT_DETAIL_NO", rs.getInt("PRODUCT_DETAIL_NO"));
+				json.put("PRODUCT_PRICE", rs.getInt("PRODUCT_PRICE"));
+				json.put("PRODUCT_SIZE", rs.getString("PRODUCT_SIZE"));
+				json.put("PRODUCT_NAME", rs.getString("PRODUCT_NAME"));
+				json.put("COLOR_NAME", rs.getString("COLOR_NAME"));
+				json.put("PRODUCT_IMAGE_PATH", rs.getString("PRODUCT_IMAGE_PATH"));
+				json.put("PRODUCT_IMAGE_NAME", rs.getString("PRODUCT_IMAGE_NAME"));
+				json.put("PRODUCT_NO", rs.getInt("PRODUCT_NO"));
+				
+				
+				jsonArr.put(json);
+			}
+		}
+		finally {
+			close();
+		}
+		return jsonArr;
+	}//end of public JSONArray selectOrderDetail(int pk_member_no, int orderNO) throws SQLException ----------------------------------------------
 }

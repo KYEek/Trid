@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   //장바구니 이미지 목록을 출력
   basket_list.forEach((item) => {
-    html += `<img src="${item["imgSrc"]}" />`;
+    html += `<img src="/Trid/${item["imgSrc"]}" />`;
   });
   delivery_product_list.innerHTML = html;
 

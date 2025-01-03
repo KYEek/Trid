@@ -29,11 +29,13 @@ public class AddressController extends AbstractController {
 			return;
 		}
 		
+		//주소 데이터를 불러온다
 		JSONArray addrList = addr_dao.selectAddrs(member.getPk_member_no());
 	
+		//주소 데이터를 스트링으로 변환
 		String addrList_str = addrList.toString();
 		
-		
+		//데이터 전송
 		request.setAttribute("addrList", addrList_str);
 		
 		super.setRedirect(false);

@@ -70,7 +70,83 @@ public class Payment_DAO_imple implements Payment_DAO {
 			e.printStackTrace();
 		}
 	}// end of private void close()---------------
-
+	
+	
+	
+	/*
+	
+	프로시저 내용
+	create or replace procedure insertOrderNo (json_data in clob, selected_address_no in number, total_price in number, member_no in number, sequenceNum out number)
+	is
+	    json_str clob := json_data;
+	    --반복문을 실행할 숫자
+	    countNum number := 1;
+	    --json배열의 각 객체
+	    data_str varchar2(300);
+	    --""가 사라진 순수한 값
+	    extracted_str number;
+	    --추출한 값을 담을 변수들
+	    product_quantity number;
+	    product_detail_num number;
+	    product_price number;
+	    --재고를 담을 변수
+	    product_inventory number;
+	    --예외를 실행시킬 변수
+	    empty_inventory exception;
+	begin
+	    --json에서 [] 삭제
+	    json_str := substr(json_str, 2, (length(json_str)-2));
+	    --주문테이블 시퀀스 번호 생성
+	    sequenceNum := PK_ORDER_NO_SEQ.nextval;
+	    --주문내역 생성
+	    insert into tbl_order (PK_ORDER_NO, FK_MEMBER_NO, FK_ADDR_NO, ORDER_STATUS, ORDER_TOTAL_PRICE) values(sequenceNum, member_no, selected_address_no, 0 , total_price);
+	    loop
+	        --각각의 객체별로 나누기
+	        data_str := REGEXP_SUBSTR(json_str, '\{.*?\}',1,countNum);
+	        --값이 없으면 반복문 취소
+	        exit when data_str is null;
+	        --각 객체의 값을 추출
+	        for i in 1..3 loop 
+	            extracted_str := to_number(REGEXP_REPLACE(REGEXP_SUBSTR(data_str, '".*?"',1,(i*2)),'"',''));
+	            if i = 1 then
+	                product_quantity := extracted_str;
+	            elsif i = 2 then
+	                product_detail_num := extracted_str;
+	            elsif i = 3 then
+	                product_price := extracted_str;
+	            end if;
+	            
+	            --재고를 불러온다
+	            select product_inventory into product_inventory
+	            from tbl_product_detail
+	            where pk_product_detail_no = 270;
+	            
+	            --재고가 없으면 예외 실행
+	            if product_inventory <= 0 then
+	                raise empty_inventory;
+	            end if;
+	            
+	        end loop;
+	        --주문 상세 테이블에 삽입
+	        insert into TBL_ORDER_DETAIL(pk_order_detail_no, fk_order_no, fk_product_detail_no, order_detail_price, order_detail_quantity) values (PK_ORDER_DETAIL_NO_SEQ.nextval, sequenceNum, product_detail_num, product_price, product_quantity);
+	        delete from tbl_basket where FK_MEMBER_NO = member_no and FK_PRODUCT_DETAIL_NO = product_detail_num;
+	        --다음 객체를 위한 번호 증가
+	        countNum := countNum + 1;
+	    end loop;
+	exception
+	    --재고가 비었을 때 반환값을 -1로 설정 후 롤백
+	    when empty_inventory then
+	        sequenceNum := -1;
+	        rollback;
+	    
+	end;
+	  
+	  
+	 */
+	
+	
+	
+	//주문을 입력하는 메서드
 	@Override
 	public int insertOrderDate(Map<String, String> orderData, Map<String, String> orderDetailData) throws SQLException {
 
@@ -78,6 +154,8 @@ public class Payment_DAO_imple implements Payment_DAO {
 		CallableStatement cstmt = null;
 		conn = ds.getConnection();
 
+		
+		
 		sql = " {call insertOrderNo(?, ?, ?, ?, ?)} ";
 		try {
 		cstmt = conn.prepareCall(sql);
