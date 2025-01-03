@@ -51,15 +51,16 @@ public class Login extends AbstractController {
 			else {
 			//	System.out.println("로그인성공!");
 				
+				// 사용자 계정이 휴면처리된 경우
+				if(loginuser.getMember_idle() == 0) {
+					request.setAttribute("memberNo", loginuser.getPk_member_no());
+					super.handleMessage(request, "휴면처리된 계정입니다. 휴면해제를 요청하세요", Constants.MEMBER_DEACTIVATE_URL);
+					return;
+				}
+				
 				HttpSession session = request.getSession();
 				
 				session.setAttribute("loginuser", loginuser);
-				
-				// 사용자 계정이 휴면처리된 경우
-				if(loginuser.getMember_idle() == 0) {
-				//	super.handleMessage(request, "휴면처리된 계정입니다. 휴면해제를 요청하세요", Constants.MEMBER_DEACTIVATE_URL);
-					return;
-				}
 				
 				String message = "로그인 성공!!";
 	        	String loc = "/Trid/main.trd"; // 현재페이지에 머뭄.
