@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +42,14 @@ public class ProductListController extends AbstractController {
         if (colorArray != null) {
             paraMap.put("chooseColor", String.join(",", colorArray));
         }
+        
+        // 페이지 번호와 페이지당 항목 수 처리
+        String pageNumberStr = request.getParameter("pageNumber");
+        String pageSizeStr = request.getParameter("pageSize");
+        int pageNumber = (pageNumberStr != null && !pageNumberStr.isEmpty()) ? Integer.parseInt(pageNumberStr) : 1;
+        int pageSize = (pageSizeStr != null && !pageSizeStr.isEmpty()) ? Integer.parseInt(pageSizeStr) : 18;
+        paraMap.put("pageNumber", String.valueOf(pageNumber));
+        paraMap.put("pageSize", String.valueOf(pageSize));
     
         try {
             // 상품 리스트 데이터 조회
@@ -66,13 +73,7 @@ public class ProductListController extends AbstractController {
                     jsonObject.put("price", product.getPrice());
                     jsonObject.put("imagePath", product.getImageList().get(0).getImagePath());
                     jsonArray.put(jsonObject);
-                    
-                    System.out.println("상품번호 : " + product.getProductNo());
                 }
-                
-                System.out.println("request parameter chooseColor: " + Arrays.toString(request.getParameterValues("chooseColor[]")));
-                System.out.println("request parameter choosePrice: " + request.getParameter("choosePrice"));
-                System.out.println("json 배열 : " + jsonArray.toString());
 
                 System.out.println("chooseColor: " + paraMap.get("chooseColor"));
                 System.out.println("choosePrice: " + paraMap.get("choosePrice"));
