@@ -1,22 +1,19 @@
 @charset "UTF-8";
 
-
-div.header_menu {
-	position: relative;
-	z-index: 999;
-	margin-top: 0px
+/* 카테고리 박스 감싸는 div */
+div#header_menu {
+	margin: 0 0 0 6.5%;
 }
 
-
-div.header_menu div {
+/* 카테고리 박스 */
+div#header_menu div {
 	border: solid 1px black;
-	width: 70px;
 	display: inline-block;
 	text-align: center;
 	color: black;
 	cursor: pointer;
-}
-
-div.header_menu img {
-	cursor: pointer;
+	
+	width: 60px;
+	height: 30px;
+	margin-right: 0.5%;
 }

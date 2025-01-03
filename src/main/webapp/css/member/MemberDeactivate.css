@@ -1,0 +1,46 @@
+/* 가장 바깥 div */
+div#container {
+	width: 88%;
+	margin: auto;
+}
+
+/* 휴면 해제 하기 */
+h2 {
+	margin-top: 3%;
+}
+
+/* 휴대폰 문자인증 */
+h3 {
+	margin: 5% 0 5% 5%;
+}
+
+div#update_box {
+	border: 3px solid black;
+	height: 500px;
+	margin-top: 4%;
+	margin-right: 40%;
+}
+
+/* 인증번호 입력한 감싸는 div */
+div#codeStep {
+	margin: 5%;
+}
+
+/* 인증 번호 */
+div#authCodeText {
+	margin-bottom: 3%;
+}
+
+/* 인증번호 입력 input, 인증하기 버튼 감싸는 div */
+div#authCodeContents {
+	margin-bottom: 2%;
+}
+
+/* 인증번호 입력 input */
+button#authCodeButton {
+	margin-left: 1%;
+}
+
+
+
+

@@ -34,14 +34,14 @@
 <jsp:include page="/WEB-INF/header.jsp" />
 
 	<!-- 헤더 카테고리 -->
-	<div class="header_menu">
+	<div id="header_menu">
 		
-		<div class="menu_all">모두보기</div>
-		<div class="menu_price">티셔츠</div>
-		<div class="menu_color">셔츠</div>
-		<div class="menu_size">맨투맨</div>
-		<div class="menu_price">후디</div>
-		<div class="menu_color">니트</div>
+		<div id="menu_all">전체</div>
+		<div id="menu_price">티셔츠</div>
+		<div id="menu_color">셔츠</div>
+		<div id="menu_size">맨투맨</div>
+		<div id="menu_price">후디</div>
+		<div id="menu_color">니트</div>
 		
 	</div>
 
@@ -100,19 +100,59 @@
 	
 </div>
 
-
     <div id="container" style="overflow-y: auto">
-    	<c:forEach var="product" items="${requestScope.productList}">
-	        <div id="product">
-	            <div id="productInfo">
-		            <div id="name">${product.productName}</div>
-		            <div id="price">${product.price}원</div>
-	            </div>
-	        </div>
-        </c:forEach>
+       
+    	
     </div>
 
 <script>
+
+var pageNumber = 1;
+var pageSize = 18; // 한 번에 불러올 아이템 수
+
+$(document).ready(function() {
+    loadMoreProducts();
+
+    /* 무한스크롤 처리 함수 */
+    $(window).scroll(function() {
+        if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
+            loadMoreProducts();
+        }
+    });
+
+ 	// 상품 리스트 클릭시 해당 상품 상세페이지로 이동
+    $(document).on("click", "div#product", function(e){
+    	const productNo = ($(e.target).closest("div#product").data("type"));
+    	
+    	location.href="/Trid/product/detail.trd?productNo="+productNo;
+    });
+    
+});// end of $(document).ready(function() -------------------------
+
+		
+		
+/* 무한스크롤 처리 ajax */
+function loadMoreProducts() {
+    $.ajax({
+        url: ctxPath + '/product/category_list.trd',
+        type: 'get',
+        headers: {
+            'ajaxHeader': 'true',
+        },
+        data: {
+            pageNumber: pageNumber,
+            pageSize: pageSize
+        },
+        dataType: 'json',
+        success: function(response) {
+            pageNumber++; // 다음 페이지 로드 준비
+            updateProductList(response);
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX 요청 실패:", status, error);
+        }
+    });
+}
 
 	// 가격 범위 필터 설정 함수
 	function updatePriceLabel() {
@@ -125,10 +165,10 @@
 	
 	// 카테고리에 맞는 상품 리스트 업데이트 함수
 	function updateProductList(products) {
-	    console.log("업데이트할 상품 데이터:", products);
+ 	    // console.log("업데이트할 상품 데이터:", products);
 
 	    const productListDiv = $("div#container");
-	    productListDiv.empty(); // 기존 리스트 초기화
+	    productListDiv.empty(); // 기존 리스트 초기화 
 
 	    if (!products || products.length === 0) {
 	        productListDiv.append("<p>상품이 없습니다.</p>");
@@ -138,30 +178,30 @@
 	    // 서버에서 받은 JSON 데이터를 기반으로 HTML 생성
 	    products.forEach(product => {
 	    	
-	    	
 	    	const path = "${pageContext.request.contextPath}" + product.imagePath;
+	    	const name = product.productName;
+	    	console.log(name);
 	    	
 	    	console.log(path);
 	        let productHtml = `
-				<div id="product">
+				<div id="product" data-type=` + product.productNo + `>
 				    <div id="photo">
 				        <img src=`
-				        
-				        
-				        
 				        	productHtml += path;
 				        	
 				        	productHtml +=
-				        `${path} alt="상품 이미지" style="width: 100px; height: 100px;">
+				        `${path} alt="상품 이미지" style="width: 100%; height: 100%; object-fit: cover;">
 				    </div>
 				    <div id="productInfo">
-				        <div id="name">${product.productName}</div>
-				        <div id="price">${product.price}원</div>
+				        <div id="name">` + product.productName + `</div>
+				        <div id="price">` + product.price + `&#8361;</div>
 				    </div>
 				</div>`;
 	        productListDiv.append(productHtml);
 	    });
 	}// end of function updateProductList(products) --------------------------------
+
+
 	
 </script>
 
