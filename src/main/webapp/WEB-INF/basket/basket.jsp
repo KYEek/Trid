@@ -21,10 +21,10 @@ const basketList = JSON.parse(basketListStr);
 </head>
 <body>
 
-<%@ include file="../header.jsp"%><style>
-.header {
-	display: sticky;
-}
+<%-- <%@ include file="../header.jsp"%><style> --%>
+<!-- .header { -->
+<!-- 	display: sticky; -->
+<!-- } -->
 </style>
  <div id="roading_container">
       <div id="roading_box">변경사항 저장중입니다.</div>
