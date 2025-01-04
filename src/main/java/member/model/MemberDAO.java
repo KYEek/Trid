@@ -47,6 +47,21 @@ public interface MemberDAO {
    // 관리자 회원 리스트 조회 시 전체 회원 수를 구하는 메소드
    int selectTotalRowCountByAdmin(Map<String, Object> paraMap) throws SQLException;
 
+	// 관리자 회원 리스트 조회 메소드
+	List<MemberDTO> selectMemberListByAdmin(Map<String, Object> paraMap) throws SQLException;
+	
+	// 관리자 회원 상세조회 메소드
+	MemberDTO selectMemberByAdmin(String memberNo) throws SQLException;
+
+	// 회원가입시 이메일 중복체크해주는 메소드
+	boolean emailDuplicateCheck3(String email) throws SQLException;
+
+	// 회원가입시 전화번호 중복검사 (tbl_member 테이블에서 mobile 이 존재하면 true 를 리턴해주고, mobile 이 존재하지 않으면 false 를 리턴한다)
+	boolean mobileDuplicateCheck(String mobile) throws SQLException;
+
+	// 회원가입시 전화번호 중복검사(현재 해당 사용자가 사용중인 mobile 이라면 true, 새로운 mobile 이라면 false)
+	boolean mobileDuplicateCheck2(Map<String, String> paraMap) throws SQLException;
+   
    // 관리자 회원 리스트 조회 메소드
    List<MemberDTO> selectMemberListByAdmin(Map<String, Object> paraMap) throws SQLException;
    

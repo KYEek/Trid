@@ -109,7 +109,7 @@ div.pwd_message {
 	        <input type="text" name="newEmail" id="newEmail" maxlength="30" class="requiredInfo" placeholder="새 이메일 주소"/>
 	        <%-- 이메일중복체크 --%>
             <span id="emailcheck">이메일중복확인</span><br>
-	        <div class="email_message"></div>
+	        <div class="email_message" style="color:red"><i class="fa-solid fa-circle-info"></i>&nbsp;올바른 이메일을 입력하세요.</div>
 			
 	
 			<button type="button" onclick="goUpdateEmail()">이메일 변경</button><!-- 이메일 변경 함수를 클릭하면 호출되는 함수 만들기 -->
