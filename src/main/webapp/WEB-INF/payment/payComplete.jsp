@@ -92,7 +92,7 @@
       </div>
     </div> -->
     <!-- 주소 리스트 -->
-
+<%@include file="../header.jsp"%>
     <main>
       <div id="select_shipment_container">
         <!-- 배송지 본문 -->
@@ -121,5 +121,6 @@
         </div>
       </div>
     </main>
+    <%@include file="../footer.jsp"%>
   </body>
 </html>

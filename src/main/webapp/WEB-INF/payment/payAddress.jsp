@@ -89,9 +89,10 @@
             </li>
           </ul> -->
         </div>
-        <div id="address_list_add">새로운 주소 추가</div>
+       <a href="/Trid/member/addressAdd.trd"><div id="address_list_add">새로운 주소 추가</div></a>
       </div>
     </div>
+    <%@include file="../header.jsp"%>
     <main>
       <div id="select_shipment_container">
         <!-- 배송지 본문 -->
@@ -116,7 +117,7 @@
             <div></div>
           </div>
           <div id="basket_footer_total_price">
-            <div>배송 <span id="total_price">₩3000</span></div>
+            <div>배송 <span id="total_price">3000</span> ₩</div>
           </div>
           <div id="basket_footer_next_button">
             <span>계속</span>
@@ -124,6 +125,7 @@
         </div>
       </div>
     </main>
+    <%@include file="../footer.jsp"%>
   </body>
 </html>
 

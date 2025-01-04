@@ -63,6 +63,7 @@
         <div id="roading_box">변경사항 저장중입니다.</div>
       </div>
     </div>
+    <%@include file="../header.jsp"%>
     <main>
       <div id="payment_info_container">
         <!-- 배송지 본문 -->
@@ -132,6 +133,7 @@
         </div>
       </div>
     </main>
+    <%@include file="../footer.jsp"%>
     <form id="payComplete" action="paying.trd">
       <input type="hidden" name="total_price" />
     </form>

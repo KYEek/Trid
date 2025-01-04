@@ -14,17 +14,20 @@ document.addEventListener("DOMContentLoaded", function () {
   //장바구니의 상품 정보를 저장
   console.log(item_count);
   item_count.textContent = basket_item_arry.length;
-	for (item of basket_item_arry) {
-		total_price +=
-			Number(item["productPrice"]) * Number(item["productCountNum"]);
-		if (instantPay == "true") {
-			imghtml += `<img src="/Trid/${item["imgSrc"]}" />`;
-		} else {
-			imghtml += ` <img src="${item["imgSrc"]}" />`;
-		}
-	}
-  //주문 총액을 계산
-  total_price = total_price + 3000;
+  for (item of basket_item_arry) {
+    total_price +=
+      Number(item["productPrice"]) * Number(item["productCountNum"]);
+    if (instantPay == "true") {
+      imghtml += `<img src="/Trid/${item["imgSrc"]}" />`;
+    } else {
+      imghtml += ` <img src="${item["imgSrc"]}" />`;
+    }
+  }
+  //주문금액이 50,000원 미만일 경우 배송비 3,000원 추가
+  if (total_price < 50000) {
+    total_price = total_price + 3000;
+  }
+
   sessionStorage.setItem("total_price", total_price);
   total_price_span.textContent = "₩ " + total_price;
 
@@ -37,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .querySelector("#basket_footer_next_button")
     .addEventListener("click", function () {
-		sessionStorage.setItem("backURL",window.location.href)
+      sessionStorage.setItem("backURL", window.location.href);
       form_var.submit();
     });
 });

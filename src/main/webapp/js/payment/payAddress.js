@@ -44,6 +44,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="address_list_item_text">${item["member_mobile"]}</div>
               </div>
             </li>`;
+
+    //추가 주소가 없을경우 공백으로 변경
+    if (item["addr_extraaddr"] == null) {
+      item["addr_extraaddr"] = "";
+    }
     if (item["addr_isdefault"] == "1") {
       sessionStorage.setItem("selected_address_no", item["pk_addr_no"]);
       insertAddressInfo(selected_addr, item);
@@ -60,6 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //주소목록의 각각의 주소를 클릭했을때 이벤트
   address_list_item.forEach((item) => {
     item.addEventListener("click", (e) => {
+      //자식요소가 선택되면
       if (e.target.getAttribute("class") != "address_list_item") {
         // console.log(e.target.parentElement.getAttribute("data-addr_no"));
         sessionStorage.setItem(
@@ -67,6 +73,11 @@ document.addEventListener("DOMContentLoaded", function () {
           e.target.parentElement.getAttribute("data-addr_no")
         );
         address_arr.forEach((item) => {
+          //추가 주소가 없을경우 공백으로 변경
+          if (item["addr_extraaddr"] == null) {
+            item["addr_extraaddr"] = "";
+          }
+
           if (
             e.target.parentElement.getAttribute("data-addr_no") ==
             item["pk_addr_no"]
@@ -84,6 +95,11 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         address_arr.forEach((item) => {
+          //추가 주소가 없을경우 공백으로 변경
+          if (item["addr_extraaddr"] == null) {
+            item["addr_extraaddr"] = "";
+          }
+
           if (e.target.getAttribute("data-addr_no") == item["pk_addr_no"]) {
             address_info_and_select.innerHTML = ` <div>${item["addr_address"]}${item["addr_extraaddr"]}</div>
                     <a href="#">변경</a>`;
@@ -130,6 +146,11 @@ document.addEventListener("DOMContentLoaded", function () {
     addressList.style.display = "block";
   });
 
+  //배송비 계산
+  if (sessionStorage.getItem("total_price") >= 50000) {
+    document.querySelector("span#total_price").textContent = "0";
+  }
+
   //계속 버튼 클릭시시
   document
     .querySelector("#basket_footer_next_button")
@@ -174,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.body.appendChild(form);
       form.submit();
     });
-});
+}); // end of DOMContentLoaded-------------------
 
 function insertAddressInfo(selected_addr, item) {
   selected_addr["member_name"] = item["member_name"];

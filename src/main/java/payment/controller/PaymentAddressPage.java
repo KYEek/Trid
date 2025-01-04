@@ -41,7 +41,7 @@ public class PaymentAddressPage extends AbstractController {
 			//주소들을 불러와 json배열에 저장
 			JSONArray addrList = addr_dao.selectAddrs(member.getPk_member_no());
 			// 주소가 있을 때
-			if(addrList.length() != 0) {
+			if(addrList != null) {
 				//페이지에 보내기 위해 스트링으로 변경
 				String addrList_str = addrList.toString();
 				
@@ -65,9 +65,10 @@ public class PaymentAddressPage extends AbstractController {
 		else {
 			JSONArray addrList = addr_dao.selectAddrs(member.getPk_member_no());
 			// 주소가 있을 때
-			if(addrList.length() != 0) {
+			if(addrList != null) {
 				//페이지에 보내기 위해 스트링으로 변경
 				String addrList_str = addrList.toString();
+				System.out.println("주소 있음");
 				
 				//리퀘스트에 저장
 				request.setAttribute("addrList", addrList_str);
@@ -109,10 +110,11 @@ public class PaymentAddressPage extends AbstractController {
 	private void sendToAddressAdd(HttpServletRequest request) {
 		request.setAttribute("message", "주소가 없어서 주소 생성 페이지로 이동합니다");
         request.setAttribute("loc", "/Trid/member/addressAdd.trd");
-         
-      // super.setRedirect(false);
-         super.setViewPage("/WEB-INF/msg.jsp");
-		
+
+		System.out.println("주소 없음");
+		super.setRedirect(false);
+		super.setViewPage(Constants.MESSAGE_PAGE);
+
 	}//end of sendToAddressAdd-------------------------------------------
 
 }

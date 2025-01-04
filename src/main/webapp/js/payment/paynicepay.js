@@ -15,7 +15,7 @@ async function requestPayment() {
   if (response.code !== undefined) {
     // 오류 발생
     alert(response.message);
-    return (location.href = sessionStorage.getItem("backURL"));
+    return (history.go(-4));
   }
 
   // /payment/complete 엔드포인트를 구현해야 합니다. 다음 목차에서 설명합니다.

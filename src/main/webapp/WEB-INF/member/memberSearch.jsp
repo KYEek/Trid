@@ -45,6 +45,11 @@ function updateMobile(){
 	
 	location.href="/Trid/member/updatePwd.trd";
 } 
+ 
+ function goAddress(){
+		
+	location.href="/Trid/member/address.trd";
+} 
 
 
  function goLogOut(ctx_Path){
@@ -137,7 +142,7 @@ div.button {
             <div class="button-list">
 
                 <div class="button address">
-                    <button type="button" id="address">주소</button><label for="address" class="arrow"><i class="fa-solid fa-greater-than"></i></label>
+                    <button type="button" id="address" onclick="goAddress()">주소</button><label for="address" class="arrow"><i class="fa-solid fa-greater-than"></i></label>
                 </div>
 
                 <div class="button">

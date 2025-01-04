@@ -73,7 +73,7 @@ div#address_list {
 }
 
 div#address_list_main {
-  background-color: wheat;
+  background-color: white;
   height: calc(100% - 200px);
   overflow: auto;
 }

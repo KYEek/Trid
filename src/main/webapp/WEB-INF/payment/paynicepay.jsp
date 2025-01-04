@@ -56,6 +56,7 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/payment/paynicepay.js"></script>
   </head>
   <body>
+  <%@include file="../header.jsp"%>
     <!-- 결제 완료 글자자 -->
     <div id="payment_complete">계속버튼을 눌러 결제를 완료하세요!</div>
     <!-- 로딩창 -->
@@ -81,6 +82,7 @@
         </div>
       </div>
     </main>
+    <%@include file="../footer.jsp"%>
   </body>
 </html>
 

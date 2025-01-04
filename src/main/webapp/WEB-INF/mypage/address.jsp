@@ -24,7 +24,12 @@
 	src="${pageContext.request.contextPath}/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
 const addrListStr = `${requestScope.addrList}`;
-const addrList = JSON.parse(addrListStr);
+
+let addrList = null;
+if (addrListStr != "") {
+	addrList = JSON.parse(addrListStr);
+}
+
 </script>
 
 </head>

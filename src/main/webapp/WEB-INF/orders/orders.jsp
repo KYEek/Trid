@@ -56,11 +56,13 @@
     <!-- <link rel="stylesheet" href="styles.css"> -->
   </head>
   <body>
+  <%@include file="../header.jsp"%>
      <main>
       <div id="order_header"><h1>구매내역</h1></div>
       <div id="order_list_box">
       </div>
     </main>
+    <%@include file="../footer.jsp"%>
   </body>
 </html>
 
