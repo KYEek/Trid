@@ -20,7 +20,6 @@ public class ChangeBasketQuantity extends AbstractController{
 	BasketDAO bskDao = new BasketDAO_imple();
 	BasketDTO bskDTO = null;
 	
-	//상속받지 않고 스트링을 반환하는 함수를 생성
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String method = request.getMethod();
@@ -47,12 +46,12 @@ public class ChangeBasketQuantity extends AbstractController{
 		
 		
 		//로그인 되어 있지 않으면 메인으로 돌려보내기 이것은 생략 왜냐하면 로그인 검증을 하고 장바구니에 들어가서 실행해야 하기 때문에 로그인 검증 됐다고 판단하겠다
-//		if(!super.checkLogin(request)) {
-//			System.out.println("로그인 안되어짐");
-//			super.setRedirect(true);
-//			super.setViewPage("/main.trd");
-//			return;
-//		}
+		if(!super.checkLogin(request)) {
+			System.out.println("로그인 안되어짐");
+			super.setRedirect(true);
+			super.setViewPage("/main.trd");
+			return;
+		}
 		
 		//수정할 장바구니 번호
 		int basketNo = Integer.parseInt(json.getString("basketNo"));
@@ -68,6 +67,7 @@ public class ChangeBasketQuantity extends AbstractController{
 			//더하기 요청일 때
 			if("plus".equalsIgnoreCase(status)) {
 				
+				//증가 함수 실행
 				result = bskDao.incrementBasketQuantity(basketNo, memberNum);
 
 				request.setAttribute("result", result);
@@ -76,6 +76,7 @@ public class ChangeBasketQuantity extends AbstractController{
 			}
 			//빼기 요청일 때
 			else {
+				//빼기 함수 실행
 				result = bskDao.decrementBasketQuantity(basketNo, memberNum);
 				request.setAttribute("result", result);
 				super.setRedirect(false);

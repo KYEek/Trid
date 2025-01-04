@@ -6,7 +6,7 @@ async function requestPayment() {
     // 채널 키 설정
     channelKey: "channel-key-abcd395e-b82e-4b41-be89-02016c0d0995",
     paymentId: "payment-" + crypto.randomUUID(),
-    orderName: "${requestScope.member_name}님의 결제",
+    orderName: `${member_name}님의 결제`,
     totalAmount: 100,
     currency: "CURRENCY_KRW",
     payMethod: "CARD",
@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const basket_item_arry_str = sessionStorage.getItem("basket_item_arry");
   const selected_address_no = sessionStorage.getItem("selected_address_no");
   const total_price = sessionStorage.getItem("total_price");
+  const instantPay = sessionStorage.getItem("instantPay");
   document.querySelector("span#total_price").textContent = total_price;
 
   //장바구니 목록의 값들을 저장할 배열
@@ -105,6 +106,11 @@ document.addEventListener("DOMContentLoaded", function () {
   input_total_price.type = "hidden";
   input_total_price.name = "total_price";
   input_total_price.value = total_price;
+  
+  const input_instantPay = document.createElement("input");
+  input_instantPay.type = "hidden";
+  input_instantPay.name = "instantPay";
+  input_instantPay.value = instantPay;
 
   form.appendChild(input_orderDetailArr);
   // form.appendChild(input_countnum);
@@ -112,6 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // form.appendChild(input_pricd);
   form.appendChild(input_selected_address_no);
   form.appendChild(input_total_price);
+  form.appendChild(input_instantPay);
   pay_completed.addEventListener("click", (e) => {
     form.submit();
   });

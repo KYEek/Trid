@@ -1,5 +1,7 @@
 //장바구니 개수
 let basketCount = 0;
+//재고가 있는지 파악하기 위한 변수
+let is_inventory = true;
 
 //장바구니 목록을 가져오는 함수
 async function getBasketList() {
@@ -95,8 +97,12 @@ async function getBasketList() {
                 </div>
                 <button class="minus_count">-</button>
               </div>
-            </div>
-          </div>`;
+            </div>`;
+			if (PRODUCT_INVENTORY ==0) {
+	        html += `<div class="no_inventory"><div class="no_inventory_text">재고가 없습니다</div></div>`;
+	        is_inventory = false;
+	      }
+	      html += `</div>`;
       //장바구니의 총 개수를 증가
       basketCount = basketCount + 1;
     }); // end of forEach-------------------------------
@@ -309,9 +315,9 @@ document.addEventListener("DOMContentLoaded", function () {
     true
   );
   
-  //계속 버튼 클릭시 결제페이지로 이동 개수가 0 이 아니고
+  //계속 버튼 클릭시 결제페이지로 이동, 개수가 0 이 아니고
   next_button.addEventListener("click", (e) => {
-	if(Number(document.querySelector("span#total_price").textContent) > 0) {
+	if(Number(document.querySelector("span#total_price").textContent) > 0 && is_inventory ) {
 	      const basket_item_arry = [];
 	      const basket_item_list = document.querySelectorAll("div.basket_item");
 	      basket_item_list.forEach((element) => {

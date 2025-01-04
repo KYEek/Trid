@@ -51,6 +51,8 @@
     <!-- <link rel="stylesheet" href="styles.css"> -->
 	<!--결제 api -->
 	<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+	<script type="text/javascript">
+	const member_name ="${requestScope.member_name}"</script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/payment/paynicepay.js"></script>
   </head>
   <body>

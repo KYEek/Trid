@@ -20,7 +20,6 @@ public class DeleteBasketProduct extends AbstractController {
 	BasketDAO bskDao = new BasketDAO_imple();
 	BasketDTO bskDTO = null;
 	
-	//상속받지 않고 스트링을 반환하는 함수를 생성
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String method = request.getMethod();
@@ -47,12 +46,12 @@ public class DeleteBasketProduct extends AbstractController {
 		
 		
 		//로그인 되어 있지 않으면 메인으로 돌려보내기 이것은 생략 왜냐하면 로그인 검증을 하고 장바구니에 들어가서 실행해야 하기 때문에 로그인 검증 됐다고 판단하겠다
-//		if(!super.checkLogin(request)) {
-//			System.out.println("로그인 안되어짐");
-//			super.setRedirect(true);
-//			super.setViewPage("/main.trd");
-//			return;
-//		}
+		if(!super.checkLogin(request)) {
+			System.out.println("로그인 안되어짐");
+			super.setRedirect(true);
+			super.setViewPage("/main.trd");
+			return;
+		}
 		
 		//결과를 알기위한 변수
 		String result = null;
@@ -61,6 +60,7 @@ public class DeleteBasketProduct extends AbstractController {
 		
 		//post 방식일 때
 		if("post".equalsIgnoreCase(method)) {
+			//삭제 함수 실행
 			result = bskDao.delectBasketProduct(basketNumber, memberNum);
 			
 			request.setAttribute("result", result);

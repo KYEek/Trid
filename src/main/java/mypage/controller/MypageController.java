@@ -11,7 +11,7 @@ public class MypageController extends AbstractController {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		
-		
+		//로그인 되어 있지 않으면 표시 안함
 		if(!super.checkLogin(request)) {
 			super.setRedirect(false);
 			super.setViewPage(request.getContextPath());
