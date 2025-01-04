@@ -46,6 +46,16 @@
     ></script>
 	<!-- 유저의 주소정보를 저장 -->
     <script type="text/javascript">
+    	//데이터를 가져오기
+    	const instantPay = `${requestScope.instantPay}`;
+    	let productInfoStr = "";
+    	let productInfo;
+    	//바로결제로 들어온 경우라면 실행
+    	if(instantPay == "true") {
+			productInfoStr = `${requestScope.productInfo}`;
+			productInfoStr = productInfoStr.replaceAll("\\", "\\\\");
+    		productInfo = JSON.parse(productInfoStr);
+    	}
 		const addrListStr = `${requestScope.addrList}`;
 		const addrList = JSON.parse(addrListStr);
 	</script>

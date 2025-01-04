@@ -309,7 +309,7 @@ document.addEventListener("DOMContentLoaded", function () {
     true
   );
   
-  //계속 버튼 클릭시 결제페이지로 이동 개수가 0 이 아니고
+  //계속 버튼 클릭시 결제페이지로 이동, 개수가 0 이 아니고
   next_button.addEventListener("click", (e) => {
 	if(Number(document.querySelector("span#total_price").textContent) > 0) {
 	      const basket_item_arry = [];

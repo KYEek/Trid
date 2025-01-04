@@ -177,4 +177,47 @@ public class Payment_DAO_imple implements Payment_DAO {
 		return result_order_no;
 	}
 
+	
+	
+	//바로 결제에서 상품 정보를 가져올 함수
+	@Override
+	public JSONObject selectProductInfo(int productDetailNo) throws SQLException {
+		//장바구니의 목록을 조회하는 메서드
+		
+		JSONObject json = null;
+		conn = ds.getConnection();
+
+		try {
+
+			sql = " select PRODUCT_DETAIL_NO, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_INVENTORY, PRODUCT_NAME, PRODUCT_PRICE, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
+				+ " from "
+				+ " (select row_number() over(partition by PRODUCT_DETAIL_NO order by product_image_name) as rowNumber, PRODUCT_DETAIL_NO, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_INVENTORY, PRODUCT_NAME, PRODUCT_PRICE, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
+				+ " from select_basket_product_info "
+				+ " order by product_no) "
+				+ " where rownumber = 1 and product_detail_no = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, productDetailNo);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				json = new JSONObject();
+				json.put("PRODUCT_DETAIL_NO", rs.getInt("PRODUCT_DETAIL_NO"));
+				json.put("PRODUCT_NO", rs.getInt("PRODUCT_NO"));
+				json.put("PRODUCT_SIZE", rs.getString("PRODUCT_SIZE"));
+				json.put("PRODUCT_INVENTORY", rs.getInt("PRODUCT_INVENTORY"));
+				json.put("PRODUCT_NAME", rs.getString("PRODUCT_NAME"));
+				json.put("PRODUCT_PRICE", rs.getInt("PRODUCT_PRICE"));
+				json.put("COLOR_NAME", rs.getString("COLOR_NAME"));
+				json.put("PRODUCT_IMAGE_PATH", rs.getString("PRODUCT_IMAGE_PATH"));
+				json.put("PRODUCT_IMAGE_NAME", rs.getString("PRODUCT_IMAGE_NAME"));
+
+			}
+
+		} finally {
+			close();
+		}
+
+		return json;
+	}
+
 }
