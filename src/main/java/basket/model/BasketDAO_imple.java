@@ -63,7 +63,7 @@ public class BasketDAO_imple implements BasketDAO {
 	
 	
 	
-	
+	//장바구니의 목록을 조회하는 메서드
 	@Override
 	public JSONArray selectBasketList(int pk_member_no) throws SQLException {
 		
@@ -112,7 +112,7 @@ public class BasketDAO_imple implements BasketDAO {
 		return basketArray;
 	}//end of selectList------------------------------------------------------------
 
-
+	//장바구니의 개수 추가 메서드
 	@Override
 	public String incrementBasketQuantity(int basketNo, int memberNum) throws SQLException {
 		conn = ds.getConnection();
@@ -138,7 +138,7 @@ public class BasketDAO_imple implements BasketDAO {
 		return result;
 	}//end of increment-------------------------------------------------
 
-
+	//장바구니의 개수 감소 메서드
 	@Override
 	public String decrementBasketQuantity(int basketNo, int memberNum) throws SQLException {
 		
@@ -166,7 +166,7 @@ public class BasketDAO_imple implements BasketDAO {
 		return result;
 	}//end of decrement----------------------------------------------------------------------
 
-
+	//장바구니 상품 삭제 메서드
 	@Override
 	public String delectBasketProduct(int basketNo, int memberNum) throws SQLException {
 		
@@ -194,7 +194,7 @@ public class BasketDAO_imple implements BasketDAO {
 		return result;
 	}
 
-
+	//장바구니 삽입 메서드
 	@Override
 	public int insertBasket(int productDetailNum, int pk_member_no) throws SQLException {
 

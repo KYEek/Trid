@@ -1,0 +1,49 @@
+@charset "UTF-8";
+:root {
+  --border-var: 0.7px solid black;
+}
+#order_detail_header {
+  width: 40vw;
+  margin: 5vh 7vw;
+  font-size: 17px;
+}
+
+div#basket_list {
+  border-top: var(--border-var);
+}
+#order_detail_footer {
+  display: flex;
+  margin-left: 10vw;
+  margin-right: 15vw;
+  padding-top: 5vh;
+  font-size: 17px;
+  margin-bottom: 5vh;
+}
+
+div#order_address_summary {
+  width: 60%;
+}
+div#order_price_summary {
+  width: 30%;
+  margin: 0 0 0 auto;
+}
+
+div#order_date_box {
+  display: flex;
+  width: 100%;
+}
+div#order_date_box > div:last-child {
+  margin: 0 0 0 auto;
+}
+
+div#order_price_summary_header {
+  height: 30%;
+}
+
+div.order_price_summary_item {
+  height: 25%;
+  display: flex;
+}
+div.order_price_summary_item > div:nth-child(2) {
+  margin: 0 0 0 auto;
+}

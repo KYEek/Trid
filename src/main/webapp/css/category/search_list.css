@@ -46,12 +46,34 @@ input#search_bar {
     border-width: 0 0 1px;
     border: 1px solid rgba(238, 238, 238, .5);
     outline: none;
-    text-align: center;
-    width: 450px;
-    font-size: 18px;
+    width: 95%;
+    font-size: 16px;
 
-    margin: 6% 0 6% 0;
-    margin-bottom: 4%;
+    margin-bottom: 0.5%;
+    padding-left: -0.5%;
+}
+
+/* 성별 선택 박스 */
+div#gender_container {
+	margin: 0 0 2% 2.3%;
+}
+
+/* 성별 선택 버튼 */
+div#gender_container button {
+	background: none;
+	border: none;
+	
+	font-size: 11pt;
+}
+
+/* 검색어 출력 */
+div#search_word {
+	margin-left: 2.3%;
+}
+
+/* 상품 개수 출력 */
+div#search_product_count {
+	margin-left: 2.3%;
 }
 
 /* 클릭(포커스) 시 border 제거 */
@@ -96,11 +118,16 @@ div#price {
 	height: 40px;
 }
 
+/* 상품에 마우스를 올릴 시 커서 변환 */
+div#product:hover {
+	cursor: pointer;
+}
+
 /* 스크롤 전체 가리기 */
 body{
     -ms-overflow-style: none;
-    }
-   ::-webkit-scrollbar {
+}
+::-webkit-scrollbar {
      display: none;
 }
 

@@ -39,8 +39,10 @@ public class BasketController extends AbstractController {
 		//post 방식일 때
 		if("post".equalsIgnoreCase(method)) {
 
+			//제품상세 번호 변수
 			int ProductDetailNum = Integer.parseInt(request.getParameter("go_basket"));
 			
+			//기존에 있는 상품인지 확인하기 위한 변수
 			int isDuplicate = bskDao.checkDuplicate(ProductDetailNum, member.getPk_member_no());
 			
 			//기존에 중복되는 상품이 있는경우 1 추가해준다
@@ -67,7 +69,7 @@ public class BasketController extends AbstractController {
 				else {
 					
 					request.setAttribute("message", "장바구니 입력이 정상적으로 되지 않았습니다.");
-					request.setAttribute("loc", request.getHeader("Referer"));
+					request.setAttribute("loc", "/Trid/");
 					
 					super.setRedirect(false);
 					super.setViewPage(Constants.MESSAGE_PAGE);
@@ -97,7 +99,7 @@ public class BasketController extends AbstractController {
 				else {
 					
 					request.setAttribute("message", "장바구니 입력이 정상적으로 되지 않았습니다.");
-					request.setAttribute("loc", request.getHeader("Referer"));
+					request.setAttribute("loc", "/Trid/");
 					
 					super.setRedirect(false);
 					super.setViewPage(Constants.MESSAGE_PAGE);
@@ -108,6 +110,7 @@ public class BasketController extends AbstractController {
 			
 		}
 		//get 방식일 때
+		//상품리스트를 간단히 불러온다
 		else {
 			
 			//json으로 상품 리스트를 가져온다

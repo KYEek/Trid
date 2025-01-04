@@ -26,37 +26,47 @@ public class PaymentCompleted extends AbstractController {
 
 		
 		//로그인 되어 있지 않으면 메인으로 돌려보내기
-//		if(!super.checkLogin(request)) {
-//			System.out.println("로그인 안되어짐");
-//			super.setRedirect(true);
-//			super.setViewPage("/main.trd");
-//			return;
-//		}
+		if(!super.checkLogin(request)) {
+			System.out.println("로그인 안되어짐");
+			super.setRedirect(true);
+			super.setViewPage("/main.trd");
+			return;
+		}
 		
 		//요청이 포스트 방식일 때(결제가 완료 됐을 때)
 		if("post".equalsIgnoreCase(method)) {
 			Map<String, String> orderData = new HashMap<>();
 			Map<String, String> orderDetailData = new HashMap<>();
 			
+			//즉시결제인지 파악하기 위한 변수
+			String instantPay = request.getParameter("instantPay");
 
 			System.out.println(request.getParameter("orderDetailArr"));
-//			System.out.println(request.getParameter("productCountNum"));
-//			System.out.println(request.getParameter("productDetailNo"));
-//			System.out.println(request.getParameter("productPrice"));
 			System.out.println(request.getParameter("selected_address_no"));
 			System.out.println(request.getParameter("total_price"));
 			
+			//주문 데이터들을 Map에 저장
 			orderDetailData.put("orderDetailArr", request.getParameter("orderDetailArr"));
-//			orderDetailData.put("productCountNum", request.getParameter("productCountNum"));
-//			orderDetailData.put("productDetailNo", request.getParameter("productDetailNo"));
-//			orderDetailData.put("productPrice", request.getParameter("productPrice"));
+
+			//주소와 가격, 멤버번호를 저장
 			orderData.put("selected_address_no", request.getParameter("selected_address_no"));
 			orderData.put("total_price", request.getParameter("total_price"));
 			orderData.put("member_No", String.valueOf(member.getPk_member_no()));
-			//sql문을 실행해서 주문번호를 불러온다
-			int resultOrderNo = pdao.insertOrderDate(orderData, orderDetailData);
+			//결과로 나온 주문번호를 저장할 변수
+			int resultOrderNo = 0;
+			
+			//즉시결제일 경우
+			if("true".equalsIgnoreCase(instantPay)) {
+				//sql문을 실행해서 주문번호를 불러온다
+				resultOrderNo = pdao.instantPay(orderData, orderDetailData);
+			}
+			else {
+				//sql문을 실행해서 주문번호를 불러온다
+				resultOrderNo = pdao.insertOrderDate(orderData, orderDetailData);
+			}
 			System.out.println(orderData.toString());
 			System.out.println(resultOrderNo);
+			//주문번호를 전송
 			request.setAttribute("orderNo", resultOrderNo);
 			
 			super.setRedirect(false);

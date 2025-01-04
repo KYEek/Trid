@@ -41,30 +41,29 @@ public class ProductRegisterController extends AbstractController {
 			try {
 				// 이미지 파일을 지정된 경로에 저장 후 이미지 정보가 담긴 ImageDTO list 반환
 				List<ImageDTO> imageList = FileComponent.saveImages(request); 
+				
+				String message = "";
 
 				// 상품 이미지가 존재하는지 확인
 				if (imageList.size() < 1) {
 					System.out.println("[ERROR] : imageList is empty");
-					handleProductRegisterFail(request);
-					return;
+					message = "failed";
 				}
-
-				//  이미지를 제외한 정보 저장
-				ProductDTO productDTO = createProductDTO(request);
-			
-				productDTO.setImageList(imageList);
+				else {
+					//  이미지를 제외한 정보 저장
+					ProductDTO productDTO = createProductDTO(request);
 				
-				// DB에 상품 추가 요청
-				int result = productDAO.insertProduct(productDTO);
+					productDTO.setImageList(imageList);
+					
+					// DB에 상품 추가 요청
+					int result = productDAO.insertProduct(productDTO);
 
-				// 상품 등록 실패 시
-				if (result != 1) {
-					handleProductRegisterFail(request);
-					return;
+					// 상품 등록 실패 시
+					message = (result == 1) ? "success" : "failed";
 				}
 
 				// 상품 등록 성공 시
-				super.handleMessage(request, "상품 등록을 성공했습니다.", Constants.ADMIN_PRODUCT_MANAGE_URL);
+				super.handelJsonResponse(response, message);
 
 			} catch (SQLException | NumberFormatException | IOException | ServletException e ) {
 				e.printStackTrace();
@@ -151,17 +150,6 @@ public class ProductRegisterController extends AbstractController {
 		productDTO.setCategoryDTO(categoryDTO);
 		
 		return productDTO;
-	}
-	
-	/*
-	 * 상품 등록 실패 시 이벤트를 처리하기 위한 메소드
-	 */
-	private void handleProductRegisterFail(HttpServletRequest request) {
-		request.setAttribute("message", "상품등록을 실패했습니다.");
-		request.setAttribute("loc", Constants.HISTORY_BACK);
-
-		super.setRedirect(false);
-		super.setViewPage(Constants.MESSAGE_PAGE);
 	}
 
 }

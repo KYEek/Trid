@@ -66,9 +66,14 @@ $(document).ready(function() {
    
       
        // DB 에 필요한 사이즈 + 상품상세번호 세팅
-      $("input#go_basketProductDetailNo").val(sizeBtn.attr('id'));
-      
-      // console.log($("input#go_basketProductDetailNo").val());
+	   // 장바구니에 보낼 상품상세 번호 세팅
+       $("input#go_basketProductDetailNo").val(sizeBtn.attr('id'));
+		
+	   //  결제페이지에 보낼 상품상세 번호 세팅      
+	   $("input#go_orderProductDetailNo").val(sizeBtn.attr('id'));
+	   
+	   
+       // console.log($("input#go_basketProductDetailNo").val());
       
       // console.log(sizeBtn.attr("id"));
    

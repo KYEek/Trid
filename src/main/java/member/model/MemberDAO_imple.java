@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -114,7 +115,8 @@ public class MemberDAO_imple implements MemberDAO {
 			conn = ds.getConnection();
 
 			String sql 	= " select pk_member_no, member_email, member_name, member_mobile, member_gender, member_birthday, member_idle, to_char(member_registerday, 'yyyy-mm-dd') as member_registerday, "
-						+ " member_pwdchangeday, to_char(member_updateday, 'yyyy-mm-dd') as member_updateday " 
+						+ " member_pwdchangeday, to_char(member_updateday, 'yyyy-mm-dd') as member_updateday,"
+						+ " (select NVL(ROUND(MONTHS_BETWEEN(sysdate, max(login_date))), 0) from tbl_login where fk_member_no = pk_member_no) as lastlogingap " 
 						+ " from tbl_member "
 						+ " where member_email = ? and member_password = ? "
 						+ " and member_status = 1 ";
@@ -123,7 +125,6 @@ public class MemberDAO_imple implements MemberDAO {
 			
 			pstmt.setString(1, aes.encrypt(paraMap.get("member_email")));
 			pstmt.setString(2, Sha256.encrypt(paraMap.get("member_password")));
-			
 			
 			rs = pstmt.executeQuery();
 
@@ -145,40 +146,41 @@ public class MemberDAO_imple implements MemberDAO {
 				member.setMember_pwdchangeday((rs.getString("member_pwdchangeday")));
 				member.setMember_updateday((rs.getString("member_updateday")));
 
-				/*
-				 * if( rs.getInt("lastlogingap") >= 12 ) { // 마지막으로 로그인 한 날짜시간이 현재시각으로 부터 1년이
-				 * 지났으면 휴면으로 지정 member.setIdle(1);
-				 * 
-				 * if(rs.getInt("idle") == 0) { // === tbl_member 테이블의 idle 컬럼의 값을 1로 변경하기 ===
-				 * // sql = " update tbl_member set idle = 1 " + " where userid = ? ";
-				 * 
-				 * pstmt = conn.prepareStatement(sql); pstmt.setString(1,
-				 * paraMap.get("userid"));
-				 * 
-				 * pstmt.executeUpdate(); }
-				 * 
-				 * }// end of if( rs.getInt("lastlogingap") >= 12 )------
-				 */
-
-				// === 휴면이 아닌 회원만 tbl_loginhistory(로그인기록) 테이블에 insert 하기 시작 === //
-				/*
-				 * if( rs.getInt("lastlogingap") < 12 ) { sql =
-				 * " insert into tbl_loginhistory(historyno, fk_userid, clientip) " +
-				 * " values(seq_historyno.nextval, ?, ?) ";
-				 * 
-				 * pstmt = conn.prepareStatement(sql); pstmt.setString(1,
-				 * paraMap.get("userid")); pstmt.setString(2, paraMap.get("clientip"));
-				 * 
-				 * pstmt.executeUpdate(); // === 휴면이 아닌 회원만 tbl_loginhistory(로그인기록) 테이블에 insert
-				 * 하기 끝 === //
-				 * 
-				 * if( rs.getInt("pwdchangegap") >= 3 ) { // 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이
-				 * 지났으면 true // 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이 지나지 않았으면 false
-				 * 
-				 * member.setRequirePwdChange(true); // 로그인시 암호를 변경해라는 alert 를 띄우도록 할때 사용한다. }
-				 * 
-				 * }
-				 */
+				// 휴면 계정 확인
+				// 마지막 로그인으로부터 6개월 이상 지난 경우 idle를 0로 변경
+				if(rs.getInt("lastlogingap") >= 6) {
+					member.setMember_idle(0);
+					
+					sql = " update tbl_member set member_idle = 0 where pk_member_no = ? ";
+					
+					pstmt = conn.prepareStatement(sql);
+					
+					pstmt.setInt(1, member.getPk_member_no());
+					
+					// 회원 휴면 상태 갱신 실패 시 로그인 실패 처리
+					if(pstmt.executeUpdate() != 1) {
+						System.out.println("[ERROR] tbl_member update failed ");
+						return null;
+					}
+					
+				}
+				// 휴면 상태가 아닌 경우 로그인 기록 추가
+				else {
+					sql = " insert into tbl_login(pk_login_no, fk_member_no, login_member_email, login_date, login_client_ip) "
+						+ " values(pk_login_no_seq.nextval, ?, ?, sysdate, ? )";
+					
+					pstmt = conn.prepareStatement(sql);
+					
+					pstmt.setInt(1, member.getPk_member_no()); // 회원 일련번호
+					pstmt.setString(2, rs.getString("Member_email")); // 암호화된 이메일
+					pstmt.setString(3, paraMap.get("clientIp")); // 접속 IP
+					
+					// 회원 로그인 기록 삽입 실패 시 로그인 실패 처리
+					if(pstmt.executeUpdate() != 1) {
+						System.out.println("[ERROR] tbl_login insert failed ");
+						return null;
+					}
+				}
 
 			} // end of if(rs.next())--------------------
 
@@ -187,6 +189,8 @@ public class MemberDAO_imple implements MemberDAO {
 		} finally {
 			close();
 		}
+		
+		//System.out.println(member.getMember_name());
 
 		return member;
 	}// end of public MemberVO login(Map<String, String> paraMap) throws
@@ -835,6 +839,159 @@ public class MemberDAO_imple implements MemberDAO {
 		}
 		
 		return memberDTO;
+	}
+	
+	// 관리자 회원 로그인 기록 리스트 조회 메소드
+	@Override
+	public int selectLoginHistoryTotalRowCount(String memberNo) throws SQLException {
+		int totalRowCount = 0;
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql = " select count(*) as total from tbl_login where fk_member_no = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, memberNo);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				totalRowCount = rs.getInt("total");
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return totalRowCount;
+	}
+
+	// 관리자 회원 로그인 기록 리스트 조회 메소드
+	@Override
+	public List<Map<String, String>> selectLoginHistoryByAdmin(Map<String, Object> paraMap) throws SQLException {
+		List<Map<String, String>> historyList = new ArrayList<>();
+		
+		PagingDTO pagingDTO = (PagingDTO)paraMap.get("pagingDTO"); // PagingDTO
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql 	= " SELECT *"
+						+ " FROM "
+						+ " ( "
+						+ "		select ROWNUM AS RN, pk_login_no, fk_member_no, login_member_email, login_date, login_client_ip "
+						+ " 	from tbl_login "
+						+ " 	where fk_member_no = ? "
+						+ " ) "
+						+ " WHERE RN BETWEEN ? AND ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, (String)paraMap.get("memberNo"));
+			pstmt.setInt(2, pagingDTO.getFirstRow());
+			pstmt.setInt(3, pagingDTO.getLastRow());
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Map<String, String> map = new HashMap<>();
+				
+				map.put("loginNo", rs.getString("pk_login_no"));
+				map.put("memberNo", rs.getString("fk_member_no"));
+				map.put("email", aes.decrypt(rs.getString("login_member_email")));
+				map.put("loginDate", rs.getString("login_date"));
+				map.put("ip", rs.getString("login_client_ip"));
+				
+				historyList.add(map);
+			}
+			
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return historyList;
+	}
+	
+	// 휴면 상태를 해제해주는 메소드
+	@Override
+	public int UpdateMemberIdle(String memberNo, String clientip) throws SQLException {
+
+	      String email = "";
+	      
+	      try {
+		      conn = ds.getConnection();
+		      
+		      conn.setAutoCommit(false);
+		      
+		      String sql = " update tbl_member set member_idle = 1 "
+		                 + " where pk_member_no = ? ";
+		      
+		      pstmt = conn.prepareStatement(sql);
+	      
+		      pstmt.setString(1, memberNo);
+	         
+		      if(pstmt.executeUpdate() != 1) {
+		    	  System.out.println("[ERROR] tbl_member update failed");
+		    	  conn.rollback();
+		    	  return 0;
+		      }
+		      
+		      sql = " select member_email "
+		      	  + " from tbl_member "
+		      	  + " where pk_member_no = ? ";
+		      
+		      pstmt = conn.prepareStatement(sql);
+		      
+		      pstmt.setString(1, memberNo);
+		      
+		      rs = pstmt.executeQuery();
+		      
+		      if(rs.next()) {
+		    	  email = rs.getString("member_email");
+		      }
+		      else {
+		    	  conn.rollback();
+		    	  System.out.println("[ERROR] tbl_member select failed");
+		    	  return 0;
+		      }
+		      
+		      sql = " insert into tbl_login"
+		      	  + " ( "
+		      	  + " pk_login_no "
+		      	  + " fk_member_no "
+		      	  + " login_member_email "
+		      	  + " login_date "
+		      	  + " login_client_ip "
+		      	  + " ) "
+		      	  + " values(pk_login_no_seq.nextval, ?, ?, sysdate, ? ) " ;
+		      
+		      pstmt = conn.prepareStatement(sql);
+		      
+		      pstmt.setString(1, memberNo);
+		      pstmt.setString(2, email);
+		      pstmt.setString(3, clientip);
+		      
+		      pstmt.executeUpdate();
+		      
+		      if(pstmt.executeUpdate() != 1) {
+		    	  conn.rollback();
+		    	  System.out.println("[ERROR] tbl_login insert failed");
+		    	  return 0;
+		      }
+		      
+		      conn.commit();
+		      
+	      } finally {
+	         close();
+	      }
+	      
+	      return 1;
 	}
 
 	// 회원가입시 전화번호 중복검사 (tbl_member 테이블에서 mobile 이 존재하면 true 를 리턴해주고, mobile 이 존재하지 않으면 false 를 리턴한다)

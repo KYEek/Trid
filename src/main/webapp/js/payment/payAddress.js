@@ -9,12 +9,29 @@ document.addEventListener("DOMContentLoaded", function () {
   const address_arr = []; //주소목록을 담을 배열
   const selected_addr = {};
 
-  //주소목록을 가져와서 출력해주는 함수
-  //  fetch("json/address.json")
-  //    .then((Response) => Response.json())
-  //    .then((data) => {
   //주소를 넣어줄 html
   let address_html = "<ul>";
+
+  console.log(productInfo);
+
+  //장바구니 결제를 위해 저장
+  sessionStorage.setItem("instantPay", "false");
+
+  //즉시결제라면
+  if (instantPay == "true") {
+    console.log("instantPay");
+    const item_arr = [];
+    let item = {
+      imgSrc: productInfo.PRODUCT_IMAGE_PATH,
+      productDetailNo: `${productInfo.PRODUCT_DETAIL_NO}`,
+      productCountNum: "1",
+      productPrice: `${productInfo.PRODUCT_PRICE}`,
+    };
+    item_arr.push(item);
+
+    sessionStorage.setItem("basket_item_arry", JSON.stringify(item_arr));
+    sessionStorage.setItem("instantPay", "true");
+  }
   for (const item of addrList) {
     // console.log(item[key]);
     address_arr.push(item);
@@ -33,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
       address_info_and_select.innerHTML = ` <div>${item["addr_address"]}${item["addr_extraaddr"]}</div>
                     <a href="#">변경</a>`;
     }
-  }
+  } // end of for-------------------
   console.log(selected_addr);
   address_html += "</ul>";
   address_list_main.innerHTML = address_html;
@@ -89,9 +106,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const basket_list = JSON.parse(basket_list_str);
 
   //장바구니 이미지 목록을 출력
-  basket_list.forEach((item) => {
-    html += `<img src="${item["imgSrc"]}" />`;
-  });
+  if (instantPay == "true") {
+    basket_list.forEach((item) => {
+      html += `<img src="/Trid/${item["imgSrc"]}" />`;
+    });
+  } else {
+    basket_list.forEach((item) => {
+      html += `<img src="${item["imgSrc"]}" />`;
+    });
+  }
+
   delivery_product_list.innerHTML = html;
 
   //주소목록 x버튼 클릭이벤트
