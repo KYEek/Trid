@@ -67,15 +67,17 @@ $(document).ready(function() {
 		
 	    const selectedPrice = $("span#priceLabel").text();
 
-/*		if(Array.isArray(selectedColors)) {
-			console.log("배열입니다");
-		}*/
+		/*		
+			if(Array.isArray(selectedColors)) {
+				console.log("배열입니다");
+			}
+		*/
 		
 	    console.log("선택한 색상:", selectedColors);  // 색상 로그 출력
 	    console.log("선택한 가격:", selectedPrice);   // 가격 로그 출력
 
 	    $.ajax({
-	        url: ctxPath + '/category/category_list.trd',
+	        url: ctxPath + '/product/category_list.trd',
 	        type: 'post',
 	        headers: {
 	            'ajaxHeader': 'true',  // 사용자 정의 헤더 추가 ajax 확인용
@@ -85,8 +87,8 @@ $(document).ready(function() {
 	            choosePrice: selectedPrice    // 선택 가격
 	        },
 	        dataType: 'json',
-	        success: function(response) {
-				console.log("서버 응답 성공 데이터:", response);
+			success: function(response) {
+			    // console.log("서버 응답 데이터 확인:", response); // `productName` 필드 확인
 				// 상품 리스트 업데이트 함수 호출
 				updateProductList(response);
 	        },
@@ -99,6 +101,6 @@ $(document).ready(function() {
 	    });
 	});
 
+	
 });// end of $(document).ready(function() -------------------------------
-
 

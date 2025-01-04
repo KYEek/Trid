@@ -53,7 +53,9 @@ public interface ProductDAO {
 	// 검색어 입력시 검색어가 상품명에 포함된 상품 리스트 뽑아오는 메소드
 	public List<ProductDTO> searchProduct(Map<String, String> paraMap) throws SQLException;
 
+	// 추천 상품 리스트 출력 메소드
+	public List<ProductDTO> RandomProducts() throws SQLException;
 	
-
-
+	// 햄버거 메뉴 카테고리 클릭시 해당 카테고리 상품페이지로 이동 메소드
+	public List<CategoryDTO> HamburgerCategory() throws SQLException;
 }

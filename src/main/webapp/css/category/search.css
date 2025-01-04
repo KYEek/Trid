@@ -7,7 +7,7 @@ article#search_contents {
 /* 무엇을 찾고 계신가요? CSS */
 div#coment {
 	text-align: center;
-	margin: 3% 0 1% 0;
+	margin: 1% 0 1% 0;
 }
 
 div#coment span {
@@ -17,8 +17,10 @@ div#coment span {
 /* 추천 상품 box CSS */
 div#header_menu {
 	text-align: center;
+	margin: 0;
 }
 
+/* 추천 카테고리 button */
 div#header_menu button {
 	border: none;
 	display: inline-block;
@@ -27,12 +29,12 @@ div#header_menu button {
 	background: transparent;
 }
 
+/* 추천 카테고리 텍스트 div */
 div#header_menu button div {
 	border: 2px solid #EEE;
 	font-size: 10pt;
 	padding: 4px 6px 4px 6px;
-	width: auto;
-	
+	/* width: auto; */
 }
 
 
@@ -96,11 +98,16 @@ div#price {
 	height: 40px;
 }
 
+/* 상품에 마우스를 올릴 시 커서 변환 */
+div#product:hover {
+	cursor: pointer;
+}
+
 /* 스크롤 전체 가리기 */
 body{
     -ms-overflow-style: none;
-    }
-   ::-webkit-scrollbar {
+}
+::-webkit-scrollbar {
      display: none;
 }
 

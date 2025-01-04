@@ -1,4 +1,9 @@
 
+/* 모두보기 + 옷 카테고리 */
+div#header_menu {
+	margin-left: 5%;
+}
+
 /* 카테고리바 CSS */
 div#choose_color_box button {
     width: 30px;
@@ -43,7 +48,7 @@ button#apply_filter_button {
 }
 
 button#choose_color_button {
-	margin-left: 8%
+	margin-left: 6.5%
 }
 
 /* 상품 리스트 페이지 CSS */
@@ -61,11 +66,6 @@ input#product_name {
     font-size: 20px;
 
     margin:0 auto;
-}
-
-/* 추천아이템 텍스트 */
-h4 {
-    margin: 1.2% 1.2%;
 }
 
 /* 상품사진+상품명 감싸는 div */
@@ -96,10 +96,15 @@ div#price {
 	height: 40px;
 }
 
+/* 상품에 마우스를 올릴 시 커서 변환 */
+div#product:hover {
+	cursor: pointer;
+}
+
 /* 스크롤 전체 가리기 */
 body{
     -ms-overflow-style: none;
-    }
-   ::-webkit-scrollbar {
+}
+::-webkit-scrollbar {
      display: none;
 }
