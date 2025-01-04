@@ -74,6 +74,33 @@ $(document).ready(function() {
 		b_email_change = true;
 		// 이메일값을 변경했는지 여부를 알아오기 위한 용도
 	});
+	
+	
+	
+	
+	// == 이메일 정규식표현 == //
+	const regExp_newEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i; 
+			
+	const newEmail = regExp_newEmail.test($(e.target).val());
+	
+	$("div.message").hide();
+	$("input#email").focus();
+	
+	if(!newEmail){
+		// 입력하지 않거나 공백만 입력했을 경우
+		
+		$("input").prop("disabled", true);
+		$(e.target).prop("disabled", false); 
+		$(e.target).val("").focus();
+		
+		$(e.target).parent().find("div.email_message").show();
+		
+	}
+	else{
+		// 공백이 아닌 글자를 입력했을 경우
+		$("input").prop("disabled", false);
+		$(e.target).parent().find("div.email_message").hide();
+	}
 
 });
 

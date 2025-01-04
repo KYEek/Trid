@@ -8,6 +8,8 @@ let b_emailcheck_click = false;
 let codeCheck_click = false;
 // 인증확인 버튼을 클릭했는지 여부를 알아오기 위한 용도
 
+let isMobile = true;
+
 $(document).ready(function(){
 	
 	$("div.message").hide();
@@ -114,7 +116,7 @@ $(document).ready(function(){
 
 		// 변경된 암호가 현재 사용중인 암호이라면 현재 사용중인 암호가 아닌 새로운 암호로 입력해야 한다.!!! 
 		$.ajax({
-			url: "member/emailDuplicateCheck3.trd", 
+			url: "member/emailDuplicateCheck3.trd",  
 			data: {
 				"email": $("input#email").val().trim(),
 				"pkNum": $("input:hidden[name='pkNum']").val()
@@ -170,6 +172,34 @@ $(document).ready(function(){
 	});	
    // *** 생년월일의 값을 입력했는지 검사하기 끝 *** //
 
+   
+   // *** 인증번호에 값을 입력했는지 검사하기 시작 *** // 
+   $("input#mobileCheck").blur((e) => {
+	
+	const regExp_mobileCheck = new RegExp(/^\d{4}$/);
+				
+	const mobileCheck = regExp_mobileCheck.test($(e.target).val());
+		
+		if(!mobileCheck) {
+			$("input").prop("disabled", true);
+			$(e.target).prop("disabled", false);
+			$(e.target).val("").focus();
+			
+			$(e.target).parent().find("div.code_message").show();
+		//	codeCheck_click = false;
+		}
+		else{
+			// 공백이 아닌 글자를 입력했을 경우
+			$("input").prop("disabled", false);
+			$(e.target).parent().find("div.code_message").hide();
+		//	codeCheck_click = true;
+		}
+	
+	});
+   // *** 인증번호에 값을 입력했는지 검사하기 끝 *** //
+   
+   
+   
 });// end of $(document).ready(function()----------
 
 
@@ -182,8 +212,16 @@ function goRegister() {
 		return;
 	}
 	
-	codeCheck_click = true;
-
+	
+	// *** "이메일중복확인" 을 클릭했는지 검사하기 시작 *** //
+	   if(!b_emailcheck_click) {
+	     // "이메일중복확인" 을 클릭 안 했을 경우
+	     alert("이메일 중복확인을 클릭하셔야 합니다.");
+	     return; // goRegister() 함수를 종료한다.
+	   }
+	// *** "이메일중복확인" 을 클릭했는지 검사하기 끝 *** //	
+	
+	
    // *** 성별을 선택했는지 검사하기 시작 *** //
    const radio_checked_length = $("input:radio[name='member_gender']:checked").length;  
 
@@ -193,9 +231,27 @@ function goRegister() {
    }
    // *** 성별을 선택했는지 검사하기 끝 *** //
 	
+   // *** 인증번호를 입력했는지 검사하기 시작 *** //
+   const code = $("input#mobileCheck").val();
+   	
+   	if(code == ""){
+   		alert("인증번호를 입력하셔야합니다!!");
+   		return;
+   	}
+   // *** 인증번호를 입력했는지 검사하기 끝 *** //
+   
+   
+   // *** "인증번호확인" 을 클릭했는지 검사하기 시작 *** //
+   	   if(!codeCheck_click) {
+   	     // "인증번호확인" 을 클릭 안 했을 경우
+   	     alert("인증번호확인을 클릭하셔야 합니다.");
+   	     return; // goRegister() 함수를 종료한다.
+   	   }
+   	// *** "인증번호확인" 을 클릭했는지 검사하기 끝 *** //	
+   
    
    const frm = document.registerFrm;
-   frm.action = "/register.trd";
+   frm.action = "register.trd";
    frm.method = "post";
    frm.submit();
    
@@ -209,29 +265,61 @@ function sendCode() {// 인증하기를 클릭하면 해당 전화번호로 인�
 	
 //	alert("인증번호 받기를 클릭했습니다.");
 	
-	$.ajax({
-			url: "member/smsSend.trd", //인증하기 버튼을 클릭하면 작성된 '전화번호'로 랜덤문자 인증키를 보낸다. 
-			data: {"mobile": $("input#mobile").val()},
-			type: "get",
+	// *** 인증번호 받기를 클릭했을 때 인증번호를 전송하기 전에 전화번호가 중복되는지 검사하기 시작 *** //
+	
+		$.ajax({
+			url: "member/mobileDuplicateCheck.trd", // 인증번호 확인을 클릭하면 전화번호가 중복되는지 검사한다. 
+			data: {"mobile": $("input#mobile").val(),
+				   "pkNum": $("input#pkNum").val()
+			},
+			type: "post",
 	
 			async: true,  
 			
 			dataType: "json", 
 	
 			success: function(json) {
-			//	alert("인증번호 받기를 성공.");
+			//	alert("전화번호 중복 확인 성공!!");
 				
-				if(json.success_count == 1) {
-					alert("ajax 페이지 이동중");
-				$("input#codeCheck").val(json.certification_code);	
-				$("div.code_message").html("");
-	               $("div.code_message").html("<span style='color:black; font-weight:bold;'>문자전송이 성공되었습니다.^^</span>");
-                }
-                else if(json.error_count != 0) {
-                   $("div.code_message").html("<span style='color:red; font-weight:bold;'>문자전송이 실패되었습니다.ㅜㅜ</span>");
-                }
-	               $("div.code_message").show();
-	               $("input#mobileCheck").val("");
+				if (json.isExists) {
+					// 입력한 mobile 이 이미 사용중이라면
+					$("div#mobileDuplicate_message").html("현재 사용중인 전화번호입니다. 번호를 다시 확인해주세요!!").css({ "color": "red", "display":"block"});
+					$("input#mobileCheck").val("");
+				}
+				else {
+					// 입력한 mobile 이 존재하지 않는 경우라면 
+					$("div.mobileDuplicate_message").html("전화번호 중복확인 완료").css({ "color": "navy" , "display":"block"});
+					
+					$.ajax({
+						url: "member/smsSend.trd", //인증하기 버튼을 클릭하면 작성된 '전화번호'로 랜덤문자 인증키를 보낸다. 
+						data: {"mobile": $("input#mobile").val()},
+						type: "get",
+				
+						async: true,  
+						
+						dataType: "json", 
+				
+						success: function(json) {
+						//	alert("인증번호 받기를 성공.");
+							
+							if(json.success_count == 1) {
+							$("input#codeCheck").val(json.certification_code);	
+							$("div.code_message").html("");
+				               $("div.code_message").html("<span style='color:black; font-weight:bold;'>문자전송이 성공되었습니다.^^</span>");
+			                }
+			                else if(json.error_count != 0) {
+			                   $("div.code_message").html("<span style='color:red; font-weight:bold;'>문자전송이 실패되었습니다.ㅜㅜ</span>");
+			                }
+				               $("div.code_message").show();
+				               $("input#mobileCheck").val("");
+						},
+				
+						error: function(request, status, error) {
+						//	console.log("에러");
+							alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+						}
+					});
+				}
 			},
 	
 			error: function(request, status, error) {
@@ -239,6 +327,18 @@ function sendCode() {// 인증하기를 클릭하면 해당 전화번호로 인�
 				alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
 			}
 		});
+		
+		
+	
+	// *** 인증번호 받기를 클릭했을 때 인증번호를 전송하기 전에 전화번호가 중복되는지 검사하기 끝 *** //
+
+
+
+	
+		
+		
+		
+		
 	
 }// end of function sendCode()------------
 
@@ -246,20 +346,21 @@ function sendCode() {// 인증하기를 클릭하면 해당 전화번호로 인�
 
 function MobileCodeCheck(){
 	
-	alert("인증확인 버튼을 누르셨습니다.");
+//	alert("인증확인 버튼을 누르셨습니다.");
+	codeCheck_click = true;
 
 	const mobileCheck = $("input#mobileCheck").val().trim();
 	const codeCheck = $("input#codeCheck").val().trim();
 	
 	if(!(mobileCheck == codeCheck)){
-		codeCheck_click = false;
+	//	codeCheck_click = false;
 		alert("인증번호가 잘못 입력되었습니다. 다시 시도하세요.");
+		$("input#mobileCheck").val("").focus();
+		
 	}
 	else {
-		codeCheck_click = true;
 		alert("인증성공!!");
 	}
-	
 	
 }// end of function codeCheck()------------------------------
 

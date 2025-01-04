@@ -15,7 +15,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import board.domain.BoardDTO;
 import common.domain.PagingDTO;
 import member.domain.MemberDTO;
 import util.StringUtil;
@@ -81,7 +80,7 @@ public class MemberDAO_imple implements MemberDAO {
 			String sql 	= " insert into tbl_member(pk_member_no, member_email, member_password, "
 						+ " member_name, member_mobile, member_gender, member_birthday, member_pwdchangeday, "
 						+ " member_updateday, member_registerday) "
-						+ " values(pk_member_no_seq.nextval , ?, ?, ?, ?, ?, sysdate, sysdate , sysdate, sysdate) ";
+						+ " values(pk_member_no_seq.nextval , ?, ?, ?, ?, ?, ?, sysdate , sysdate, sysdate) ";
 
 			pstmt = conn.prepareStatement(sql);
 
@@ -90,7 +89,7 @@ public class MemberDAO_imple implements MemberDAO {
 			pstmt.setString(3, member.getMember_name());
 			pstmt.setString(4, aes.encrypt(member.getMember_mobile())); // 휴대폰을 AES256 알고리즘으로 양방향 암호화 시킨다.
 			pstmt.setInt(5, 1);
-			//pstmt.setString(6, "sysdate");
+			pstmt.setString(6, member.getMember_birthday());
 
 			result = pstmt.executeUpdate();
 
@@ -314,6 +313,37 @@ public class MemberDAO_imple implements MemberDAO {
 		
 		return isExists;
 		
+	}
+	
+	
+	// 회원가입시 이메일 중복체크해주는 메소드
+	@Override
+	public boolean emailDuplicateCheck3(String email) throws SQLException {
+		
+		boolean isExists = false;
+		
+		try {
+			  conn = ds.getConnection();
+			  
+			  String sql = " select member_email "
+			  		     + " from tbl_member "
+			  		     + " where member_email = ? ";
+			  
+			  pstmt = conn.prepareStatement(sql);
+			  pstmt.setString(1, aes.encrypt(email));
+			  
+			  rs = pstmt.executeQuery();
+			  
+			  isExists = rs.next(); // 행이 있으면(중복된 email) true,
+			                        // 행이 없으면(사용가능한 email) false
+			  
+		} catch(GeneralSecurityException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return isExists;
 	}
 
 	// 현재 비밀번호를 알아와서 웹에 들어온 비밀번호 값과 같은지 다른지 비교해주는 페이지
@@ -806,5 +836,69 @@ public class MemberDAO_imple implements MemberDAO {
 		
 		return memberDTO;
 	}
+
+	// 회원가입시 전화번호 중복검사 (tbl_member 테이블에서 mobile 이 존재하면 true 를 리턴해주고, mobile 이 존재하지 않으면 false 를 리턴한다)
+	@Override
+	public boolean mobileDuplicateCheck(String mobile) throws SQLException {
+		
+		boolean isExists = false;
+		
+		try {
+			  conn = ds.getConnection();
+			  
+			  String sql = " select member_mobile "
+			  		     + " from tbl_member "
+			  		     + " where member_mobile = ? ";
+			  
+			  pstmt = conn.prepareStatement(sql);
+			  pstmt.setString(1, aes.encrypt(mobile));
+			  
+			  rs = pstmt.executeQuery();
+			  
+			  isExists = rs.next(); // 행이 있으면(중복된 mobile) true,
+			                        // 행이 없으면(사용가능한 mobile) false
+			  
+		} catch(GeneralSecurityException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return isExists;
+		
+	}// end of public boolean mobileDuplicateCheck(String mobile) throws SQLException-----------------
+
+	// 회원가입시 전화번호 중복검사(현재 해당 사용자가 사용중인 mobile 이라면 true, 새로운 mobile 이라면 false)
+	@Override
+	public boolean mobileDuplicateCheck2(Map<String, String> paraMap) throws SQLException {
+		
+		boolean isExists = false;
+	      
+	      try {// 이메일은 다른 사용자와 중복되면 안된다.(현재 사용자가 해당 이메일을 사용하고 있는지와 다른 사용자가 해당 이메일을 사용하고 있는지 모두 확인해야한다.)
+	         conn = ds.getConnection();
+	         
+	         String sql = " select pk_member_no "
+	         			+ " from tbl_member "
+	         			+ " where pk_member_no = ? and member_mobile = ? ";
+	         
+	         pstmt = conn.prepareStatement(sql); 
+	         pstmt.setString(1, paraMap.get("pkNum"));
+	         pstmt.setString(2, aes.encrypt(paraMap.get("mobile")));
+	         
+	         rs = pstmt.executeQuery();
+	         
+	         isExists = rs.next(); // 행이 있으면(사용자가 현재 사용중인 email) true,
+	                               // 행이 없으면(사용자가 사용하고 있지 않은 email) false
+	         
+	      } catch(GeneralSecurityException | UnsupportedEncodingException e) {
+				e.printStackTrace();
+		  } finally {
+	         close();
+	      }
+	      
+	      return isExists;
+	}
+
+	
 
 }

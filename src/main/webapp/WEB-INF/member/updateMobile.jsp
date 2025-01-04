@@ -23,7 +23,7 @@ div#container > input {
     border-bottom: 2px solid #ccc;
     padding-bottom: 5px;
     display: block;
-    margin-bottom: 2%;
+    margin-bottom: 1%;
     outline: none;
 }
 
@@ -39,7 +39,10 @@ button {
 }
 
 div.message {
-    font: 10pt;
+    font-size: 8pt;
+    color: red;
+    margin-bottom: 1%;
+    display: block;
 }
 
 div#update{
@@ -90,7 +93,8 @@ div#code {
 			
 			<input type="text" name="newMobile" id="newMobile" maxlength="15" class="requiredInfo" placeholder="새 전화번호" size="49%"/>
 	        <input type="hidden" name="pkNum" id="pkNum" value="${sessionScope.loginuser.pk_member_no}"/>
-	        <div class="message"></div>
+	        <div class="message"><i class="fa-solid fa-circle-info">&nbsp;전화번호를 입력해주십시오</i></div>
+	        <div class="mobile_message"><i class="fa-solid fa-circle-info"></i></div>
 	       
 			<button type="button" onclick="goMobileUpdate()">전화번호 업데이트하기</button>
 		</div>
