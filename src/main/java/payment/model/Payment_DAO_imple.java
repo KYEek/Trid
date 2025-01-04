@@ -220,4 +220,35 @@ public class Payment_DAO_imple implements Payment_DAO {
 		return json;
 	}
 
+	//즉시결제하는 메서드
+	@Override
+	public int instantPay(Map<String, String> orderData, Map<String, String> orderDetailData) throws SQLException {
+		
+		int result_order_no = 0;
+		CallableStatement cstmt = null;
+		conn = ds.getConnection();
+
+		
+		
+		sql = " {call instantPay(?, ?, ?, ?, ?)} ";
+		try {
+		cstmt = conn.prepareCall(sql);
+		cstmt.setString(1, orderDetailData.get("orderDetailArr"));
+		cstmt.setInt(2, Integer.parseInt(orderData.get("selected_address_no")));
+		cstmt.setInt(3, Integer.parseInt(orderData.get("total_price")));
+		cstmt.setInt(4, Integer.parseInt(orderData.get("member_No")));
+		cstmt.registerOutParameter(5, Types.NUMERIC);
+		
+		cstmt.execute();
+		
+		result_order_no = cstmt.getInt(5);
+		
+
+		} finally {
+			close();
+		}
+
+		return result_order_no;
+	}
+
 }

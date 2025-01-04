@@ -115,7 +115,7 @@
               <div>주문번호 : <sapn>${requestScope.orderNo}</sapn></div>
             </div>
             <div id="order_info_button">
-              <div><a href="">주문 정보 보기 </a></div>
+              <div><a href="http://localhost:9090/Trid/orders/detail.trd?orderNo=${requestScope.orderNo}">주문 정보 보기 </a></div>
             </div>
           </div>
         </div>

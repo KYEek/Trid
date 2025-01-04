@@ -14,21 +14,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
   console.log(productInfo);
 
+  //장바구니 결제를 위해 저장
+  sessionStorage.setItem("instantPay", "false");
+
   //즉시결제라면
   if (instantPay == "true") {
     console.log("instantPay");
     const item_arr = [];
     let item = {
       imgSrc: productInfo.PRODUCT_IMAGE_PATH,
-      productDetailNo: productInfo.PRODUCT_DETAIL_NO,
-      productCountNum: 1,
-      productPrice: productInfo.PRODUCT_PRICE,
+      productDetailNo: `${productInfo.PRODUCT_DETAIL_NO}`,
+      productCountNum: "1",
+      productPrice: `${productInfo.PRODUCT_PRICE}`,
     };
     item_arr.push(item);
 
     sessionStorage.setItem("basket_item_arry", JSON.stringify(item_arr));
+    sessionStorage.setItem("instantPay", "true");
   }
-
   for (const item of addrList) {
     // console.log(item[key]);
     address_arr.push(item);
