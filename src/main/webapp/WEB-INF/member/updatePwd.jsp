@@ -32,6 +32,7 @@
 
 <!-- 직접 만든 JS -->
 <script type="text/javascript" src="<%= ctx_Path%>/js/member/updatePwd.js"></script>
+<script type="text/javascript" src="<%= ctx_Path%>/js/member/util.js"></script> 
 
 
 <style>
@@ -97,7 +98,12 @@ div#update{
 			
 
 	        <input type="password" name="newPwd" id="newPwd" maxlength="15" class="requiredInfo" placeholder="새 비밀번호" />
-	        <div class="newPwd_message"></div>
+	        <div class="newPwd_message"><i class="fa-solid fa-circle-info"></i>&nbsp;안전한 비밀번호를 입력하세요. 영어대소문자,숫자 및 특수기호를 포함한 최소 8자리 이상이어야 합니다.</div>
+	        
+	        
+	        <input type="password" name="newPwdCheck" id="newPwdCheck" maxlength="15" class="requiredInfo" placeholder="새 비밀번호 확인" />
+	        <div class="newPwdCheck_message"><i class="fa-solid fa-circle-info"></i>&nbsp;비밀번호가 일치하지 않습니다.</div>
+	        
 		
 	
 			<button type="button" onclick="goUpdatePwd()">저장</button>

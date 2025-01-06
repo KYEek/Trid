@@ -1,177 +1,158 @@
 
 
-let isEmail = true;
+
 
 let b_emailcheck_click = false;
 // "이메일중복확인" 을 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도
 
-let codeCheck_click = false;
-// 인증확인 버튼을 클릭했는지 여부를 알아오기 위한 용도
+let pwdValid = false; // 새로운 비밀번호가 유효한 경우 true
 
-let isMobile = true;
+let pwdCheckValid = false; // 확인 비밀번호가 유효한 경우 true
+
+let nameCheckVaild = false; // 이름이 유효한 경우 true
+
+let birthdayCheckVaild = false; // 생년월일이 유효한 경우 true
+
+let mobileCheckVaild = false; // 전화번호가 유효한 경우 true
+
+let codeCheck_click = false; // 인증확인 버튼을 클릭했는지 여부를 알아오기 위한 용도
 
 $(document).ready(function(){
 	
 	$("div.message").hide();
+	$("div#mobile_check_box").hide();
 	$("input#email").focus();
 	
-	$("input#email").blur((e) => {
-		
-		const regExp_email = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i; 
-		
-		const email = regExp_email.test($(e.target).val());
-		
-		if(!email){
-			// 입력하지 않거나 공백만 입력했을 경우
-			
-			$("input").prop("disabled", true);
-			$(e.target).prop("disabled", false); 
-			$(e.target).val("").focus();
-			
-			$(e.target).parent().find("div.email_message").show();
-			
-		}
-		else{
-			// 공백이 아닌 글자를 입력했을 경우
-			$("input").prop("disabled", false);
-			$(e.target).parent().find("div.email_message").hide();
-		}
-		
-	});
-	
-	
-	$("input#pwd").blur((e) => {
-		const regExp_pwd = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
-		
-		const pwd = regExp_pwd.test($(e.target).val());
-		
-		if(!pwd) {
-			$("input").prop("disabled", true);
-			$(e.target).prop("disabled", false);
-			$(e.target).val("").focus();
-			
-			$(e.target).parent().find("div.pwd_message").show();
-		}
-		else{
-			// 공백이 아닌 글자를 입력했을 경우
-			$("input").prop("disabled", false);
-			$(e.target).parent().find("div.pwd_message").hide();
-		}
-		
-	});	
-	
-	
-	$("input#name").blur((e) => {
-	
-		const regExp_name = new RegExp("^[가-힣]{3,10}$");
-		
-		const name = regExp_name.test($(e.target).val());
-		
-		if(!name) {
-			$("input").prop("disabled", true);
-			$(e.target).prop("disabled", false);
-			$(e.target).val("").focus();
-			
-			$(e.target).parent().find("div.name_message").show();
-		}
-		else{
-			// 공백이 아닌 글자를 입력했을 경우
-			$("input").prop("disabled", false);
-			$(e.target).parent().find("div.name_message").hide();
-		}
-	});
-	
-	
-	
-	$("input#mobile").blur((e) => {
-		
-		const regExp_mobile = new RegExp("^(0[2-9]{1,2}|01[016789])[-]*([0-9]{3,4})[-]*([0-9]{4})$");
-				
-		const mobile = regExp_mobile.test($(e.target).val());
-		
-		if(!mobile) {
-			$("input").prop("disabled", true);
-			$(e.target).prop("disabled", false);
-			$(e.target).val("").focus();
-			
-			$(e.target).parent().find("div.mobile_message").show();
-		}
-		else {
-			// 공백이 아닌 글자를 입력했을 경우
-			$("input").prop("disabled", false);
-			$(e.target).parent().find("div.mobile_message").hide();
-		}
-		
-	});	
-	
-	
-	
-	
-	
 	// "이메일중복확인" 을 클릭했을 때 이벤트 처리하기
-	$("span#emailcheck").click(function() {
+	$("button#emailcheck").click(function() {
 
+		const email = $("input#email").val();
+		
 		b_emailcheck_click = true;
-		// "이메일중복확인" 을 클릭했는지 클릭을 안했는지 여부를 알아오기 위한 용도 
-
-		// 변경된 암호가 현재 사용중인 암호이라면 현재 사용중인 암호가 아닌 새로운 암호로 입력해야 한다.!!! 
+		
+		if(!checkEmail(email)){
+		//	alert("이메일 유효성 검사");
+			$("div.email_message").html("이메일 형식을 정확하게 입력해주세요").css({ "color": "red" });
+			$("div.email_message").show();
+			b_emailcheck_click = false;
+			$("input#email").val("");
+			return false;
+		}
+		
 		$.ajax({
-			url: "member/emailDuplicateCheck3.trd",  
+			url: "member/emailDuplicateCheck.trd", 
+			//tbl_member 테이블에 같은 이메일을 사용하는 사용자가 있는지 알아온다.
+			
 			data: {
-				"email": $("input#email").val().trim(),
-				"pkNum": $("input:hidden[name='pkNum']").val()
+				"newEmail": $("input#email").val(),
 			}, 
 			type: "post",  
-			async: true,
-			
-			dataType: "json", 
-			
+
+			async: true,   
+
+			dataType: "json",
+
 			success: function(json) {
 
 				if (json.isExists) {
 					// 입력한 email 이 이미 사용중이라면
-					$("div#email_message").html($("input#email").val().trim() + " 은 현재 사용중 이므로 다른 이메일을 입력하세요.").css({ "color": "red" });
+					$("div.email_message").html($("input#email").val() + " 은 현재 사용중 이므로 다른 이메일을 입력하세요").css({ "color": "red" });
+					$("div.email_message").show();
 					$("input#email").val("");
-					isEmail = false;
+					b_emailcheck_click = false;
 				}
-				else if(!(json.isExists) && $("input#email").val().trim()){
+				else {
 					// 입력한 email 이 존재하지 않는 경우라면 
-					$("div#email_message").html($("input#email").val().trim() + " 은 사용가능 합니다.").css({ "color": "navy" });
-					isEmail = true;
+					$("div.email_message").html($("input#email").val() + " 은 사용가능 합니다").css({ "color": "navy" });
+					$("div.email_message").show();
+					b_emailcheck_click = true;
 				}
 
 			},
 
-			error: function(request, status, error) {
+			error: function(request,error) {
 				alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
 			}
 		});
-		
+					
 	});
 	
+	// 비밀번호 유효성 검사
+	$("input#pwd").blur((e) => {
+		const pwd = $(e.target).val(); // blur 이벤트가 일어난 pwd input의 값
+		$("div.pwd_message").show();
+		// 유효한 비밀번호를 입력하지 않았을 경우
+		if(!checkPwd(pwd)) {
+			$("div.pwd_message").show();
+		}
+		else{
+			// 공백이 아닌 글자를 입력했을 경우
+			$("div.pwd_message").hide();
+			pwdValid = true;
+		}
+	});
 	
-	// *** 생년월일의 값을 입력했는지 검사하기 시작 *** //
+	// 비밀번호 확인 검사	
+	$("input#pwdCheck").blur((e) => {
+		const pwd = $("input#pwd").val(); // 비밀번호 입력값
+		const pwdCheck = $(e.target).val(); // 비밀번호 확인 입력값
+		
+		// 초기에 비밀번호 확인 경고 메시지가 보여진다
+		$("div.pwd_checkMessage").show(); 
+		
+		// 비밀번호와 비밀번호 확인 값이 같을 경우
+		if(pwd == pwdCheck) {
+			$("div.pwd_checkMessage").hide();
+			pwdCheckValid = true;
+		}
+		// 같지 않은 경우
+		else{
+			$("div.pwd_checkMessage").show();
+		}
+	});
+	
+	//이름 유효성 검사
+	$("input#name").blur((e) => {
+		const name = $(e.target).val(); // 이름
+		
+		if(!checkName(name)) {
+			$("div.name_message").show();
+		}
+		else{
+			// 공백이 아닌 글자를 입력했을 경우
+			$("div.name_message").hide();
+			nameCheckVaild = true;
+		}
+	});
+	
+	// 생년월일 유효성 검사
 	$("input#birthday").blur((e) => {
-			const regExp_birthday = new RegExp(/^(\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/);
-			
-			const birthday = regExp_birthday.test($(e.target).val());
-			
-			if(!birthday) {
-				$("input").prop("disabled", true);
-				$(e.target).prop("disabled", false);
-				$(e.target).val("").focus();
-				
-				$(e.target).parent().find("div.birthday_message").show();
-			}
-			else{
-				// 공백이 아닌 글자를 입력했을 경우
-				$("input").prop("disabled", false);
-				$(e.target).parent().find("div.birthday_message").hide();
-			}
-			
+		const birthday = $(e.target).val(); // 생년월일
+		
+		if(!checkBirthday(birthday)) {
+			$("div.birthday_message").show();
+		}
+		else{
+			// 공백이 아닌 글자를 입력했을 경우
+			$("div.birthday_message").hide();
+			birthdayCheckVaild = true;
+		}
 	});	
-   // *** 생년월일의 값을 입력했는지 검사하기 끝 *** //
-
+	
+	// 전화번호 유효성 검사
+	$("input#mobile").blur((e) => {
+		const mobile = $(e.target).val(); // 전화번호 
+		
+		if(!checkMobile(mobile)) {
+			$("div.mobile_message").show();
+		}
+		else {
+			// 공백이 아닌 글자를 입력했을 경우
+			$("div.mobile_message").hide();
+			mobileCheckVaild = true;
+		}
+	});		
+	
    
    // *** 인증번호에 값을 입력했는지 검사하기 시작 *** // 
    $("input#mobileCheck").blur((e) => {
@@ -181,18 +162,11 @@ $(document).ready(function(){
 	const mobileCheck = regExp_mobileCheck.test($(e.target).val());
 		
 		if(!mobileCheck) {
-			$("input").prop("disabled", true);
-			$(e.target).prop("disabled", false);
-			$(e.target).val("").focus();
-			
 			$(e.target).parent().find("div.code_message").show();
-		//	codeCheck_click = false;
 		}
 		else{
 			// 공백이 아닌 글자를 입력했을 경우
-			$("input").prop("disabled", false);
 			$(e.target).parent().find("div.code_message").hide();
-		//	codeCheck_click = true;
 		}
 	
 	});
@@ -204,6 +178,7 @@ $(document).ready(function(){
 
 
 function goRegister() {
+
 	
 	const checkbox_checked_length = $("input:checkbox[name='agree']:checked").length;
 	
@@ -217,9 +192,35 @@ function goRegister() {
 	   if(!b_emailcheck_click) {
 	     // "이메일중복확인" 을 클릭 안 했을 경우
 	     alert("이메일 중복확인을 클릭하셔야 합니다.");
-	     return; // goRegister() 함수를 종료한다.
+	     return;
 	   }
 	// *** "이메일중복확인" 을 클릭했는지 검사하기 끝 *** //	
+		
+		if(!pwdValid || !pwdCheckValid) {
+			// 비밀번호를 입력하지 않을 경우
+			alert("비밀번호를 다시 입력해 주세요.");
+			return;
+		}
+
+		if (!nameCheckVaild) {
+			// 이름을 입력하지 않을 경우
+			alert("성명을 입력하여 주세요");
+			return;
+		}
+	
+		if (!birthdayCheckVaild) {
+			// 생년월일 입력하지 않을 경우
+			alert("생년월일 입력하여 주세요");
+			return;
+		}
+	
+	
+		if (!mobileCheckVaild) {
+			// 전화번호를 입력하지 않을 경우
+			alert("전화번호를 입력하여 주세요");
+			return;
+		}
+				   	
 	
 	
    // *** 성별을 선택했는지 검사하기 시작 *** //
@@ -227,7 +228,7 @@ function goRegister() {
 
    if(radio_checked_length == 0){
        alert("성별을 선택하셔야 합니다.");
-       return; // 함수를 종료한다.
+       return;
    }
    // *** 성별을 선택했는지 검사하기 끝 *** //
 	
@@ -245,11 +246,12 @@ function goRegister() {
    	   if(!codeCheck_click) {
    	     // "인증번호확인" 을 클릭 안 했을 경우
    	     alert("인증번호확인을 클릭하셔야 합니다.");
-   	     return; // goRegister() 함수를 종료한다.
+   	     return;
    	   }
    	// *** "인증번호확인" 을 클릭했는지 검사하기 끝 *** //	
-   
-   
+
+	
+	
    const frm = document.registerFrm;
    frm.action = "register.trd";
    frm.method = "post";
@@ -261,111 +263,92 @@ function goRegister() {
 
 
 
-function sendCode() {// 인증하기를 클릭하면 해당 전화번호로 인증 문자를 보낸다.
-	
-//	alert("인증번호 받기를 클릭했습니다.");
+function sendCode() {
 	
 	// *** 인증번호 받기를 클릭했을 때 인증번호를 전송하기 전에 전화번호가 중복되는지 검사하기 시작 *** //
-	
-		$.ajax({
-			url: "member/mobileDuplicateCheck.trd", // 인증번호 확인을 클릭하면 전화번호가 중복되는지 검사한다. 
-			data: {"mobile": $("input#mobile").val(),
-				   "pkNum": $("input#pkNum").val()
-			},
-			type: "post",
-	
-			async: true,  
+	$.ajax({
+		url: "member/mobileDuplicateCheck.trd", // 인증번호 확인을 클릭하면 전화번호가 중복되는지 검사한다. 
+		data: {
+			"mobile": $("input#mobile").val()
+		},
+		type: "post",
+
+		async: true,  
+		
+		dataType: "json", 
+
+		success: function(json) {
 			
-			dataType: "json", 
-	
-			success: function(json) {
-			//	alert("전화번호 중복 확인 성공!!");
+			if (json.isExists) {
+				// 입력한 mobile 이 이미 사용중이라면
+				$("div#mobileDuplicate_message").html("현재 사용중인 전화번호입니다. 번호를 다시 확인해주세요!!").css({ "color": "red", "display":"block"});
+				$("input#mobileCheck").val("");
+			}
+			else {
+				// 입력한 mobile 이 존재하지 않는 경우라면 
+				$("div#mobileDuplicate_message").hide();
 				
-				if (json.isExists) {
-					// 입력한 mobile 이 이미 사용중이라면
-					$("div#mobileDuplicate_message").html("현재 사용중인 전화번호입니다. 번호를 다시 확인해주세요!!").css({ "color": "red", "display":"block"});
-					$("input#mobileCheck").val("");
-				}
-				else {
-					// 입력한 mobile 이 존재하지 않는 경우라면 
-					$("div.mobileDuplicate_message").html("전화번호 중복확인 완료").css({ "color": "navy" , "display":"block"});
+				// 
+				$.ajax({
+					url: "member/smsSend.trd", //인증하기 버튼을 클릭하면 작성된 '전화번호'로 랜덤문자 인증키를 보낸다. 
+					data: {"mobile": $("input#mobile").val()},
+					type: "get",
+			
+					async: true,  
 					
-					$.ajax({
-						url: "member/smsSend.trd", //인증하기 버튼을 클릭하면 작성된 '전화번호'로 랜덤문자 인증키를 보낸다. 
-						data: {"mobile": $("input#mobile").val()},
-						type: "get",
-				
-						async: true,  
+					dataType: "json", 
+			
+					success: function(json) {
 						
-						dataType: "json", 
-				
-						success: function(json) {
-						//	alert("인증번호 받기를 성공.");
-							
-							if(json.success_count == 1) {
+						if(json.success_count == 1) {
 							$("input#codeCheck").val(json.certification_code);	
 							$("div.code_message").html("");
-				               $("div.code_message").html("<span style='color:black; font-weight:bold;'>문자전송이 성공되었습니다.^^</span>");
-			                }
-			                else if(json.error_count != 0) {
-			                   $("div.code_message").html("<span style='color:red; font-weight:bold;'>문자전송이 실패되었습니다.ㅜㅜ</span>");
-			                }
-				               $("div.code_message").show();
-				               $("input#mobileCheck").val("");
-						},
-				
-						error: function(request, status, error) {
-						//	console.log("에러");
-							alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
-						}
-					});
-				}
-			},
-	
-			error: function(request, status, error) {
-			//	console.log("에러");
-				alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+			                $("div.code_message").html("<span style='color:black; font-weight:bold;'>문자전송이 성공되었습니다.^^</span>");
+						    $("div#mobile_check_box").show(); // 문자 전송 성공 시 인증번호 확인 div show
+						   
+		                }
+		                else if(json.error_count != 0) {
+		                   $("div.code_message").html("<span style='color:red; font-weight:bold;'>문자전송이 실패되었습니다.ㅜㅜ</span>");
+		                }
+			               $("div.code_message").show();
+			               $("input#mobileCheck").val("");
+					},
+			
+					error: function(request,error) {
+					//	console.log("에러");
+						alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+					}
+				});
 			}
-		});
-		
-		
+		},
+		error: function(request,error) {
+		//	console.log("에러");
+			alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+		}
+	});	
 	
 	// *** 인증번호 받기를 클릭했을 때 인증번호를 전송하기 전에 전화번호가 중복되는지 검사하기 끝 *** //
-
-
-
 	
-		
-		
-		
-		
 	
 }// end of function sendCode()------------
 
 
-
+// 문자로 받은 인증번호가 일치한지 확인하는 함수
 function MobileCodeCheck(){
-	
-//	alert("인증확인 버튼을 누르셨습니다.");
-	codeCheck_click = true;
 
 	const mobileCheck = $("input#mobileCheck").val().trim();
 	const codeCheck = $("input#codeCheck").val().trim();
 	
 	if(!(mobileCheck == codeCheck)){
-	//	codeCheck_click = false;
 		alert("인증번호가 잘못 입력되었습니다. 다시 시도하세요.");
-		$("input#mobileCheck").val("").focus();
-		
 	}
 	else {
 		alert("인증성공!!");
+		codeCheck_click = true;
+		
 	}
 	
 }// end of function codeCheck()------------------------------
-
-
-
 
 
 // ==== 체크박스 전체선택/전체해제 ==== //

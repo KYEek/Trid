@@ -32,6 +32,7 @@
 
 <!-- 직접 만든 JS -->
 <script type="text/javascript" src="<%= ctx_Path%>/js/member/updateEmail.js"></script>
+<script type="text/javascript" src="<%= ctx_Path%>/js/member/util.js"></script>
 
 <style>
 
@@ -85,7 +86,6 @@ span#emailcheck {
 div.email_message,
 div.pwd_message {
     font-size: 10pt;
-    /* border: solid 1px gray; */ /* 확인용 */
 }
 
 </style>
@@ -101,7 +101,7 @@ div.pwd_message {
 			<div id="currentEmail">현재 이메일 : <span>${sessionScope.loginuser.member_email}</span></div>
 			
 			<input type="password" name="currentPwd" id="currentPwd" maxlength="15" class="requiredInfo" placeholder="현재 비밀번호"/>
-	        <input type="hidden" name="pkNum" id="pkNum" value="${sessionScope.loginuser.pk_member_no}"/>
+	        <input type="hidden" name="memberNo" id="pkNum" value="${sessionScope.loginuser.pk_member_no}"/>
 	        <div class="pwd_message"></div>
 	        
 			<br>
@@ -110,6 +110,7 @@ div.pwd_message {
 	        <%-- 이메일중복체크 --%>
             <span id="emailcheck">이메일중복확인</span><br>
 	        <div class="email_message" style="color:red"><i class="fa-solid fa-circle-info"></i>&nbsp;올바른 이메일을 입력하세요.</div>
+			<div class="message" style="color:red"></div>
 			
 	
 			<button type="button" onclick="goUpdateEmail()">이메일 변경</button><!-- 이메일 변경 함수를 클릭하면 호출되는 함수 만들기 -->

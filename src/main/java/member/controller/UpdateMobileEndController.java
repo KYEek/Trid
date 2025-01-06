@@ -11,19 +11,27 @@ import member.domain.MemberDTO;
 import member.model.MemberDAO;
 import member.model.MemberDAO_imple;
 
+/*
+ 	회원 전화번호 수정 컨트롤러(update)
+ */
+
 public class UpdateMobileEndController extends AbstractController {
 
-	private MemberDAO mdao = new MemberDAO_imple(); // db와 연결해주는 용도
+	private MemberDAO mdao = new MemberDAO_imple(); 
 	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+		if(!super.checkLogin(request)) {
+            super.handleMessage(request, "로그인이 필요한 페이지입니다.", Constants.MEMBER_LOGIN_URL);
+            return;
+         }
+		
 		String method = request.getMethod(); // "GET" 또는 "POST" 
 		
-		if("POST".equalsIgnoreCase(method)) {// 비밀번호와 이메일 정보가 필요하므로 무조건 post 방식
-			// **** POST 방식으로 넘어온 것이라면 **** //
-			
-			String newMobile = request.getParameter("newMobile");// 뷰단 페이지에서 넘겨받은 mobile 값
+		if("POST".equalsIgnoreCase(method)) {// "POST" 방식이라면
+	
+			String newMobile = request.getParameter("newMobile");
 			String pkNum = request.getParameter("pkNum");
 			
 			MemberDTO member = new MemberDTO();
@@ -36,14 +44,13 @@ public class UpdateMobileEndController extends AbstractController {
 		         
 		         if(n==1) {
 		           
-		           // !!!! session 에 저장된 loginuser 를 변경된 사용자의 정보값으로 변경해주어야 한다. !!!!
 	               HttpSession session = request.getSession();
 	               MemberDTO loginuser = (MemberDTO) session.getAttribute("loginuser");
 	               
 	               loginuser.setMember_mobile(newMobile);
 	               
 	        	   String message = "회원전화번호 수정 성공!!";
-	        	   String loc = "/Trid/member/updateMobile.trd"; // 현재페이지에 머뭄.
+	        	   String loc = "/Trid/member/updateMobile.trd"; 
 	             
 	               request.setAttribute("message", message);
 	               request.setAttribute("loc", loc);
@@ -58,10 +65,9 @@ public class UpdateMobileEndController extends AbstractController {
 	         }
 			
 		}
-		else {
-			 super.setRedirect(false);
-        	 super.setViewPage(request.getContextPath()+"/error.trd");
-        	 
+		else { // GET 방식이라면
+			super.handleMessage(request, "잘못된 요청방식입니다.", "/member/mypage.trd");
+			
 		}
 	}
 

@@ -1,5 +1,6 @@
 package member.controller;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,12 +9,16 @@ import org.json.JSONObject;
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import member.domain.MemberDTO;
 import member.model.MemberDAO;
 import member.model.MemberDAO_imple;
-
+/*
+ *	전화번호 중복확인 컨트롤러
+*/
 public class MobileDuplicateCheckController extends AbstractController {
 
-	private MemberDAO mdao = new MemberDAO_imple();
+	private MemberDAO mdao = new MemberDAO_imple(); // MemberDAO 초기화
 	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -21,40 +26,25 @@ public class MobileDuplicateCheckController extends AbstractController {
 		String method =	request.getMethod(); // "GET" 또는 "POST"
 		
 		if("POST".equalsIgnoreCase(method)) {
-			
-			String mobile = request.getParameter("mobile");
-			String pkNum = request.getParameter("pkNum");
-			
-			Map<String, String> paraMap = new HashMap<>();
-			paraMap.put("mobile",mobile);
-			paraMap.put("pkNum", pkNum);
-			
-			boolean isExists = mdao.mobileDuplicateCheck2(paraMap); 
-			// 자신이 사용중인 이메일인지 아닌지 알아오는 메소드
-			
-			
-			if(!isExists) { // 자신이 변경하고자 하는 이메일이 자신이 사용중이지 않는 새로운 이메일 이라면(false)
-				isExists = mdao.mobileDuplicateCheck(mobile);//자신이 변경하고자하는 이메일이 tbl_member 테이블에서 사용중인지 아닌지 여부 알아오기
+			try {		
+				String mobile = request.getParameter("mobile");
+
+				//자신이 변경하고자하는 전화번호가 tbl_member 테이블에서 사용중인지 아닌지 여부 알아오기
+				boolean isExists = mdao.mobileDuplicateCheck(mobile);
 				
+				JSONObject jsonObj = new JSONObject();
+				
+				// {"isExists":true}  또는  {"isExists":false} 으로 만들어준다.
+				jsonObj.put("isExists", isExists);     
+
+				super.handelJsonView(request, jsonObj);
+			
+			} catch (SQLException e) {
+				e.printStackTrace();
+				super.handleServerError();
 			}
-			
-			JSONObject jsonObj = new JSONObject(); // {}
-			jsonObj.put("isExists", isExists);     // {"isExists":true}  또는  {"isExists":false} 으로 만들어준다.
-			
-			String json = jsonObj.toString(); // 문자열 형태인 "{"isExists":true}"  또는  "{"isExists":false}" 으로 만들어준다.
-		//	System.out.println(">>> 확인용 json => " + json);
-			// >>> 확인용 json => {"isExists":true}
-			// >>> 확인용 json => {"isExists":false}
-			
-			request.setAttribute("json", json);
-			
-			super.setRedirect(false);
-			super.setViewPage("/WEB-INF/jsonview.jsp");
-			
-			
 		}
 		
-
 	}// end of public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception--------------
 
 }

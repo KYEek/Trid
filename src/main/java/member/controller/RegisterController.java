@@ -11,8 +11,8 @@ import member.model.MemberDAO;
 import member.model.MemberDAO_imple;
 
 /*
- * 회원가입 요청을 처리하는 컨트롤러
- */
+  	회원가입 요청을 처리하는 컨트롤러
+*/
 
 public class RegisterController extends AbstractController {
 
@@ -25,7 +25,7 @@ public class RegisterController extends AbstractController {
 		
 		if("POST".equalsIgnoreCase(method)) {// POST 방식이라면
 			
-			String member_email = request.getParameter("email");
+			String member_email = request.getParameter("email");			
 			String member_password = request.getParameter("pwd");
 			String member_name = request.getParameter("name");
 			String member_mobile = request.getParameter("mobile");
@@ -35,6 +35,7 @@ public class RegisterController extends AbstractController {
 			String member_pwdchangeday = request.getParameter("member_pwdchangeday");
 			String member_updateday = request.getParameter("member_updateday");
 			
+			System.out.println(request.getParameter("mobile"));
 			
 			MemberDTO member = new MemberDTO();
 			member.setMember_email(member_email);
@@ -47,7 +48,7 @@ public class RegisterController extends AbstractController {
 			member.setMember_pwdchangeday(member_pwdchangeday);
 			member.setMember_updateday(member_updateday);
 			
-			// ==== 회원가입이 성공되어지면 "회원가입 성공" 이라는 alert 를 띄우고 시작페이지로 이동한다. === // 
+			// ==== 회원가입이 성공되어지면 "회원가입이 완료되었습니다" 라는 alert 를 띄우고 시작페이지로 이동한다. === // 
 			String message = "";
 			String loc = "";
 			
@@ -81,6 +82,6 @@ public class RegisterController extends AbstractController {
 			
 		}
 		
-	}
+	}// end of public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception-------------
 
 }

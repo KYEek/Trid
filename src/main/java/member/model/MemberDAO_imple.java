@@ -40,7 +40,6 @@ public class MemberDAO_imple implements MemberDAO {
 			ds = (DataSource) envContext.lookup("jdbc/semioracle");
 
 			aes = new AES256("trid3333#gclass$");
-			// SecretMyKey.KEY 은 우리가 만든 암호화/복호화 키이다.
 
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -69,6 +68,7 @@ public class MemberDAO_imple implements MemberDAO {
 		}
 	}// end of private void close()---------------
 
+	
 	// 회원가입을 해주는 메소드(tbl_member 테이블에 insert)
 	@Override
 	public int registerMember(MemberDTO member) throws SQLException {
@@ -89,7 +89,7 @@ public class MemberDAO_imple implements MemberDAO {
 			pstmt.setString(2, Sha256.encrypt(member.getMember_password())); // 암호를 SHA256 알고리즘으로 단방향 암호화 시킨다.
 			pstmt.setString(3, member.getMember_name());
 			pstmt.setString(4, aes.encrypt(member.getMember_mobile())); // 휴대폰을 AES256 알고리즘으로 양방향 암호화 시킨다.
-			pstmt.setInt(5, 1);
+			pstmt.setInt(5, member.getMember_gender());
 			pstmt.setString(6, member.getMember_birthday());
 
 			result = pstmt.executeUpdate();
@@ -100,10 +100,9 @@ public class MemberDAO_imple implements MemberDAO {
 			close();
 		}
 
-//		System.out.println(result);
 		return result;
-	}// end of public int registerMember(MemberDTO member) throws SQLException
-		// -----------------
+	}// end of public int registerMember(MemberDTO member) throws SQLException--------------------------------
+	
 
 	// 로그인 처리를 해주는 메소드
 	@Override
@@ -190,15 +189,9 @@ public class MemberDAO_imple implements MemberDAO {
 			close();
 		}
 		
-		//System.out.println(member.getMember_name());
-
 		return member;
-	}// end of public MemberVO login(Map<String, String> paraMap) throws
-		// SQLException---------
+	}// end of public MemberVO login(Map<String, String> paraMap) throws SQLException---------
 
-	
-	
-	
 
 	// 회원 탈퇴를 처리해주는 메소드
 	@Override
@@ -230,9 +223,9 @@ public class MemberDAO_imple implements MemberDAO {
 	
 	// 이메일을 수정 해주는 메소드
 	@Override
-	public int updateEmail(MemberDTO member) throws SQLException {
+	public int updateEmail(Map<String , String> paraMap) throws SQLException {
 		
-		int result = 0; // 업데이트가 성공되어졌는지 알기위한 용도
+		int result = 0;
 		
 		try {
 			conn = ds.getConnection();
@@ -242,8 +235,8 @@ public class MemberDAO_imple implements MemberDAO {
 			
 			pstmt = conn.prepareStatement(sql);
 	        
-	        pstmt.setString(1, aes.encrypt(member.getMember_email()) );  // 이메일을 AES256 알고리즘으로 양방향 암호화 시킨다. 
-	        pstmt.setInt(2, member.getPk_member_no() ); 
+	        pstmt.setString(1, aes.encrypt(paraMap.get("newEmail")) );  // 이메일을 AES256 알고리즘으로 양방향 암호화 시킨다. 
+	        pstmt.setString(2, paraMap.get("memberNo") ); 
 	        
 	        result = pstmt.executeUpdate();
 	        
@@ -254,41 +247,11 @@ public class MemberDAO_imple implements MemberDAO {
 			close();
 		}
 		
-		return result;// 업데이트가 성공되어졌다면 result 값은 1이 나온다.
+		return result; 
 	}
+	
 
-	// email 중복검사(현재 해당 사용자가 사용중인 email 이라면 true, 새로운 비밀번호이라면 false)
-	@Override
-	public boolean emailDuplicateCheck2(Map<String, String> paraMap) throws SQLException{
-
-		boolean isExists = false;
-	      
-	      try {// 이메일은 다른 사용자와 중복되면 안된다.(현재 사용자가 해당 이메일을 사용하고 있는지와 다른 사용자가 해당 이메일을 사용하고 있는지 모두 확인해야한다.)
-	         conn = ds.getConnection();
-	         
-	         String sql = " select pk_member_no "
-	         			+ " from tbl_member "
-	         			+ " where pk_member_no = ? and member_email = ? ";
-	         
-	         pstmt = conn.prepareStatement(sql); 
-	         pstmt.setString(1, paraMap.get("pkNum"));
-	         pstmt.setString(2, aes.encrypt(paraMap.get("newEmail")));
-	         
-	         rs = pstmt.executeQuery();
-	         
-	         isExists = rs.next(); // 행이 있으면(사용자가 현재 사용중인 email) true,
-	                               // 행이 없으면(사용자가 사용하고 있지 않은 email) false
-	         
-	      } catch(GeneralSecurityException | UnsupportedEncodingException e) {
-				e.printStackTrace();
-		  } finally {
-	         close();
-	      }
-	      
-	      return isExists;
-	}
-
-	// email 중복검사 (tbl_member 테이블에서 email 이 존재하면 true 를 리턴해주고, email 이 존재하지 않으면 false 를 리턴한다)
+	//email 수정시 자신이 변경하고자 하는 이메일이 tbl_member 테이블에서 사용중인지 아닌지 여부 알아오기 위한 메소드
 	@Override
 	public boolean emailDuplicateCheck(String newEmail) throws SQLException {
 
@@ -299,7 +262,7 @@ public class MemberDAO_imple implements MemberDAO {
 			  
 			  String sql = " select member_email "
 			  		     + " from tbl_member "
-			  		     + " where member_email = ? ";
+			  		     + " where member_email = ? and member_status = 1 ";
 			  
 			  pstmt = conn.prepareStatement(sql);
 			  pstmt.setString(1, aes.encrypt(newEmail));
@@ -318,41 +281,11 @@ public class MemberDAO_imple implements MemberDAO {
 		return isExists;
 		
 	}
-	
-	
-	// 회원가입시 이메일 중복체크해주는 메소드
-	@Override
-	public boolean emailDuplicateCheck3(String email) throws SQLException {
-		
-		boolean isExists = false;
-		
-		try {
-			  conn = ds.getConnection();
-			  
-			  String sql = " select member_email "
-			  		     + " from tbl_member "
-			  		     + " where member_email = ? ";
-			  
-			  pstmt = conn.prepareStatement(sql);
-			  pstmt.setString(1, aes.encrypt(email));
-			  
-			  rs = pstmt.executeQuery();
-			  
-			  isExists = rs.next(); // 행이 있으면(중복된 email) true,
-			                        // 행이 없으면(사용가능한 email) false
-			  
-		} catch(GeneralSecurityException | UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} finally {
-			close();
-		}
-		
-		return isExists;
-	}
 
-	// 현재 비밀번호를 알아와서 웹에 들어온 비밀번호 값과 같은지 다른지 비교해주는 페이지
+
+	// 현재 비밀번호로 인증해주는 절차를 위해 사용자의 현재 비밀번호를 알아오는 메소드
 	@Override
-	public boolean currentPwdCheck(MemberDTO member) throws SQLException{
+	public boolean currentPwdCheck(Map<String, String> paraMap) throws SQLException{
 		
 		boolean isExists = false;
 		
@@ -364,8 +297,10 @@ public class MemberDAO_imple implements MemberDAO {
 			  			 + " where pk_member_no = ? and member_password = ? ";
 			  
 			  pstmt = conn.prepareStatement(sql);
-			  pstmt.setInt(1, member.getPk_member_no());
-			  pstmt.setString(2, Sha256.encrypt(member.getMember_password()));
+			  pstmt.setString(1, paraMap.get("memberNo"));
+			  pstmt.setString(2, Sha256.encrypt(paraMap.get("currentPwd")));
+			  
+			  System.out.println(paraMap.get("memberNo") + paraMap.get("currentPwd") );
 			  
 			  rs = pstmt.executeQuery();
 			  
@@ -383,7 +318,7 @@ public class MemberDAO_imple implements MemberDAO {
 	@Override
 	public int updateMobile(MemberDTO member) throws SQLException {
 		
-		int result = 0; // 업데이트가 성공되어졌는지 알기위한 용도
+		int result = 0; 
 		
 		try {
 			conn = ds.getConnection();
@@ -391,7 +326,7 @@ public class MemberDAO_imple implements MemberDAO {
 			String sql = " update tbl_member set member_mobile = ? "
 					   + " where pk_member_no = ? ";
 			
-			pstmt = conn.prepareStatement(sql);// 우편배달부
+			pstmt = conn.prepareStatement(sql);
 	        
 	        pstmt.setString(1, aes.encrypt(member.getMember_mobile()) );  // 전화번호를 AES256 알고리즘으로 양방향 암호화 시킨다. 
 	        pstmt.setInt(2, member.getPk_member_no() ); 
@@ -404,50 +339,11 @@ public class MemberDAO_imple implements MemberDAO {
 		} finally {
 			close();
 		}
-	//	System.out.println(result);
 		
-		return result;// 업데이트가 성공되어졌다면 result 값은 1이 나온다.
+		return result;
 	}
 
-	// 새로운 전화번호가 tbl_member 에서 사용중인 전화번호인지 체크해주는 메소드
-	@Override
-	public boolean MobileDuplicateCheck(Map<String, String> paraMap) throws SQLException {
-		
-		 boolean isExists = false;
-		    
-		    try {
-		        conn = ds.getConnection();
-		        
-		        // 두 컬럼 모두 조회
-		        String sql = " SELECT pk_member_no, member_mobile "
-		                   + " FROM tbl_member "
-		                   + " WHERE member_mobile = ? ";  
-		        
-		        pstmt = conn.prepareStatement(sql);
-		        pstmt.setString(1, aes.encrypt(paraMap.get("newMobile")));
-		        
-		        
-		        rs = pstmt.executeQuery();
-		        
-		        // 결과가 있고, 그 결과의 pk_member_no가 현재 사용자와 다르다면(false) 
-		        // 다른 사용자가 그 번호를 사용하고 있다는 의미.
-		        if(rs.next()) {
-		            String isPkNum = rs.getString("pk_member_no");
-		            isExists = !isPkNum.equals(paraMap.get("pkNum"));
-		        }
-		        else {// 다른 사용자가 사용하고 있지 않다면(사용가능한 전화번호라면 true)
-		        	isExists = true;
-		        }
-		        
-		    } catch(GeneralSecurityException | UnsupportedEncodingException e) {
-		        e.printStackTrace();
-		    } finally {
-		        close();
-		    }
-		    
-		    return isExists;
-	}
-
+	
 	// 비밀번호 찾기(이메일을 입력 받아서 해당 사용자가 존재하는지 유무를 알려준다)
 	@Override
 	public boolean isUserExist(Map<String, String> paraMap) throws SQLException {
@@ -479,7 +375,7 @@ public class MemberDAO_imple implements MemberDAO {
 	
 	// 비밀번호 변경을 처리해주는 메소드
 	@Override
-	public int updatePwdEnd(MemberDTO member) throws SQLException {
+	public int updatePwdEnd(Map<String , String> paraMap) throws SQLException {
 		
 		int result = 0; // 업데이트가 성공되어졌는지 알기위한 용도
 		
@@ -491,8 +387,8 @@ public class MemberDAO_imple implements MemberDAO {
 			
 			pstmt = conn.prepareStatement(sql);// 우편배달부
 	        
-			pstmt.setString(1, Sha256.encrypt(member.getMember_password()));
-	        pstmt.setInt(2, member.getPk_member_no() ); 
+			pstmt.setString(1, Sha256.encrypt(paraMap.get("newPwd")));
+	        pstmt.setString(2, paraMap.get("memberNo") ); 
 	        
 	        result = pstmt.executeUpdate();
 	           
@@ -1003,9 +899,9 @@ public class MemberDAO_imple implements MemberDAO {
 		try {
 			  conn = ds.getConnection();
 			  
-			  String sql = " select member_mobile "
-			  		     + " from tbl_member "
-			  		     + " where member_mobile = ? ";
+			  String sql = " select pk_member_no "
+	         			 + " from tbl_member "
+	         			 + " where member_mobile = ? and member_status = 1 ";
 			  
 			  pstmt = conn.prepareStatement(sql);
 			  pstmt.setString(1, aes.encrypt(mobile));
@@ -1023,39 +919,6 @@ public class MemberDAO_imple implements MemberDAO {
 		
 		return isExists;
 		
-	}// end of public boolean mobileDuplicateCheck(String mobile) throws SQLException-----------------
-
-	// 회원가입시 전화번호 중복검사(현재 해당 사용자가 사용중인 mobile 이라면 true, 새로운 mobile 이라면 false)
-	@Override
-	public boolean mobileDuplicateCheck2(Map<String, String> paraMap) throws SQLException {
-		
-		boolean isExists = false;
-	      
-	      try {// 이메일은 다른 사용자와 중복되면 안된다.(현재 사용자가 해당 이메일을 사용하고 있는지와 다른 사용자가 해당 이메일을 사용하고 있는지 모두 확인해야한다.)
-	         conn = ds.getConnection();
-	         
-	         String sql = " select pk_member_no "
-	         			+ " from tbl_member "
-	         			+ " where pk_member_no = ? and member_mobile = ? ";
-	         
-	         pstmt = conn.prepareStatement(sql); 
-	         pstmt.setString(1, paraMap.get("pkNum"));
-	         pstmt.setString(2, aes.encrypt(paraMap.get("mobile")));
-	         
-	         rs = pstmt.executeQuery();
-	         
-	         isExists = rs.next(); // 행이 있으면(사용자가 현재 사용중인 email) true,
-	                               // 행이 없으면(사용자가 사용하고 있지 않은 email) false
-	         
-	      } catch(GeneralSecurityException | UnsupportedEncodingException e) {
-				e.printStackTrace();
-		  } finally {
-	         close();
-	      }
-	      
-	      return isExists;
-	}
-
-	
+	}// end of public boolean mobileDuplicateCheck(String mobile) throws SQLException-----------------	
 
 }
