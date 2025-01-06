@@ -29,9 +29,16 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     item_arr.push(item);
 
+	sessionStorage.setItem("total_price",`${productInfo.PRODUCT_PRICE}`);
     sessionStorage.setItem("basket_item_arry", JSON.stringify(item_arr));
     sessionStorage.setItem("instantPay", "true");
   }
+  // 비정상적인 접근이라면
+  if (sessionStorage.getItem("basket_item_arry") == null) {
+    alert("비정상적인 접근입니다.");
+    location.href = "/Trid/";
+  }
+  //주소 목록을 표시해준다
   for (const item of addrList) {
     // console.log(item[key]);
     address_arr.push(item);
@@ -150,6 +157,15 @@ document.addEventListener("DOMContentLoaded", function () {
   if (sessionStorage.getItem("total_price") >= 50000) {
     document.querySelector("span#total_price").textContent = "0";
   }
+  //날짜를 계산
+  const today = new Date();
+  const nextday = new Date();
+  nextday.setDate(today.getDate() + 2);
+  
+  const next_month = today.getMonth() + 1;
+  const next_date = today.getDate();
+  
+  document.querySelector("div#delevery_date").textContent = next_month + "/" + next_date + " 배송";
 
   //계속 버튼 클릭시시
   document

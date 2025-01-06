@@ -106,7 +106,7 @@
             </div>
           </div>
           <div id="delivery_select_box">
-            <div>1/2 배송</div>
+            <div id ="delevery_date">1/2 배송</div>
             <div id="delivery_product_list"></div>
             <div id="delivery_radio_box">배송은 약 1-3일 소요됩니다</div>
           </div>

@@ -1,5 +1,7 @@
 package orders.controller;
 
+import java.sql.SQLException;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -37,25 +39,36 @@ public class OrderDetailController extends AbstractController {
 			super.setViewPage("/main.trd");
 			return;
 		}	
+		
+		
+		try {
+			// sql에서 주문 내용 가져오기
+			orderDetail = odao.selectOrderDetail(member.getPk_member_no(), orderNO);
+			
+			//json배열에서 주소번호를 추출하기
+			JSONObject addrNoJSON = (JSONObject)orderDetail.get(0);
+			int addrNo = (int)addrNoJSON.get("FK_ADDR_NO");
+			
+			//주소 정보 가져오기
+			JSONObject addrInfo =  addrdao.selectOneAddr(addrNo, member.getPk_member_no());
+			
+			//주소완료 페이지에서 온경우에는 주소 데이터를 삭제	
+	    	session.removeAttribute("temp_address_info");
+			
+			//데이터값 전송
+			request.setAttribute("orderDetail", orderDetail.toString());
+			request.setAttribute("addrInfo", addrInfo.toString());
+	
+			super.setRedirect(false);
+			super.setViewPage(Constants.ORDER_DETAIL_PAGE);
+		}
+		// sql 오류시 오류페이지로 이동
+		catch (SQLException e) {
+			e.printStackTrace();
 
-		// sql에서 주문 내용 가져오기
-		orderDetail = odao.selectOrderDetail(member.getPk_member_no(), orderNO);
-		
-		//json배열에서 주소번호를 추출하기
-		JSONObject addrNoJSON = (JSONObject)orderDetail.get(0);
-		int addrNo = (int)addrNoJSON.get("FK_ADDR_NO");
-		
-		//주소 정보 가져오기
-		JSONObject addrInfo =  addrdao.selectOneAddr(addrNo, member.getPk_member_no());
-		
-		
-		
-		//데이터값 전송
-		request.setAttribute("orderDetail", orderDetail.toString());
-		request.setAttribute("addrInfo", addrInfo.toString());
-
-		super.setRedirect(false);
-		super.setViewPage(Constants.ORDER_DETAIL_PAGE);
+			super.setRedirect(false);
+			super.setViewPage(request.getContextPath() + "/error.jsp");
+		}
 
 	}
 

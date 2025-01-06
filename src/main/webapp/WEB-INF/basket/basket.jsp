@@ -51,7 +51,7 @@ const basketList = JSON.parse(basketListStr);
             </div>
           </div>
           <div id="basket_footer_total_price">
-            <div>총 <span id="total_price">₩739,400</span></div>
+            <div>총 <span id="total_price">₩739,400</span>₩</div>
             <div>부가세 포함함</div>
           </div>
           <div id="basket_footer_next_button">

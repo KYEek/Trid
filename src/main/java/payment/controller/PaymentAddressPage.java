@@ -1,5 +1,7 @@
 package payment.controller;
 
+import java.sql.SQLException;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -35,71 +37,75 @@ public class PaymentAddressPage extends AbstractController {
 			super.setViewPage("/main.trd");
 			return;
 		}
-		
-		//장바구니에서 들어온 경우
-		if(instantPay == null) {
-			//주소들을 불러와 json배열에 저장
-			JSONArray addrList = addr_dao.selectAddrs(member.getPk_member_no());
-			// 주소가 있을 때
-			if(addrList != null) {
-				//페이지에 보내기 위해 스트링으로 변경
-				String addrList_str = addrList.toString();
-				
-				//리퀘스트에 저장
-				request.setAttribute("addrList", addrList_str);
-				//장바구니를 통해 들어왔다는 것을 전달
-				request.setAttribute("instantPay", instantPay);
-				
-				//주소 페이지로 이동
-				super.setRedirect(false);
-				super.setViewPage(Constants.PAYMENT_ADDRESS);
-				
-			}
-			//주소가 없으면 주소 생성 페이지로 이동
-			else {
-				sendToAddressAdd(request);
-			}
-		}
-		
-		//바로구매로 들어온 경우
-		else {
-			JSONArray addrList = addr_dao.selectAddrs(member.getPk_member_no());
-			// 주소가 있을 때
-			if(addrList != null) {
-				//페이지에 보내기 위해 스트링으로 변경
-				String addrList_str = addrList.toString();
-				System.out.println("주소 있음");
-				
-				//리퀘스트에 저장
-				request.setAttribute("addrList", addrList_str);
-				
-				
-				//상품 상세번호 조회
-				int productDetailNo = Integer.parseInt(request.getParameter("go_payment"));
-				
-				//페이지에 보내기 위해 스트링으로 변경
-				JSONObject json = pdao.selectProductInfo(productDetailNo);
-				String jsonStr = json.toString();
-				
-				//리퀘스트에 저장
-				request.setAttribute("productInfo", jsonStr);
-				//바로결제를 통해 들어왔다는 것들 전달
-				request.setAttribute("instantPay", instantPay);
-				
-				//주소 페이지로 이동
-				super.setRedirect(false);
-				super.setViewPage(Constants.PAYMENT_ADDRESS);
-				
-			}
-			//주소가 없으면 주소 생성 페이지로 이동
-			else {
-				sendToAddressAdd(request);
-			}
-			
-		}
-		
-	
+		try {
+			// 장바구니에서 들어온 경우
+			if (instantPay == null) {
+				// 주소들을 불러와 json배열에 저장
+				JSONArray addrList = addr_dao.selectAddrs(member.getPk_member_no());
+				// 주소가 있을 때
+				if (addrList != null) {
+					// 페이지에 보내기 위해 스트링으로 변경
+					String addrList_str = addrList.toString();
 
+					// 리퀘스트에 저장
+					request.setAttribute("addrList", addrList_str);
+					// 장바구니를 통해 들어왔다는 것을 전달
+					request.setAttribute("instantPay", instantPay);
+
+					// 주소 페이지로 이동
+					super.setRedirect(false);
+					super.setViewPage(Constants.PAYMENT_ADDRESS);
+
+				}
+				// 주소가 없으면 주소 생성 페이지로 이동
+				else {
+					sendToAddressAdd(request);
+				}
+			}
+
+			// 바로구매로 들어온 경우
+			else {
+				JSONArray addrList = addr_dao.selectAddrs(member.getPk_member_no());
+				// 주소가 있을 때
+				if (addrList != null) {
+					// 페이지에 보내기 위해 스트링으로 변경
+					String addrList_str = addrList.toString();
+					System.out.println("주소 있음");
+
+					// 리퀘스트에 저장
+					request.setAttribute("addrList", addrList_str);
+
+					// 상품 상세번호 조회
+					int productDetailNo = Integer.parseInt(request.getParameter("go_payment"));
+
+					// 페이지에 보내기 위해 스트링으로 변경
+					JSONObject json = pdao.selectProductInfo(productDetailNo);
+					String jsonStr = json.toString();
+
+					// 리퀘스트에 저장
+					request.setAttribute("productInfo", jsonStr);
+					// 바로결제를 통해 들어왔다는 것들 전달
+					request.setAttribute("instantPay", instantPay);
+
+					// 주소 페이지로 이동
+					super.setRedirect(false);
+					super.setViewPage(Constants.PAYMENT_ADDRESS);
+
+				}
+				// 주소가 없으면 주소 생성 페이지로 이동
+				else {
+					sendToAddressAdd(request);
+				}
+
+			}
+		}
+		// sql 오류시 오류페이지로 이동
+		catch (SQLException e) {
+			e.printStackTrace();
+
+			super.setRedirect(false);
+			super.setViewPage(request.getContextPath() + "/error.jsp");
+		}
 		
 
 	}//end of execute ---------------------------------------------------

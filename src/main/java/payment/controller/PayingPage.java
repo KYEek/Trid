@@ -28,10 +28,16 @@ public class PayingPage extends AbstractController {
 			return;
 		}
 		
-
-		super.setRedirect(false);
-		super.setViewPage(Constants.PAYING_PAGE);
-
+		//포스트 방식으로 진입한 경우
+		if("post".equalsIgnoreCase(method)) {
+			super.setRedirect(false);
+			super.setViewPage(Constants.PAYING_PAGE);
+		}
+		//get방식으로 진입한 경우(비정상 접근)
+		else {
+			super.setRedirect(true);
+			super.setViewPage("/main.trd");
+		}
 	}
 
 }

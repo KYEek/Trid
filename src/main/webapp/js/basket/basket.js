@@ -178,7 +178,7 @@ function calculateTotalPrice() {
   priceList.forEach((element) => {
     totlaPrice += Number(element.textContent);
   });
-  document.querySelector("span#total_price").textContent = totlaPrice;
+  document.querySelector("span#total_price").textContent = totlaPrice.toLocaleString();
 }
 
 //로딩화면을 보여주는 함수
@@ -318,7 +318,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //계속 버튼 클릭시 결제페이지로 이동, 개수가 0 이 아니고
   next_button.addEventListener("click", (e) => {
     if (
-      Number(document.querySelector("span#total_price").textContent) > 0 &&
+      Number(document.querySelector("span#total_price").textContent) !="0" &&
       is_inventory
     ) {
       const basket_item_arry = [];
