@@ -29,6 +29,8 @@ public class ProductDTO {
 	
 	private List<ImageDTO> imageList; // 이미지 저장 경로 리스트
 	
+	private String[] colorNameArray; // 컬러 저장 리스트
+
 	public int getProductNo() {
 		return productNo;
 	}
@@ -115,6 +117,14 @@ public class ProductDTO {
 
 	public void setImageList(List<ImageDTO> imageList) {
 		this.imageList = imageList;
+	}
+	
+	public String[] getColorNameArray() {
+		return colorNameArray;
+	}
+
+	public void setColorNameArray(String[] colorNameArray) {
+		this.colorNameArray = colorNameArray;
 	}
 
 }

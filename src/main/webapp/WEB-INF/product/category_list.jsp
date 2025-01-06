@@ -12,7 +12,6 @@
     var ctxPath = "${pageContext.request.contextPath}";
 </script>
 
-
 <%-- 공용 CSS --%>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/bootstrap-4.6.2-dist/css/bootstrap.min.css">
@@ -30,20 +29,32 @@
 
 </head>
 <body>
+<c:set var="categoryList" value="${requestScope.categoryList}" />
+<c:set var="chooseGender" value="${requestScope.chooseGender}" />
+<c:set var="chooseType" value="${requestScope.chooseType}" />
+<c:set var="chooseCategoryNo" value="${requestScope.chooseCategoryNo}" />
 
 <jsp:include page="/WEB-INF/header.jsp" />
 
-	<!-- 헤더 카테고리 -->
-	<div id="header_menu">
+<!-- 헤더 카테고리 -->
+<div id="header_menu">
+	<div id="menu_all">전체</div>
+
+	
+	<c:forEach var="categoryDTO" items="${categoryList}">
+		<c:if test="${categoryDTO.gender == chooseGender && categoryDTO.type == chooseType }">
 		
-		<div id="menu_all">전체</div>
-		<div id="menu_price">티셔츠</div>
-		<div id="menu_color">셔츠</div>
-		<div id="menu_size">맨투맨</div>
-		<div id="menu_price">후디</div>
-		<div id="menu_color">니트</div>
-		
-	</div>
+			<c:if test="${not empty categoryDTO.pkCategoryNo}">
+				<a href="${pageContext.request.contextPath}/product/category_list.trd?chooseGender=${categoryDTO.gender}&chooseType=${categoryDTO.type}&chooseCategoryNo=${categoryDTO.pkCategoryNo}">
+					<div id="categoryName">${categoryDTO.categoryName}</div>
+				</a>
+			</c:if>
+			
+		</c:if>
+	</c:forEach>
+	
+</div>
+
 
 <div id="filter_container">
 
@@ -107,12 +118,59 @@
 
 <script>
 
-var pageNumber = 1;
-var pageSize = 18; // 한 번에 불러올 아이템 수
+let pageNumber = 1;
+let pageSize = 18; // 한 번에 불러올 아이템 수
+let totalRowCount = 19;
 
 $(document).ready(function() {
-    loadMoreProducts();
+	
+	// 필터 적용 버튼 클릭 시 필터 적용 함수
+	$("#apply_filter_button").on("click", function() {
+		
+		$("div#container").empty();
+		pageNumber = 1;
+		
+	    const selectedColors = [];
+	    $(".color_active").each(function() {
+	        selectedColors.push($(this).attr("id"));
+	    });
+		
+	    const selectedPrice = $("span#priceLabel").text();
 
+				
+	    console.log("선택한 색상:", selectedColors);  // 색상 로그 출력
+	    console.log("선택한 가격:", selectedPrice);   // 가격 로그 출력
+
+	    $.ajax({
+	        url: ctxPath + '/product/category_list.trd',
+	        type: 'post',
+	        headers: {
+	            'ajaxHeader': 'true',  // 사용자 정의 헤더 추가 ajax 확인용
+	        },
+	        data: {
+	            chooseColor: selectedColors,  // 선택 색상
+	            choosePrice: selectedPrice,   // 선택 가격
+	        	chooseGender: "${chooseGender}",
+	        	chooseType: "${chooseType}",
+	        	chooseCategoryNo: "${chooseCategoryNo}"
+	        },
+	        dataType: 'json',
+			success: function(response) {
+			    // console.log("서버 응답 데이터 확인:", response); // `productName` 필드 확인
+				// 상품 리스트 업데이트 함수 호출
+				updateProductList(response);
+			    pageNumber++;
+	        },
+			error: function(xhr, status, error) {
+				console.error("AJAX 요청 실패:", status, error);
+				console.log("AJAX 요청 실패 응답 상태 코드:", xhr.status); // 상태 코드 확인
+				console.log("AJAX 요청 실패 응답 내용:", xhr.responseText); // 응답 본문 확인
+			}
+
+	    });
+	});
+	
+    loadMoreProducts();
     /* 무한스크롤 처리 함수 */
     $(window).scroll(function() {
         if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
@@ -129,29 +187,48 @@ $(document).ready(function() {
     
 });// end of $(document).ready(function() -------------------------
 
-		
+const URL = location.href;
 		
 /* 무한스크롤 처리 ajax */
 function loadMoreProducts() {
-    $.ajax({
-        url: ctxPath + '/product/category_list.trd',
-        type: 'get',
-        headers: {
-            'ajaxHeader': 'true',
-        },
-        data: {
-            pageNumber: pageNumber,
-            pageSize: pageSize
-        },
-        dataType: 'json',
-        success: function(response) {
-            pageNumber++; // 다음 페이지 로드 준비
-            updateProductList(response);
-        },
-        error: function(xhr, status, error) {
-            console.error("AJAX 요청 실패:", status, error);
-        }
+	
+	console.log("호출");
+	console.log(pageNumber * pageSize);
+	console.log(totalRowCount);
+	
+    const selectedColors = [];
+    $(".color_active").each(function() {
+        selectedColors.push($(this).attr("id"));
     });
+	
+    const selectedPrice = $("span#priceLabel").text();
+    
+    
+    if(((pageNumber - 1) * pageSize) < totalRowCount ){
+    	$.ajax({
+            url: URL,
+            type: 'get',
+            headers: {
+                'ajaxHeader': 'true',
+            },
+            data: {
+                pageNumber: pageNumber,
+                chooseColor: selectedColors,  // 선택 색상
+                choosePrice: selectedPrice,   // 선택 가격
+            	chooseGender: "${chooseGender}",
+            	chooseType: "${chooseType}",
+            	chooseCategoryNo: "${chooseCategoryNo}"
+            },
+            dataType: 'json',
+            success: function(response) {
+                pageNumber++; // 다음 페이지 로드 준비
+                updateProductList(response);
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX 요청 실패:", status, error);
+            }
+        });	
+    }
 }
 
 	// 가격 범위 필터 설정 함수
@@ -168,7 +245,6 @@ function loadMoreProducts() {
  	    // console.log("업데이트할 상품 데이터:", products);
 
 	    const productListDiv = $("div#container");
-	    productListDiv.empty(); // 기존 리스트 초기화 
 
 	    if (!products || products.length === 0) {
 	        productListDiv.append("<p>상품이 없습니다.</p>");
@@ -180,9 +256,11 @@ function loadMoreProducts() {
 	    	
 	    	const path = "${pageContext.request.contextPath}" + product.imagePath;
 	    	const name = product.productName;
+	    	totalRowCount = Number(product.totalRowCount);
 	    	console.log(name);
 	    	
-	    	console.log(path);
+	    	
+	    	// console.log(path);
 	        let productHtml = `
 				<div id="product" data-type=` + product.productNo + `>
 				    <div id="photo">
@@ -200,8 +278,6 @@ function loadMoreProducts() {
 	        productListDiv.append(productHtml);
 	    });
 	}// end of function updateProductList(products) --------------------------------
-
-
 	
 </script>
 

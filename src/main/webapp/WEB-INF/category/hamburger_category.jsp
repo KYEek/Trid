@@ -1,21 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%
     String ctxPath = request.getContextPath();
 %>
     
-<!DOCTYPE html>
-<html>
-<head>
-<title></title>
-
 <!-- 직접 만든 CSS -->
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/css/category/hamburger.css" />
 
 <script src="<%= ctxPath %>/js/jquery-3.7.1.min.js"></script>
 <script src="<%= ctxPath %>/js/category/genderbox.js"></script>
 
-</head>
+
 
 <script>
 	/* 햄버거 메뉴 눌렀을때 카테고리 */
@@ -42,95 +39,91 @@
 			$('div#category_box').toggleClass('show');
 	        $('ul.clothing_box').toggleClass('show');
 		});
-	});
+		
+/* 	 	// 햄버거 카테고리 클릭시 해당 상품 리스트로 이동
+	    $(document).on("click", ".clothing_box > a", function(e){
+	    	const chooseGender = ($(e.target).closest(".clothing_box > a").data("type"));
+	    	const chooseType = ($(e.target).closest(".clothing_box > a").data("type"));
+	    	
+	    	location.href="/Trid/product/category_list.trd?gender="+chooseGender+"&type="+chooseType;
+	    }); */
+	 	
+	});// end of $(document).ready(function() ---------------------------------
 			
 </script>
 
 <body>
+<c:set var="categoryList" value="${requestScope.categoryList}" />
 	
+	
+	<!-- a 태그를 쓰지 않아도 됨 -->
 	<div id="category_box">
 	    <a id="gender_female" href="#">여성</a>
 	    <a id="gender_male" href="#">남성</a>
 	</div>
-	
-	
-	<ul class="clothing_box" id="female_clothing">
-		<a class="top" href="<%= ctxPath%>/product/category_list.trd">상의</a>
+
+		<!-- 남성을 클릭했을때 나오는 햄버거 -->
+	<ul class="clothing_box" id="male_clothing">
+		<a class="top" href="<%= ctxPath%>/product/category_list.trd?chooseGender=0&chooseType=0">상의</a>
+		
+		<c:forEach var="categoryDTO" items="${categoryList}">
+			<%-- "남자" 를 클릭했을 때 --%>
+			<c:if test="${categoryDTO.gender == 0}">
+				<%-- 상의 --%>
+				<c:if test="${categoryDTO.type == 0 }">
+					<a href="<%= ctxPath%>/product/category_list.trd?chooseGender=0&chooseType=0&chooseCategoryNo=${categoryDTO.pkCategoryNo}">
+						&emsp;&emsp;${categoryDTO.categoryName}
+					</a>
+				</c:if>
+			</c:if>
+		</c:forEach>
 				
-		<a href="">&emsp;&emsp;티셔츠</a>
-		<a href="">&emsp;&emsp;셔츠</a>
-		<a href="">&emsp;&emsp;블라우스</a>
-		<a href="">&emsp;&emsp;맨투맨</a>
-		<a href="">&emsp;&emsp;니트</a>
-		<br>
-		
-		<a class="bottom" href="<%= ctxPath%>/product/category_list.trd">하의</a>
-		
-		<a href="">&emsp;&emsp;레깅스</a>
-		<a href="">&emsp;&emsp;스커트</a>
-		<a href="">&emsp;&emsp;스웻팬츠</a>
-		<a href="">&emsp;&emsp;치노팬츠</a>
-		<a href="">&emsp;&emsp;데님팬츠</a>
+		<a class="top" href="<%= ctxPath%>/product/category_list.trd?chooseGender=0&chooseType=1">하의</a>		
+		<c:forEach var="categoryDTO" items="${categoryList}">
+			<%-- "남자" 를 클릭했을 때 --%>
+			<c:if test="${categoryDTO.gender == 0}">
+				<%-- 하의 --%>
+				<c:if test="${categoryDTO.type == 1 }">
+						<a href="<%= ctxPath%>/product/category_list.trd?chooseGender=0&chooseType=1&chooseCategoryNo=${categoryDTO.pkCategoryNo}">
+							&emsp;&emsp;${categoryDTO.categoryName}
+						</a>
+				</c:if>
+			</c:if>
+		</c:forEach>				
 	</ul>
-	
-	<ul class="clothing_box" id="male_clothing">
-		<a class="top" href="<%= ctxPath%>/product/category_list.trd">상의</a>
-		
-		<a href="">&emsp;&emsp;티셔츠</a>
-		<a href="">&emsp;&emsp;셔츠</a>
-		<a href="">&emsp;&emsp;맨투맨</a>
-		<a href="">&emsp;&emsp;후디</a>
-		<a href="">&emsp;&emsp;니트</a>
-		<br>
-		
-		<a class="bottom" href="<%= ctxPath%>/product/category_list.trd">하의</a>
-		
-		<a href="">&emsp;&emsp;반바지</a>
-		<a href="">&emsp;&emsp;치노팬츠</a>
-		<a href="">&emsp;&emsp;스웻팬츠</a>
-		<a href="">&emsp;&emsp;데님팬츠</a>
-		<a href="">&emsp;&emsp;코듀로이</a>
-	</ul>
-	
+
+	<!-- 여성을 클릭했을때 나오는 햄버거 -->
 	<ul class="clothing_box" id="female_clothing">
-	    <c:forEach var="category" items="${Categories}">
-		    <div id="category">
-   		        <a href="<%= ctxPath%>/product/category_list.trd?categoryNo=${category.categoryNo}">
-		            &emsp;&emsp;${category.categoryName}
-		        </a>
-		    </div>
-	    </c:forEach>
+		<a class="top" href="<%= ctxPath%>/product/category_list.trd?chooseGender=1&chooseType=0">상의</a>
+		
+		<c:forEach var="categoryDTO" items="${categoryList}">
+			<%-- "여자" 를 클릭했을 때 --%>
+			<c:if test="${categoryDTO.gender == 1}">
+				<%-- 상의 --%>
+				<c:if test="${categoryDTO.type == 0 }">
+					<a href="<%= ctxPath%>/product/category_list.trd?chooseGender=1&chooseType=0&chooseCategoryNo=${categoryDTO.pkCategoryNo}">
+						&emsp;&emsp;${categoryDTO.categoryName}
+					</a>
+				</c:if>
+			</c:if>
+		</c:forEach>
+				
+		<a class="top" href="<%= ctxPath%>/product/category_list.trd?chooseGender=1&chooseType=1">하의</a>		
+		<c:forEach var="categoryDTO" items="${categoryList}">
+			<%-- "여자" 를 클릭했을 때 --%>
+			<c:if test="${categoryDTO.gender == 1}">
+				<%-- 하의 --%>
+				<c:if test="${categoryDTO.type == 1 }">
+					<a href="<%= ctxPath%>/product/category_list.trd?chooseGender=1&chooseType=1&chooseCategoryNo=${categoryDTO.pkCategoryNo}">
+						&emsp;&emsp;${categoryDTO.categoryName}
+					</a>
+				</c:if>
+			</c:if>
+		</c:forEach>				
 	</ul>
-	
-	<ul class="clothing_box" id="male_clothing">
-	    <c:forEach var="category" items="${Categories}">
-		    <div id="category">
-   		        <a href="<%= ctxPath%>/product/category_list.trd?categoryNo=${category.categoryNo}">
-		            &emsp;&emsp;${category.categoryName}
-		        </a>
-		    </div>
-	    </c:forEach>
-	</ul>
-	
-	
 	
 <script>
-$(document).ready(function() {
-	/* 
-	/* 카테고리 클릭시 해당 카테고리 상품 리스트 페이지로 이동 
-	$(document).on("click", "ul#female_clothing a", function(e){
-		const categoryNo =($(e.target).closest("ul#female_clothing a").data("type"));
-		
-		location.href="/Trid/product/category_list.trd?categoryNo="+categoryNo;
-	});
-	
-	$(document).on("click", "ul#male_clothing a", function(e){
-		const categoryNo =($(e.target).closest("ul#female_clothing a").data("type"));
-		
-		location.href="/Trid/product/category_list.trd?categoryNo="+categoryNo;
-	});
- 	*/	
-}
+
 
 </script>
 </body>
