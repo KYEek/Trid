@@ -52,7 +52,7 @@
     	let productInfo;
     	//바로결제로 들어온 경우라면 실행
     	if(instantPay == "true") {
-			productInfoStr = `${requestScope.productInfo}`;
+			productInfoStr = "sessionStorage.getItem('basket_item_arry')";
 			productInfoStr = productInfoStr.replaceAll("\\", "\\\\");
     		productInfo = JSON.parse(productInfoStr);
     	}

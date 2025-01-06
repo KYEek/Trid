@@ -22,7 +22,7 @@ async function requestPayment() {
   if (response.code !== undefined) {
     // 오류 발생
     alert(response.message);
-    return location.href = sessionStorage.getItem("backURL");
+    return (location.href = sessionStorage.getItem("backURL"));
   }
 
   // /payment/complete 엔드포인트를 구현해야 합니다. 다음 목차에서 설명합니다.
@@ -39,68 +39,40 @@ async function requestPayment() {
       // 주문 정보...
     }),
   })
+    .then((response) => response.text())
     .then((data) => {
-      document.querySelector("div#payment_complete").style.display = "block";
+      console.log(data.trim());
+      if (data.trim() == "성공") {
+        document.querySelector("div#payment_complete").style.display = "block";
 
-      // const input_orderDetailArr = document.createElement("input");
-      // input_orderDetailArr.type = "hidden";
-      // input_orderDetailArr.name = "orderDetailArr";
-      // input_orderDetailArr.value = JSON.stringify(orderDetailArr);
+        //세션에 있던 값을 삭제
+        sessionStorage.removeItem("basket_item_arry");
+        sessionStorage.removeItem("selected_address_no");
+        sessionStorage.removeItem("total_price");
+        sessionStorage.removeItem("instantPay");
+        sessionStorage.removeItem("backURL");
+        //      console.log(data);
+        //      console.log(orderDetailArr);
+        sessionStorage.removeItem("isCorrect");
 
-      // const input_countnum = document.createElement("input");
-      // input_countnum.type = "hidden";
-      // input_countnum.name = "productCountNum";
-      // input_countnum.value = JSON.stringify(productCountNum);
-
-      // const input_detailnum = document.createElement("input");
-      // input_detailnum.type = "hidden";
-      // input_detailnum.name = "productDetailNo";
-      // input_detailnum.value = JSON.stringify(productDetailNo);
-
-      // const input_pricd = document.createElement("input");
-      // input_pricd.type = "hidden";
-      // input_pricd.name = "productPrice";
-      // input_pricd.value = JSON.stringify(productPrice);
-
-      // const input_selected_address_no = document.createElement("input");
-      // input_selected_address_no.type = "hidden";
-      // input_selected_address_no.name = "selected_address_no";
-      // input_selected_address_no.value = selected_address_no;
-
-      // const input_total_price = document.createElement("input");
-      // input_total_price.type = "hidden";
-      // input_total_price.name = "total_price";
-      // input_total_price.value = total_price;
-
-      // const input_instantPay = document.createElement("input");
-      // input_instantPay.type = "hidden";
-      // input_instantPay.name = "instantPay";
-      // input_instantPay.value = instantPay;
-
-      // form.appendChild(input_orderDetailArr);
-      // form.appendChild(input_countnum);
-      // form.appendChild(input_detailnum);
-      // form.appendChild(input_pricd);
-      // form.appendChild(input_selected_address_no);
-      // form.appendChild(input_total_price);
-      // form.appendChild(input_instantPay);
-      //폼 생성 끝---------------------------------------------
-      //폼 전송
-
-	  //세션에 있던 값을 삭제
-      sessionStorage.removeItem("basket_item_arry");
-      sessionStorage.removeItem("selected_address_no");
-      sessionStorage.removeItem("total_price");
-      sessionStorage.removeItem("instantPay");
-	  sessionStorage.removeItem("backURL");
-//      console.log(data);
-//      console.log(orderDetailArr);
-	  sessionStorage.removeItem("isCorrect");
-      alert("결제가 완료되었습니다.");
-      return true;
+        document.querySelector("div#payment_loading_container").style.display =
+          "none";
+        alert("결제가 완료되었습니다.");
+        return true;
+      } else if (data.trim == "재고없음") {
+        alert("재고가 없습니다.");
+        throw new Error("재고가 없습니다");
+      } else if (data.trim == "과다주문") {
+        alert("재고보다 많은 수량을 주문한 상품이 있습니다.");
+        throw new Error("재고보다 많은 수량을 주문한 상품이 있습니다.");
+      } else {
+        alert("오류가 발생했습니다.");
+        throw new Error("오류가 발생했습니다");
+      }
     })
     .catch((message) => {
       console.error(message);
+      location.href = sessionStorage.getItem("backURL");
       return false;
     });
 }
@@ -111,9 +83,9 @@ document.addEventListener("DOMContentLoaded", function () {
     location.href = "/Trid/";
   }
   //정상적인 접근이 아닐 경우(이전페이지를 통해 오지 않거나 결제가 완료된 후에 접근하는 경우)
-  if(sessionStorage.getItem("isCorrect") == null) {
-	alert("잘못된 접근입니다..");
-	location.href = "/Trid/";
+  if (sessionStorage.getItem("isCorrect") == null) {
+    alert("잘못된 접근입니다..");
+    location.href = "/Trid/";
   }
   //세션에 있는 값들을 불러온다
   basket_item_arry_str = sessionStorage.getItem("basket_item_arry");
@@ -133,13 +105,13 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log(orderDetail);
     orderDetailArr.push(orderDetail);
   });
-  //결제를 실행하면서 결제가 성공하면 로딩을 가리기
-  if (requestPayment()) {
-    document.querySelector("div#payment_loading_container").style.display =
-      "none";
+  //실패하면 이전 페이지로 이동
+  if (!requestPayment()) {
+    location.href = sessionStorage.getItem("backURL");
   }
 
-  document.querySelector("span#total_price").textContent = Number(total_price).toLocaleString()+"₩";
+  document.querySelector("span#total_price").textContent =
+    Number(total_price).toLocaleString() + "₩";
 
   //결제 완료 버튼
   const pay_completed = document.querySelector("div#basket_footer_next_button");

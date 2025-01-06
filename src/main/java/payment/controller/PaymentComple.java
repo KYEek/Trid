@@ -91,15 +91,43 @@ public class PaymentComple extends AbstractController {
 				}
 
 				System.out.println(resultOrderNo);
+				//sql문 오류가 생겼을 경우(데이터 입력값 이상)
+				if(resultOrderNo == -50001)
+				{
+					
+					request.setAttribute("result", "오류");
+					System.out.println("오류");
+					super.setRedirect(false);
+					super.setViewPage("/WEB-INF/basket/jsonview.jsp");
+					
+				}
+				//재고가 없는 값을 결제하는 경우
+				else if(resultOrderNo == -50000){
+					request.setAttribute("result", "재고없음");
+					System.out.println("재고없음");
+					super.setRedirect(false);
+					super.setViewPage("/WEB-INF/basket/jsonview.jsp");
+					
+				}
+				//주문수량이 재고수량보다 많을 경우
+				else if(resultOrderNo >-50000 && resultOrderNo <0) {
+					request.setAttribute("result", "과다주문");
+					System.out.println("과다주문");
+					super.setRedirect(false);
+					super.setViewPage("/WEB-INF/basket/jsonview.jsp");
+				}
+				//정상적인 경우
+				else {
+					// 주문번호를 전송
+					session.setAttribute("resultOrderNo", resultOrderNo);
 
-				// 주문번호를 전송
-				session.setAttribute("resultOrderNo", resultOrderNo);
+					/////////////////////////////////////////////
 
-				/////////////////////////////////////////////
-
-				System.out.println("성공");
-				super.setRedirect(false);
-				super.setViewPage("/WEB-INF/basket/jsonview.jsp");
+					System.out.println("성공");
+					request.setAttribute("result", "성공");
+					super.setRedirect(false);
+					super.setViewPage("/WEB-INF/basket/jsonview.jsp");
+				}
 
 			}
 		}

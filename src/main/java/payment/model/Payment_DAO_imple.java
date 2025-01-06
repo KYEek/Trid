@@ -93,6 +93,8 @@ public class Payment_DAO_imple implements Payment_DAO {
 	    product_inventory number;
 	    --예외를 실행시킬 변수
 	    empty_inventory exception;
+	    --재고 이상으로 주문한 경우에 예외를 실행시킬 변수
+	    over_order_product exception;
 	begin
 	    --json에서 [] 삭제
 	    json_str := substr(json_str, 2, (length(json_str)-2));
@@ -115,28 +117,52 @@ public class Payment_DAO_imple implements Payment_DAO {
 	            elsif i = 3 then
 	                product_price := extracted_str;
 	            end if;
-	            
-	            --재고를 불러온다
-	            select product_inventory into product_inventory
-	            from tbl_product_detail
-	            where pk_product_detail_no = 270;
-	            
-	            --재고가 없으면 예외 실행
-	            if product_inventory <= 0 then
-	                raise empty_inventory;
-	            end if;
+	            --DBMS_OUTPUT.PUT_LINE(REGEXP_SUBSTR(data_str, '".*?"',1,(i*2)));
+	            --DBMS_OUTPUT.PUT_LINE(extracted_str);
 	            
 	        end loop;
+	        
+	        --재고를 불러온다
+	        select product_inventory into product_inventory
+	        from tbl_product_detail
+	        where pk_product_detail_no = product_detail_num;
+	        
+	        --재고가 없으면 예외 실행
+	        if product_inventory <= 0 then
+	            raise empty_inventory;
+	        end if;
+	        --재고 이상으로 주문을 한 경우
+	        if (product_inventory - product_quantity) < 0 then
+	            raise over_order_product;
+	        end if;
+	    
+	        
+	        --재고 이상은 예외가 발생시키므로 여기는 재고가 정상적인 경우에만 들어온다
+	        --DBMS_OUTPUT.PUT_LINE(product_quantity || ' ' || product_detail_num || ' ' || product_price);
 	        --주문 상세 테이블에 삽입
 	        insert into TBL_ORDER_DETAIL(pk_order_detail_no, fk_order_no, fk_product_detail_no, order_detail_price, order_detail_quantity) values (PK_ORDER_DETAIL_NO_SEQ.nextval, sequenceNum, product_detail_num, product_price, product_quantity);
+	        --장바구니 삭제
 	        delete from tbl_basket where FK_MEMBER_NO = member_no and FK_PRODUCT_DETAIL_NO = product_detail_num;
+	        --재고 차감
+	        update tbl_product_detail set PRODUCT_INVENTORY = (product_inventory - product_quantity) where PK_PRODUCT_DETAIL_NO =  product_detail_num;
 	        --다음 객체를 위한 번호 증가
 	        countNum := countNum + 1;
+	        --DBMS_OUTPUT.PUT_LINE('1행 완료');
+	        --countNum2 := countNum2 +2;
 	    end loop;
 	exception
 	    --재고가 비었을 때 반환값을 -1로 설정 후 롤백
 	    when empty_inventory then
-	        sequenceNum := -1;
+	        DBMS_OUTPUT.PUT_LINE('오류 메시지: ' || '없는 재고 입니다');
+	        sequenceNum := -50000;
+	        rollback;
+	    when over_order_product then
+	        DBMS_OUTPUT.PUT_LINE('오류 메시지: ' || '재고가 부족합니다');
+	        sequenceNum := product_inventory - product_quantity;
+	        rollback;
+	    when others then
+	        DBMS_OUTPUT.PUT_LINE('오류 메시지: ' || SQLERRM);
+	        sequenceNum := -50001;
 	        rollback;
 	    
 	end;

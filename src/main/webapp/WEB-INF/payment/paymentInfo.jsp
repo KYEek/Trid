@@ -68,7 +68,7 @@
      const id_Map = "<%=name %>";
      //맵이 비어있으면 (비정상상황이면)
      if(id_Map == "null") {
-		alert("비정상 접근은 안됩니다 순서에 따라 접속해 주세요");
+		//alert("비정상 접근은 안됩니다 순서에 따라 접속해 주세요");
 		location.href="address.trd";
      }
      

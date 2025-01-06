@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     item_arr.push(item);
 
-	sessionStorage.setItem("total_price",`${productInfo.PRODUCT_PRICE}`);
+    sessionStorage.setItem("total_price", `${productInfo.PRODUCT_PRICE}`);
     sessionStorage.setItem("basket_item_arry", JSON.stringify(item_arr));
     sessionStorage.setItem("instantPay", "true");
   }
@@ -154,18 +154,22 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   //배송비 계산
-  if (sessionStorage.getItem("total_price") >= 50000) {
+  if (
+    Number(sessionStorage.getItem("total_price").replaceAll(",", "")) >=
+    Number(50000)
+  ) {
     document.querySelector("span#total_price").textContent = "0";
   }
   //날짜를 계산
   const today = new Date();
   const nextday = new Date();
   nextday.setDate(today.getDate() + 2);
-  
+
   const next_month = today.getMonth() + 1;
   const next_date = today.getDate();
-  
-  document.querySelector("div#delevery_date").textContent = next_month + "/" + next_date + " 배송";
+
+  document.querySelector("div#delevery_date").textContent =
+    next_month + "/" + next_date + " 배송";
 
   //계속 버튼 클릭시시
   document
