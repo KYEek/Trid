@@ -39,20 +39,16 @@ button {
 }
 
 div.message {
-    font-size: 8pt;
+    font-size: 10pt;
     color: red;
     margin-bottom: 1%;
     display: block;
 }
 
 div#update{
-	margin-bottom: 1.5%;
+	margin-bottom:4%;
 }
 
-div#code {
-	margin-bottom: 7%;
-	font-size: 10pt;
-}
 
 </style>   
     
@@ -88,8 +84,6 @@ div#code {
     <form name="mobileUpdateFrm" action="">
 		<div id="container">
 			<div id="update">전화번호 수정</div>
-			
-			<div id="code">새 번호로 인증 코드가 전송됩니다.</div>
 			
 			<input type="text" name="newMobile" id="newMobile" maxlength="15" class="requiredInfo" placeholder="새 전화번호" size="49%"/>
 	        <input type="hidden" name="pkNum" id="pkNum" value="${sessionScope.loginuser.pk_member_no}"/>

@@ -11,6 +11,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import member.model.MemberDAO;
 import member.model.MemberDAO_imple;
 
+
+/*
+ 	비밀번호 찾기를 할때 필요한 이메일 인증 컨트롤러
+ */
 public class FindPwdEmailCheckController extends AbstractController {
 
 	private MemberDAO mdao = new MemberDAO_imple();
@@ -20,7 +24,7 @@ public class FindPwdEmailCheckController extends AbstractController {
 		
 		String method =	request.getMethod(); // "GET" 또는 "POST"
 		
-		if("POST".equalsIgnoreCase(method)) {
+		if("POST".equalsIgnoreCase(method)) {// "POST" 방식이라면
 			
 			String email = request.getParameter("email");
 			
@@ -29,15 +33,12 @@ public class FindPwdEmailCheckController extends AbstractController {
 			
 			boolean isExists = mdao.isUserExist(paraMap);
 			
-			JSONObject jsonObj = new JSONObject(); // {}
-			jsonObj.put("isExists", isExists);     // {"isExists":true}  또는  {"isExists":false} 으로 만들어준다.
+			JSONObject jsonObj = new JSONObject(); 
+			jsonObj.put("isExists", isExists);
 			
-			String json = jsonObj.toString(); // 문자열 형태인 "{"isExists":true}"  또는  "{"isExists":false}" 으로 만들어준다.
-		//	System.out.println(">>> 확인용 json => " + json);
-			// >>> 확인용 json => {"isExists":true}
-			// >>> 확인용 json => {"isExists":false}
+			String json = jsonObj.toString();
 			
-			request.setAttribute("json", json); // 새로운 전화번호가 맞다면 true
+			request.setAttribute("json", json); 
 			
 			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/jsonview.jsp");

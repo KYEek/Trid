@@ -12,19 +12,18 @@ import member.domain.MemberDTO;
 import member.model.*;
 
 /*
- * 사용자 로그인 컨트롤러
+  	사용자 로그인 컨트롤러
  */
 public class Login extends AbstractController {
 
-	private MemberDAO mdao = new MemberDAO_imple(); // MemberDAO 초기화
+	private MemberDAO mdao = new MemberDAO_imple();
 	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		String method = request.getMethod(); // HTTP Method
 		
-		// POST 방식이라면
-		if("POST".equalsIgnoreCase(method)) { 
+		if("POST".equalsIgnoreCase(method)) { // POST 방식이라면
 			String member_email = request.getParameter("email");
 			String member_password = request.getParameter("pwd");
 			String clientIp = request.getRemoteAddr();
@@ -76,7 +75,7 @@ public class Login extends AbstractController {
 				return;
 			}
 		}
-		else {// get 방식이라면
+		else {// GET 방식이라면
 			super.setRedirect(false);
 			super.setViewPage(Constants.MEMBER_LOGIN_PAGE);
 		}
