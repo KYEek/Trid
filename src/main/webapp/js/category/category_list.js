@@ -57,50 +57,6 @@ $(document).ready(function() {
         }
     });// end of $(document).on("click", "button#choose_color_button", function() ----------------------------
 
-		
-	// 필터 적용 버튼 클릭 시 필터 적용 함수
-	$("#apply_filter_button").on("click", function() {
-	    const selectedColors = [];
-	    $(".color_active").each(function() {
-	        selectedColors.push($(this).attr("id"));
-	    });
-		
-	    const selectedPrice = $("span#priceLabel").text();
-
-		/*		
-			if(Array.isArray(selectedColors)) {
-				console.log("배열입니다");
-			}
-		*/
-		
-	    console.log("선택한 색상:", selectedColors);  // 색상 로그 출력
-	    console.log("선택한 가격:", selectedPrice);   // 가격 로그 출력
-
-	    $.ajax({
-	        url: ctxPath + '/product/category_list.trd',
-	        type: 'post',
-	        headers: {
-	            'ajaxHeader': 'true',  // 사용자 정의 헤더 추가 ajax 확인용
-	        },
-	        data: {
-	            chooseColor: selectedColors,  // 선택 색상
-	            choosePrice: selectedPrice    // 선택 가격
-	        },
-	        dataType: 'json',
-			success: function(response) {
-			    // console.log("서버 응답 데이터 확인:", response); // `productName` 필드 확인
-				// 상품 리스트 업데이트 함수 호출
-				updateProductList(response);
-	        },
-			error: function(xhr, status, error) {
-				console.error("AJAX 요청 실패:", status, error);
-				console.log("AJAX 요청 실패 응답 상태 코드:", xhr.status); // 상태 코드 확인
-				console.log("AJAX 요청 실패 응답 내용:", xhr.responseText); // 응답 본문 확인
-			}
-
-	    });
-	});
-
 	
 });// end of $(document).ready(function() -------------------------------
 

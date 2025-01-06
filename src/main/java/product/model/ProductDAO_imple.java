@@ -1052,18 +1052,49 @@ public class ProductDAO_imple implements ProductDAO {
 			
 		    List<ProductDTO> productList = new ArrayList<>();
 
+		    int pageNumber = Integer.parseInt(paraMap.get("pageNumber"));
+		    int pageSize = Integer.parseInt(paraMap.get("pageSize"));
+		    
 		    try {
 		        conn = ds.getConnection();
 
 		        StringBuilder sql = new StringBuilder(
-					                    " SELECT  p.pk_product_no, p.product_name, p.product_price, "
+					                    " WITH COLOR AS "
+					                  + " ( "
+					                  + "  SELECT fk_product_no, "
+					                  + "  LISTAGG(color_name, ',') WITHIN GROUP(ORDER BY color_name) AS color_name "
+					                  + "  FROM tbl_color "
+					                  + "  WHERE 1=1 ");
+					                  
+					                  if (!StringUtil.isBlank(paraMap.get("chooseColor"))) {
+					  		            String[] colors = paraMap.get("chooseColor").split(",");
+					  		            // sql += " and product_name like '%' || ? || '%' ";
+					  		            if (colors.length > 0) {
+					  		                sql.append(" AND color_name IN (");
+					  		                for (int i = 0; i < colors.length; i++) {
+					  		                    sql.append("'" + colors[i].toUpperCase() + "'");
+					  		                    if (i < colors.length - 1) {
+					  		                        sql.append(", ");
+					  		                    }
+					  		                }
+					  		                sql.append(")");
+					  		            }
+					  		        }	                  
+					                  
+					                  
+					                 sql.append("  GROUP BY fk_product_no "
+					                  + " )"
+					                  + " SELECT T.*"
+					                  + " FROM"
+					                  + " ( "
+					                  + " SELECT  ROWNUM as RN, p.pk_product_no, p.product_name, p.product_price, "
 					                  + "         i.product_image_path, i.pk_product_image_no, "
-					                  + "         c.pk_category_no, c.category_type, "
+					                  + "         c.pk_category_no, c.category_type, c.category_gender, "
 					                  + "         cr.color_name "
 					                  + " FROM    tbl_product p "
 					                  + "         JOIN tbl_category c "
 					                  + "         ON p.fk_category_no = c.pk_category_no "
-					                  + "         JOIN tbl_color cr "
+					                  + "         JOIN COLOR cr "
 					                  + "         ON p.pk_product_no = cr.fk_product_no "
 					                  + "         JOIN tbl_product_image i "
 					                  + "         ON p.pk_product_no = i.fk_product_no "
@@ -1072,65 +1103,69 @@ public class ProductDAO_imple implements ProductDAO {
 					                  + " ( "
 					                  + "  SELECT  MIN(pk_product_image_no) "
 					                  + "  FROM    tbl_product_image "
-					                  + "  WHERE   fk_product_no = p.pk_product_no "
-					                  + " ) " );
-
+					                  + "  WHERE   fk_product_no = p.pk_product_no )");
+					                  
+					                 
+					     
 		        // 필터링 조건 추가
+					                 
 		        if (!StringUtil.isBlank(paraMap.get("choosePrice"))) {
 		            sql.append(" AND p.product_price <= ? "); // 선택 가격 이하 상품만 가져오기
 		        }
-		        if (!StringUtil.isBlank(paraMap.get("chooseColor"))) {
-		            String[] colors = paraMap.get("chooseColor").split(",");
-		            if (colors.length > 0) {
-		                sql.append(" AND cr.color_name IN (");
-		                for (int i = 0; i < colors.length; i++) {
-		                    sql.append(" ? ");
-		                    if (i < colors.length - 1) {
-		                        sql.append(", ");
-		                    }
-		                }
-		                sql.append(")");
-		            }
-		        }
-		        if (!StringUtil.isBlank(paraMap.get("chooseCategory"))) {
+		        
+		        if (!StringUtil.isBlank(paraMap.get("chooseCategoryNo"))) {
 		            sql.append(" and c.pk_category_no = ? ");
 		        }
 		        if (!StringUtil.isBlank(paraMap.get("chooseType"))) {
 		            sql.append(" and c.category_type = ? ");
 		        }
+		        if (!StringUtil.isBlank(paraMap.get("chooseGender"))) {
+		            sql.append(" and c.category_gender = ? ");
+		        }
+		        
+		        sql.append( 
+		        		" ) T "
+                + " WHERE T.RN BETWEEN ? and ? " );
 
+		        
 		        pstmt = conn.prepareStatement(sql.toString());
 
-			     // PreparedStatement에 필터 값을 넣어줌
-			     int index = 1; // 인덱스는 1부터 시작
-			     if (!StringUtil.isBlank(paraMap.get("choosePrice"))) {
-			         pstmt.setInt(index++, Integer.parseInt(paraMap.get("choosePrice")));
-			     }
-			     if (!StringUtil.isBlank(paraMap.get("chooseColor"))) {
-			         String[] colors = paraMap.get("chooseColor").split(",");
-			         for (String color : colors) {
-			             pstmt.setString(index++, color.trim().toUpperCase());
-			         }
-			     }
-			     if (!StringUtil.isBlank(paraMap.get("chooseCategory"))) {
-			         pstmt.setString(index++, paraMap.get("chooseCategory"));
-			     }
-			     if (!StringUtil.isBlank(paraMap.get("chooseType"))) {
-			         pstmt.setString(index++, paraMap.get("chooseType"));
-			     }
+			    // PreparedStatement에 필터 값을 넣어줌
+			    int index = 1; // 인덱스는 1부터 시작
+			    
+			    if (!StringUtil.isBlank(paraMap.get("choosePrice"))) {
+			    	pstmt.setInt(index++, Integer.parseInt(paraMap.get("choosePrice")));
+			    }
+			    if (!StringUtil.isBlank(paraMap.get("chooseCategoryNo"))) {
+			    	pstmt.setString(index++, paraMap.get("chooseCategoryNo"));
+			    }
+			    if (!StringUtil.isBlank(paraMap.get("chooseType"))) {
+			    	pstmt.setString(index++, paraMap.get("chooseType"));
+			    }
+			    if (!StringUtil.isBlank(paraMap.get("chooseGender"))) {
+			    	pstmt.setString(index++, paraMap.get("chooseGender"));
+			    }
 		        
 		        if (!StringUtil.isBlank(paraMap.get("choosePrice"))) {
-		            System.out.println("choosePrice: " + paraMap.get("choosePrice"));
+		        	System.out.println("choosePrice: " + paraMap.get("choosePrice"));
 		        }
 		        if (!StringUtil.isBlank(paraMap.get("chooseColor"))) {
 		            System.out.println("chooseColor: " + paraMap.get("chooseColor"));
 		        }
+		        
+		        pstmt.setInt(index++, (pageNumber-1) * pageSize + 1);
+			    pstmt.setInt(index++, (pageNumber) * pageSize);
+	
+
+		        System.out.println("sql 문 실행됨 "+sql);
+		        
+		        System.out.println("Executing SQL: " + pstmt.toString());
 
 		        rs = pstmt.executeQuery();
-		        
 
-		        // 결과를 ProductDTO 리스트로 매핑
+		        // 결과를 매핑
 		        while (rs.next()) {
+		        	
 		            ProductDTO product = new ProductDTO();
 		            
 		            product.setProductNo(rs.getInt("pk_product_no"));
@@ -1146,15 +1181,14 @@ public class ProductDAO_imple implements ProductDAO {
 	                
 	                imageList.add(image);  // 이미지 리스트에 이미지 하나씩 쌓아주기
 	                
+	                product.setColorNameArray(rs.getString("color_name").split(","));
+	                
 	                product.setImageList(imageList);
 	                
 	                productList.add(product);
 		        }
 
-		    } catch (SQLException e) {
-		        e.printStackTrace();
-		        System.out.println("SQL 실행 중 오류 발생: " + e.getMessage());
-		    }   finally {
+		    } finally {
 		        close();
 		    }
 
@@ -1226,7 +1260,7 @@ public class ProductDAO_imple implements ProductDAO {
 	                 imageList.add(image);  // 이미지 리스트에 이미지 하나씩 쌓아주기
 	                
 	                 product.setImageList(imageList);
-	                
+	                 
 		             searchProductList.add(product);
 
 		          } // end of while -------------------
@@ -1371,16 +1405,18 @@ public class ProductDAO_imple implements ProductDAO {
 		// 햄버거 메뉴 카테고리 클릭시 해당 카테고리 상품페이지로 이동 메소드
 		@Override
 		public List<CategoryDTO> HamburgerCategory() throws SQLException {
+			
 			List<CategoryDTO> Categories = new ArrayList<>();
 			
 			try {
 				conn = ds.getConnection();
 				
-				String sql 	= " select pk_category_no, category_name, category_gender, category_type "
-							+ " from tbl_category ";
+		        // 모든 카테고리를 가져옴
+		        String sql = " SELECT pk_category_no, category_name, category_gender, category_type " +
+		                     " FROM tbl_category " +
+		                     " ORDER BY pk_category_no ASC "; // 카테고리 번호 기준 정렬
 				
 				pstmt = conn.prepareStatement(sql);
-				
 				rs = pstmt.executeQuery();
 				
 				while(rs.next()) {
@@ -1399,6 +1435,118 @@ public class ProductDAO_imple implements ProductDAO {
 			}
 			
 			return Categories;
+		}
+
+		// 카테고리 선택시 상품의 총 개수를 구하는 메소드
+		@Override
+		public int selectCountProductByCategory(Map<String, String> paraMap) throws SQLException {
+			int totalRowCount = 0;
+		    
+		    try {
+		        conn = ds.getConnection();
+
+		        StringBuilder sql = new StringBuilder(
+					        		  " SELECT  count(*) as total "
+					                  + " FROM    tbl_product p "
+					                  + "         JOIN tbl_category c "
+					                  + "         ON p.fk_category_no = c.pk_category_no "
+					                  + "         JOIN tbl_product_image i "
+					                  + "         ON p.pk_product_no = i.fk_product_no "
+					                  + " WHERE   product_status_code = 1 "
+					                  + " AND     i.pk_product_image_no ="
+					                  + " ( "
+					                  + "  SELECT  MIN(pk_product_image_no) "
+					                  + "  FROM    tbl_product_image "
+					                  + "  WHERE   fk_product_no = p.pk_product_no "
+					                  + "  ) "
+					                  + "  AND p.pk_product_no IN "
+					                  + "  ( "
+					                  + "   SELECT fk_product_no"
+					                  + "	FROM tbl_color"
+					                  + "	where 1=1 ");
+					                 
+					                  if (!StringUtil.isBlank(paraMap.get("chooseColor"))) {
+					  		            String[] colors = paraMap.get("chooseColor").split(",");
+					  		            // sql += " and product_name like '%' || ? || '%' ";
+					  		            if (colors.length > 0) {
+					  		                sql.append(" AND color_name IN (");
+					  		                for (int i = 0; i < colors.length; i++) {
+					  		                    sql.append("'" + colors[i].toUpperCase() + "'");
+					  		                    if (i < colors.length - 1) {
+					  		                        sql.append(", ");
+					  		                    }
+					  		                }
+					  		                sql.append(")");
+					  		            }
+					  		        }
+					                  
+					                  sql.append("  ) ");
+					     
+		        // 필터링 조건 추가
+					                 
+		        if (!StringUtil.isBlank(paraMap.get("choosePrice"))) {
+		            sql.append(" AND p.product_price <= ? "); // 선택 가격 이하 상품만 가져오기
+		        }
+		        
+		        if (!StringUtil.isBlank(paraMap.get("chooseCategoryNo"))) {
+		            sql.append(" and c.pk_category_no = ? ");
+		        }
+		        if (!StringUtil.isBlank(paraMap.get("chooseType"))) {
+		            sql.append(" and c.category_type = ? ");
+		        }
+		        if (!StringUtil.isBlank(paraMap.get("chooseGender"))) {
+		            sql.append(" and c.category_gender = ? ");
+		        }
+		        
+		    
+
+		        
+		        pstmt = conn.prepareStatement(sql.toString());
+
+			    // PreparedStatement에 필터 값을 넣어줌
+			    int index = 1; // 인덱스는 1부터 시작
+			    
+			    if (!StringUtil.isBlank(paraMap.get("choosePrice"))) {
+			    	pstmt.setInt(index++, Integer.parseInt(paraMap.get("choosePrice")));
+			    }
+			    if (!StringUtil.isBlank(paraMap.get("chooseCategoryNo"))) {
+			    	pstmt.setString(index++, paraMap.get("chooseCategoryNo"));
+			    }
+			    if (!StringUtil.isBlank(paraMap.get("chooseType"))) {
+			    	pstmt.setString(index++, paraMap.get("chooseType"));
+			    }
+			    if (!StringUtil.isBlank(paraMap.get("chooseGender"))) {
+			    	pstmt.setString(index++, paraMap.get("chooseGender"));
+			    }
+		        
+		        if (!StringUtil.isBlank(paraMap.get("choosePrice"))) {
+		        	System.out.println("choosePrice: " + paraMap.get("choosePrice"));
+		        }
+		        if (!StringUtil.isBlank(paraMap.get("chooseColor"))) {
+		            System.out.println("chooseColor: " + paraMap.get("chooseColor"));
+		        }
+		
+
+		        System.out.println("sql 문 실행됨 "+sql);
+		        
+		        System.out.println("Executing SQL: " + pstmt.toString());
+
+		        rs = pstmt.executeQuery();
+
+		        // 결과를 매핑
+		        if(rs.next()) {
+		        	totalRowCount = rs.getInt("total");
+		        }
+		        
+		        System.out.println(totalRowCount);
+
+		    } finally {
+		        close();
+		    }
+
+		    return totalRowCount;
+			
+			
 		}
 		
 }

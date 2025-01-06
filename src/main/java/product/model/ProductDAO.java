@@ -58,4 +58,7 @@ public interface ProductDAO {
 	
 	// 햄버거 메뉴 카테고리 클릭시 해당 카테고리 상품페이지로 이동 메소드
 	public List<CategoryDTO> HamburgerCategory() throws SQLException;
+	
+	// 카테고리 선택시 상품의 총 개수를 구하는 메소드
+	public int selectCountProductByCategory(Map<String, String> paraMap) throws SQLException;
 }
