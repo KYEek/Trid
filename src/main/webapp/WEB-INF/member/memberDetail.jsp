@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>회원 조회 페이지</title>
+<title>회원 마이페이지 페이지</title>
 
 <!-- Required meta tags -->
 <meta charset="utf-8">
@@ -54,10 +54,8 @@ function updateMobile(){
 
  function goLogOut(ctx_Path){
 	if(confirm("정말 로그아웃 하시겠습니까?")){
-//		alert("로그아웃 클릭됨.");
 		location.href="<%= ctx_Path%>/login/logout.trd";
 	}
-	
 } 
  
 function goMemberDelete(){

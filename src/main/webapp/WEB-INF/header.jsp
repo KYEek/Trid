@@ -6,14 +6,16 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header/header.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.7.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"></script>
+
+
 	<div class="header">
 		<!-- 헤더 카테고리 메뉴 버튼 -->
 		<div class="header-menu-container">
 			<div class="menu-trigger">
 				<span></span> <span></span>
 			</div>
-			<jsp:include page="category/hamburger_category.jsp" />
-		</div>
+ 			<jsp:include page="/WEB-INF/category/hamburger_category.jsp" />		
+ 		</div>
 
 		<!-- 로고 -->
 		<div class="header-logo-container">
@@ -42,5 +44,9 @@
 		</c:if>	
 			<a class="header-link" style="color:black" href="${pageContext.request.contextPath}/basket.trd">바스켓백</a>
 			<a class="header-link" style="color:black" href="${pageContext.request.contextPath}/board/list.trd" >Q&A</a>
+		
+		<c:if test="${not empty sessionScope.loginuser}">
+			<a class="header-link" style="color:black" href="${pageContext.request.contextPath}/login/logout.trd" onclick="return confirm('정말 로그아웃 하시겠습니까?')">로그아웃</a> 			
+		</c:if>
 		</div>
 	</div>

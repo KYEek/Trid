@@ -30,7 +30,7 @@
 <script type="text/javascript" src="jquery-ui-1.13.1.custom/jquery-ui.min.js"></script> 
 
 <script type="text/javascript" src="<%= ctx_Path%>/js/member/register.js"></script> 
-	
+<script type="text/javascript" src="<%= ctx_Path%>/js/member/util.js"></script> 
 
 <style>
 
@@ -132,7 +132,7 @@ div[class='modal-body']{
 	text-align: left;
 }
 
-span#emailcheck {
+button#emailcheck {
 	border: solid 1px gray;
 	border-radius: 5px;
 	font-size: 9pt;
@@ -164,10 +164,8 @@ input#email {
 				<div class="box">          
 	                <input type="text" name="email" id="email" maxlength="60" class="requiredInfo" placeholder="이메일" size="50%"/>
 	                <%-- 이메일중복체크 --%>
-            		<span id="emailcheck">이메일중복확인</span><br>
-            		<input type="hidden" name="pkNum" id="pkNum" value="${sessionScope.loginuser.pk_member_no}"/>
+            		<button type="button" id="emailcheck">이메일중복확인</button><br>
 	                <div class="email_message message"><i class="fa-solid fa-circle-info"></i>&nbsp;올바른 이메일을 입력하세요.</div>
-	                 <div id="email_message"></div>
 	                
 				</div> 
 				
@@ -177,10 +175,26 @@ input#email {
 				</div>
 				
 				<div class="box"> 
+	                <input type="password" name="pwdCheck" id="pwdCheck" maxlength="15" class="requiredInfo" placeholder="비밀번호 확인" size="50%"/>
+	                <div class="pwd_checkMessage message"><i class="fa-solid fa-circle-info"></i>&nbsp;비밀번호가 일치하지 않습니다.</div>
+				</div>
+				
+				<div class="box"> 
 	                <input type="text" name="name" id="name" maxlength="60" class="requiredInfo" placeholder="이름" size="50%"/>
 	                <div class="name_message message"><i class="fa-solid fa-circle-info"></i>&nbsp;이름을 입력해주십시오</div>
 				</div>
 				
+				<div class="box"> 
+	                <input type="text" name="member_birthday" id="birthday" maxlength="60" class="requiredInfo" placeholder="생년월일 (예: 970520)" size="50%"/>
+	                <div class="birthday_message message"><i class="fa-solid fa-circle-info"></i>&nbsp;생년월일 6자리를 입력해주십시오</div>
+            	</div>
+            	
+            	<div class="box"> 
+	                <input type="radio" name="member_gender" value="1" id="male" /><label for="male" style="margin-left: 1.5%; color:black;">남자</label>
+                    <input type="radio" name="member_gender" value="0" id="female" style="margin-left: 10%;" /><label for="female" style="margin-left: 1.5%; color:black;">여자</label>
+            	</div>
+            	
+				<p style="font-weight:bold">휴대폰 인증을 위해 SMS를 보내드립니다.</p>
 				<div class="box"> 
 	                <input type="text" name="mobile" id="mobile" maxlength="60" class="requiredInfo" placeholder="전화번호" size="50%"/>
 	                <div class="mobile_message message"><i class="fa-solid fa-circle-info"></i>&nbsp;전화번호를 입력해주십시오</div>
@@ -188,25 +202,14 @@ input#email {
 	                <div id="mobileDuplicate_message" class="message"></div>
             	</div>
             	
-            	<div class="box"> 
-	                <input type="text" name="member_birthday" id="birthday" maxlength="60" class="requiredInfo" placeholder="생년월일 (예: 970520)" size="50%"/>
-	                <div class="birthday_message message"><i class="fa-solid fa-circle-info"></i>&nbsp;생년월일 6자리를 입력해주십시오</div>
-            	</div>
-            	
-            	<div class="box"> 
-	                <input type="radio" name="member_gender" value="1" id="male" /><label for="male" style="margin-left: 1.5%; color:black;">남자</label>
-                    <input type="radio" name="member_gender" value="2" id="female" style="margin-left: 10%;" /><label for="female" style="margin-left: 1.5%; color:black;">여자</label>
-            	</div>
-            	
             </div>  
-	
-            <br>
-	
-            <p>휴대폰 인증을 위해 SMS를 보내드립니다.</p>
-            <input type="text" name="mobileCheck" id="mobileCheck" maxlength="60" placeholder="인증번호를 입력하세요."/>
-			<button type="button" id="code" onclick="MobileCodeCheck()">인증확인</button>
-			<div class="code_message message"><i class="fa-solid fa-circle-info"></i>&nbsp;인증번호를 입력하세요.</div>
-			<input type="hidden" name="codeCheck" id="codeCheck" value="${sessionScope.certification_code}"/>
+			<div id="mobile_check_box">
+	            <input type="text" name="mobileCheck" id="mobileCheck" maxlength="60" placeholder="인증번호를 입력하세요."/>
+				<button type="button" id="code" onclick="MobileCodeCheck()">인증확인</button>
+				<div class="code_message message"><i class="fa-solid fa-circle-info"></i>&nbsp;인증번호를 입력하세요.</div>
+				<input type="hidden" name="codeCheck" id="codeCheck" value="${sessionScope.certification_code}"/>
+			</div>
+			
             <br>
 	
             <div>

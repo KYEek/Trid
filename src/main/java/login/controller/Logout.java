@@ -5,6 +5,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+/*
+ 	로그아웃 처리를 해주는 컨트롤러
+ */
+
 public class Logout extends AbstractController {
 
 	@Override

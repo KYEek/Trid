@@ -33,7 +33,7 @@
 
 function memberDelete(){
 	
-	location.href="<%= ctx_Path%>/member/checkDelete.trd"
+	location.href="<%= ctx_Path%>/member/memberDeletePwdCheck.trd"
 	
 }
 

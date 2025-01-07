@@ -3,6 +3,8 @@ package common.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.json.JSONObject;
+
 import common.Constants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -97,8 +99,8 @@ public abstract class AbstractController implements InterCommand {
 	}
 	
 	/*
-	 * AJAX JSON 응답 처리 메소드
-	 */
+	  	AJAX JSON 응답 처리 메소드
+	*/
 	public void handelJsonResponse(HttpServletResponse response, String message) {
 		try {
 			setJsonResponse(true); // 클라이언트로 단순 응답 처리
@@ -116,5 +118,17 @@ public abstract class AbstractController implements InterCommand {
 		}
 
 	}
+	
+	
+/*
+ 	JSON view 응답 처리 메소드
+*/
+   public void handelJsonView(HttpServletRequest request, JSONObject jsonObj) {
+      String json = jsonObj.toString(); // JSON 객체 문자열 변환
+      request.setAttribute("json", json);
+
+      setRedirect(false);
+      setViewPage("/WEB-INF/jsonview.jsp");
+   }
 	
 }
