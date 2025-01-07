@@ -548,7 +548,7 @@ public class OrderDAO_imple implements OrderDAO {
 				+ " where rownumber = 1  "
 				+ " ) "
 				+ "  "
-				+ " select PK_ORDER_NO, ORDER_TOTAL_PRICE, SUM_PRODUC_PRICE, ORDER_STATUS, ORDER_DATE, FK_ADDR_NO, PRODUCT_DETAIL_NO, PRODUCT_PRICE, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME, product_no "
+				+ " select PK_ORDER_NO, ORDER_TOTAL_PRICE, SUM_PRODUC_PRICE, ORDER_STATUS, ORDER_DATE, FK_ADDR_NO, PRODUCT_DETAIL_NO, PRODUCT_PRICE, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME, product_no, fk_member_no  "
 				+ " from order_detail "
 				+ "  "
 				+ " join ( "
@@ -590,6 +590,7 @@ public class OrderDAO_imple implements OrderDAO {
 				json.put("PRODUCT_IMAGE_PATH", rs.getString("PRODUCT_IMAGE_PATH"));
 				json.put("PRODUCT_IMAGE_NAME", rs.getString("PRODUCT_IMAGE_NAME"));
 				json.put("PRODUCT_NO", rs.getInt("PRODUCT_NO"));
+				json.put("fk_member_no", rs.getInt("fk_member_no"));
 				
 				
 				jsonArr.put(json);

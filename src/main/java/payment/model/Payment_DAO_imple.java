@@ -145,6 +145,8 @@ public class Payment_DAO_imple implements Payment_DAO {
 	        delete from tbl_basket where FK_MEMBER_NO = member_no and FK_PRODUCT_DETAIL_NO = product_detail_num;
 	        --재고 차감
 	        update tbl_product_detail set PRODUCT_INVENTORY = (product_inventory - product_quantity) where PK_PRODUCT_DETAIL_NO =  product_detail_num;
+	        --수정 날짜 갱신
+	        update tbl_product_detail set PRODUCT_DETAIL_UPDATEDAY = sysdate where PK_PRODUCT_DETAIL_NO =  product_detail_num;
 	        --다음 객체를 위한 번호 증가
 	        countNum := countNum + 1;
 	        --DBMS_OUTPUT.PUT_LINE('1행 완료');

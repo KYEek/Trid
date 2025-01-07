@@ -6,7 +6,7 @@ div#address_header {
   margin-top: 5vh;
   display: flex;
   width: 45vw;
-  font-size: 17px;
+  font-size: 17px !important;
 }
 div#address_header > div {
   border: 0.7px solid black;
@@ -28,14 +28,14 @@ ul.address_contents {
 
 div.i_tag {
   margin: auto 0 auto auto;
-  font-size: 14pt;
+  font-size: 14pt !important;
 }
 
 div#is_default_address {
   border: 0.7px solid black;
   width: 13%;
   text-align: center;
-  font-size: 10px;
+  font-size: 10px !important;
   margin-top: 1vh;
 }
 
@@ -44,9 +44,9 @@ div#is_default_address {
   outline: none;
   box-shadow: none;
 }
-/* .dropdown-toggle::after { */
-/*   display: none; */
-/* } */
+.dropdown-toggle::after {
+  display: none !important;
+}
 
 .dropdown-menu {
   border: 0.7px solid black;
@@ -59,14 +59,14 @@ div#is_default_address {
 /* 풀 화면이 아닐 때의 폰트 사이즈 */
 @media (max-width: 1919px) {
   div#address_header {
-    font-size: 15px;
+    font-size: 15px !important;
   }
 }
 
 /* 태블릿 버전 */
 @media (max-width: 1025px) {
   div#address_header {
-    font-size: 13px;
+    font-size: 13px !important;
   }
 }
 
@@ -74,7 +74,7 @@ div#is_default_address {
 @media (max-width: 768px) {
   div#address_header {
     border: 0px solid black;
-    font-size: 13px;
+    font-size: 13px !important;
     margin-left: 3vw;
     width: 100vw;
   }
@@ -92,5 +92,9 @@ div#is_default_address {
 
   div.i_tag {
     margin: auto 0;
+  }
+  
+  div.dropdown-menu {
+  	left:-20vw !important;
   }
 }

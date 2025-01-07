@@ -95,7 +95,6 @@
                 <div id="payment_shipment_method">
                   <div>자택 배송</div>
                   <div>배송 <span id="delivery_date">화요일 31, 12월 - 목요일 02, 1월</span></div>
-                  <div>편집</div>
                 </div>
                 <div id="payment_address_info" class="address_list_item">
                   <div id="payment_address_name"><%=name %></div>

@@ -1,3 +1,8 @@
+@charset "UTF-8";
+
+main {
+	height:auto !important;
+}
 :root {
   --border_size: 0.7px solid black;
 }
@@ -71,6 +76,7 @@ div.basket_product_info_header {
 img {
   width: 100%;
   aspect-ratio: 750/1125;
+  height:100%;
 }
 
 /* �ｿｽ謫ｽ�ｿｽ�ｽｯ�ｽｸ�ｿｽ�ｽｧ�ｿｽ�ｿｽ�ｽ･�ｽｼ �ｿｽ讖具ｿｽ譬ｪ div�ｿｽ謾ｪ �ｿｽ邊包ｿｽ譴ｵ�ｿｽ謾､�ｿｽ謠� �ｿｽ萓��ｿｽ�ｽｲ�ｽｽ�ｿｽ豢橸ｿｽ蜈ｱ */

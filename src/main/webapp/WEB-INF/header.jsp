@@ -41,8 +41,10 @@
 		</c:if>
 		<c:if test="${not empty sessionScope.loginuser}">
 			<a class="header-link" style="color:black" href="${pageContext.request.contextPath}/member/mypage.trd">${(sessionScope.loginuser).member_name}</a> 
-		</c:if>	
+		</c:if>
+		<c:if test="${not empty sessionScope.loginuser}">	
 			<a class="header-link" style="color:black" href="${pageContext.request.contextPath}/basket.trd">바스켓백</a>
+		</c:if>
 			<a class="header-link" style="color:black" href="${pageContext.request.contextPath}/board/list.trd" >Q&A</a>
 		
 		<c:if test="${not empty sessionScope.loginuser}">
