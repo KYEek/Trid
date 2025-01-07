@@ -2,7 +2,7 @@
   --border_size: 0.7px solid black;
 }
 
-/* �棗�ｰ緋ｵｬ�笈 �陸�鵠 */
+/* �ｿｽ譽暦ｿｽ�ｽｰ邱具ｽｵ�ｽｬ�ｿｽ隨� �ｿｽ髯ｸ�ｿｽ魴� */
 div#basket_header {
   top: 2%;
   width: 100%;
@@ -12,7 +12,7 @@ div#basket_header {
   background-color: white;
 }
 
-/* �棗�ｰ緋ｵｬ�笈 �擽�ｦ��ｳｼ �ｰ懍��  */
+/* �ｿｽ譽暦ｿｽ�ｽｰ邱具ｽｵ�ｽｬ�ｿｽ隨� �ｿｽ謫ｽ�ｿｽ�ｽｦ�ｿｽ�ｿｽ�ｽｳ�ｽｼ �ｿｽ�ｽｰ諛搾ｿｽ�ｿｽ  */
 div#basket_header > div {
   font-weight: bold;
   text-align: center;
@@ -23,7 +23,7 @@ div#basket_header > div {
   border-bottom: 0;
 }
 
-/* �棗�ｰ緋ｵｬ�笈 �└�ｪ��ｬｸ */
+/* �ｿｽ譽暦ｿｽ�ｽｰ邱具ｽｵ�ｽｬ�ｿｽ隨� �ｿｽ笏費ｿｽ�ｽｪ�ｿｽ�ｿｽ�ｽｬ�ｽｸ */
 div#basket_explain {
   background-color: rgb(235, 235, 235);
   border: var(--border_size);
@@ -31,14 +31,14 @@ div#basket_explain {
   border-top: 0;
 }
 
-/* �棗�ｰ緋ｵｬ�笈 �ｪｩ�｡� */
+/* �ｿｽ譽暦ｿｽ�ｽｰ邱具ｽｵ�ｽｬ�ｿｽ隨� �ｿｽ�ｽｪ�ｽｩ�ｿｽ�ｽ｡�ｿｽ */
 div#basket_list {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   margin-bottom: 9.8vh;
 }
 
-/* �棗�ｰ緋ｵｬ�笈 �ｪｩ�｡晧攪 �ｰ� �墳�ｪｩ */
+/* �ｿｽ譽暦ｿｽ�ｽｰ邱具ｽｵ�ｽｬ�ｿｽ隨� �ｿｽ�ｽｪ�ｽｩ�ｿｽ�ｽ｡譎ｧ謾ｪ �ｿｽ�ｽｰ�ｿｽ �ｿｽ蠅ｳ�ｿｽ�ｽｪ�ｽｩ */
 div#basket_list > div {
   width: 100%;
   border-right: var(--border_size);
@@ -50,7 +50,7 @@ a.product_link {
   text-decoration: none;
 }
 
-/* �メ�宙 �擽�ｦ��ｳｼ �く��罹ｲ�款*/
+/* �ｿｽ繝｡�ｿｽ螳� �ｿｽ謫ｽ�ｿｽ�ｽｦ�ｿｽ�ｿｽ�ｽｳ�ｽｼ �ｿｽ縺擾ｿｽ�ｿｽ鄂ｹ�ｽｲ�ｿｽ谺ｾ*/
 div.basket_product_info_header {
   display: flex;
   width: 100%;
@@ -59,7 +59,7 @@ div.basket_product_info_header {
   margin-left: 0.7vw;
   width: 85%;
 }
-/* �メ�宙 �擽�ｦ�乱 �从�ｲ��ｰ� �摺 �阜 */
+/* �ｿｽ繝｡�ｿｽ螳� �ｿｽ謫ｽ�ｿｽ�ｽｦ�ｿｽ荵ｱ �ｿｽ莉趣ｿｽ�ｽｲ�ｿｽ�ｿｽ�ｽｰ�ｿｽ �ｿｽ鞫ｺ �ｿｽ髦� */
 .basket_product_info_header > div:first-child {
   cursor: pointer;
 }
@@ -67,13 +67,13 @@ div.basket_product_info_header {
   cursor: pointer;
 }
 
-/* �擽�ｯｸ�ｧ��･ｼ basket_img�乱 �ｽ餓梵�ｲ� �復�共 */
+/* �ｿｽ謫ｽ�ｿｽ�ｽｯ�ｽｸ�ｿｽ�ｽｧ�ｿｽ�ｿｽ�ｽ･�ｽｼ basket_img�ｿｽ荵ｱ �ｿｽ�ｽｽ鬢捺｢ｵ�ｿｽ�ｽｲ�ｿｽ �ｿｽ蠕ｩ�ｿｽ蜈ｱ */
 img {
   width: 100%;
   aspect-ratio: 750/1125;
 }
 
-/* �擽�ｯｸ�ｧ��･ｼ �橋�株 div�攪 �粕�梵�攤�揆 �侠�ｲｽ�洞�共 */
+/* �ｿｽ謫ｽ�ｿｽ�ｽｯ�ｽｸ�ｿｽ�ｽｧ�ｿｽ�ｿｽ�ｽ･�ｽｼ �ｿｽ讖具ｿｽ譬ｪ div�ｿｽ謾ｪ �ｿｽ邊包ｿｽ譴ｵ�ｿｽ謾､�ｿｽ謠� �ｿｽ萓��ｿｽ�ｽｲ�ｽｽ�ｿｽ豢橸ｿｽ蜈ｱ */
 .basket_img {
   width: 100%;
   border-bottom: var(--border_size);
@@ -85,7 +85,7 @@ img {
   margin: 1vh 0;
 }
 
-/* �ｰ懍�� �ｴ���ｨ div �侃�ム�攵 �└��� */
+/* �ｿｽ�ｽｰ諛搾ｿｽ�ｿｽ �ｿｽ�ｽｴ�ｿｽ�ｿｽ�ｿｽ�ｽｨ div �ｿｽ萓�ｿｽ繝��ｿｽ謾ｵ �ｿｽ笏費ｿｽ�ｿｽ�ｿｽ */
 div.basket_product_count_container {
   display: flex;
   border: var(--border_size);
@@ -105,7 +105,7 @@ div.basket_product_count {
   border-right: var(--border_size);
 }
 
-/* �ｰ懍�們凰 �ｹｴ��語ｳ��ｦｬ div */
+/* �ｿｽ�ｽｰ諛搾ｿｽ蛟大�ｰ �ｿｽ�ｽｹ�ｽｴ�ｿｽ�ｿｽ隱橸ｽｳ�ｿｽ�ｿｽ�ｽｦ�ｽｬ div */
 .basket_pruduct_price {
   margin-left: 0.7vw;
 }
@@ -113,7 +113,7 @@ div.basket_product_count {
   margin-left: 0.7vw;
 }
 
-/* �尊�┣ �ｴ���ｨ */
+/* �ｿｽ蟆奇ｿｽ笏｣ �ｿｽ�ｽｴ�ｿｽ�ｿｽ�ｿｽ�ｽｨ */
 
 div#basket_footer {
   border-top: var(--border_size);
@@ -168,7 +168,7 @@ span.basket_item {
   font-size: 30px;
 }
 
-/* �｡罹畠�剩�ｩｴ */
+/* �ｿｽ�ｽ｡鄂ｹ逡��ｿｽ蜑ｩ�ｿｽ�ｽｩ�ｽｴ */
 div#roading_container {
   position: fixed;
   width: 100%;
@@ -190,7 +190,6 @@ div#roading_box {
   background-color: white;
 }
 
-
 div.no_inventory {
   background-color: rgba(255, 255, 255, 0.3);
   width: 100%;
@@ -209,5 +208,6 @@ div.no_inventory_text {
 }
 
 .basket_delete {
-	z-index: 99;
+  z-index: 99;
 }
+
