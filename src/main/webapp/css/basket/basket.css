@@ -7,7 +7,7 @@ main {
   --border_size: 0.7px solid black;
 }
 
-/* �ｿｽ譽暦ｿｽ�ｽｰ邱具ｽｵ�ｽｬ�ｿｽ隨� �ｿｽ髯ｸ�ｿｽ魴� */
+/* 장바구니 헤더 */
 div#basket_header {
   top: 2%;
   width: 100%;
@@ -17,7 +17,8 @@ div#basket_header {
   background-color: white;
 }
 
-/* �ｿｽ譽暦ｿｽ�ｽｰ邱具ｽｵ�ｽｬ�ｿｽ隨� �ｿｽ謫ｽ�ｿｽ�ｽｦ�ｿｽ�ｿｽ�ｽｳ�ｽｼ �ｿｽ�ｽｰ諛搾ｿｽ�ｿｽ  */
+
+/* 장바구니 이름과 개수  */
 div#basket_header > div {
   font-weight: bold;
   text-align: center;
@@ -28,7 +29,7 @@ div#basket_header > div {
   border-bottom: 0;
 }
 
-/* �ｿｽ譽暦ｿｽ�ｽｰ邱具ｽｵ�ｽｬ�ｿｽ隨� �ｿｽ笏費ｿｽ�ｽｪ�ｿｽ�ｿｽ�ｽｬ�ｽｸ */
+/* 장바구니 설명문 */
 div#basket_explain {
   background-color: rgb(235, 235, 235);
   border: var(--border_size);
@@ -36,14 +37,14 @@ div#basket_explain {
   border-top: 0;
 }
 
-/* �ｿｽ譽暦ｿｽ�ｽｰ邱具ｽｵ�ｽｬ�ｿｽ隨� �ｿｽ�ｽｪ�ｽｩ�ｿｽ�ｽ｡�ｿｽ */
+/* 장바구니 목록 */
 div#basket_list {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   margin-bottom: 9.8vh;
 }
 
-/* �ｿｽ譽暦ｿｽ�ｽｰ邱具ｽｵ�ｽｬ�ｿｽ隨� �ｿｽ�ｽｪ�ｽｩ�ｿｽ�ｽ｡譎ｧ謾ｪ �ｿｽ�ｽｰ�ｿｽ �ｿｽ蠅ｳ�ｿｽ�ｽｪ�ｽｩ */
+/* 장바구니 목록의 각 항목 */
 div#basket_list > div {
   width: 100%;
   border-right: var(--border_size);
@@ -55,7 +56,7 @@ a.product_link {
   text-decoration: none;
 }
 
-/* �ｿｽ繝｡�ｿｽ螳� �ｿｽ謫ｽ�ｿｽ�ｽｦ�ｿｽ�ｿｽ�ｽｳ�ｽｼ �ｿｽ縺擾ｿｽ�ｿｽ鄂ｹ�ｽｲ�ｿｽ谺ｾ*/
+/* 상품 이름과 삭제버튼*/
 div.basket_product_info_header {
   display: flex;
   width: 100%;
@@ -64,7 +65,7 @@ div.basket_product_info_header {
   margin-left: 0.7vw;
   width: 85%;
 }
-/* �ｿｽ繝｡�ｿｽ螳� �ｿｽ謫ｽ�ｿｽ�ｽｦ�ｿｽ荵ｱ �ｿｽ莉趣ｿｽ�ｽｲ�ｿｽ�ｿｽ�ｽｰ�ｿｽ �ｿｽ鞫ｺ �ｿｽ髦� */
+/* 상품 이름에 호버가 될 때 */
 .basket_product_info_header > div:first-child {
   cursor: pointer;
 }
@@ -72,14 +73,14 @@ div.basket_product_info_header {
   cursor: pointer;
 }
 
-/* �ｿｽ謫ｽ�ｿｽ�ｽｯ�ｽｸ�ｿｽ�ｽｧ�ｿｽ�ｿｽ�ｽ･�ｽｼ basket_img�ｿｽ荵ｱ �ｿｽ�ｽｽ鬢捺｢ｵ�ｿｽ�ｽｲ�ｿｽ �ｿｽ蠕ｩ�ｿｽ蜈ｱ */
+/* 이미지를 basket_img에 꽉자게 한다 */
 img {
   width: 100%;
   aspect-ratio: 750/1125;
   height:100%;
 }
 
-/* �ｿｽ謫ｽ�ｿｽ�ｽｯ�ｽｸ�ｿｽ�ｽｧ�ｿｽ�ｿｽ�ｽ･�ｽｼ �ｿｽ讖具ｿｽ譬ｪ div�ｿｽ謾ｪ �ｿｽ邊包ｿｽ譴ｵ�ｿｽ謾､�ｿｽ謠� �ｿｽ萓��ｿｽ�ｽｲ�ｽｽ�ｿｽ豢橸ｿｽ蜈ｱ */
+/* 이미지를 담는 div의 디자인을 신경쓴다 */
 .basket_img {
   width: 100%;
   border-bottom: var(--border_size);
@@ -91,7 +92,7 @@ img {
   margin: 1vh 0;
 }
 
-/* �ｿｽ�ｽｰ諛搾ｿｽ�ｿｽ �ｿｽ�ｽｴ�ｿｽ�ｿｽ�ｿｽ�ｽｨ div �ｿｽ萓�ｿｽ繝��ｿｽ謾ｵ �ｿｽ笏費ｿｽ�ｿｽ�ｿｽ */
+/* 개수 관련 div 스타일 설정 */
 div.basket_product_count_container {
   display: flex;
   border: var(--border_size);
@@ -111,7 +112,7 @@ div.basket_product_count {
   border-right: var(--border_size);
 }
 
-/* �ｿｽ�ｽｰ諛搾ｿｽ蛟大�ｰ �ｿｽ�ｽｹ�ｽｴ�ｿｽ�ｿｽ隱橸ｽｳ�ｿｽ�ｿｽ�ｽｦ�ｽｬ div */
+/* 개수와 카테고리 div */
 .basket_pruduct_price {
   margin-left: 0.7vw;
 }
@@ -119,7 +120,7 @@ div.basket_product_count {
   margin-left: 0.7vw;
 }
 
-/* �ｿｽ蟆奇ｿｽ笏｣ �ｿｽ�ｽｴ�ｿｽ�ｿｽ�ｿｽ�ｽｨ */
+/* 푸터 관련 */
 
 div#basket_footer {
   border-top: var(--border_size);
@@ -174,17 +175,19 @@ span.basket_item {
   font-size: 30px;
 }
 
-/* �ｿｽ�ｽ｡鄂ｹ逡��ｿｽ蜑ｩ�ｿｽ�ｽｩ�ｽｴ */
+/* 로딩화면 */
 div#roading_container {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  z-index: 100;
-  background-color: rgba(255, 255, 255, 0.5);
-  display: none;
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	z-index: 100;
+	background-color: rgba(255, 255, 255, 0.5);
+	top: 0px;
+	display: none;
 }
 
 div#roading_box {
+  padding-top: 1vh;
   position: fixed;
   top: 45%;
   left: 40%;
@@ -196,6 +199,13 @@ div#roading_box {
   background-color: white;
 }
 
+img#roading_img {
+  width: 40px;
+  height: 40px;
+}
+
+
+/* 재고가 없는 경우 */
 div.no_inventory {
   background-color: rgba(255, 255, 255, 0.3);
   width: 100%;

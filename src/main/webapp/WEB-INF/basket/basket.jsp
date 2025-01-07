@@ -27,7 +27,8 @@ const basketList = JSON.parse(basketListStr);
 }
 </style>
  <div id="roading_container">
-      <div id="roading_box">변경사항 저장중입니다.</div>
+      <div id="roading_box">변경사항 저장중입니다.<br/><img id="roading_img" src="/Trid/images/loading.gif"/>
+        </div>
     </div>
     <main>
       <div id="basket_container">
