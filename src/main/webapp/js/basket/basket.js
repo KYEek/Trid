@@ -81,9 +81,9 @@ async function getBasketList() {
                 <div><a class="product_link">${PRODUCT_NAME}</a></div>
                 <div id= "basket_delete_${PK_BASKET_NO}" class = "basket_delete">⨉</div>
               </div>
-              <div class="basket_pruduct_price"><span class="price_text" data-price ="${PRODUCT_PRICE}">${
-        PRODUCT_PRICE * BASKET_QUANTITY
-      }</span>₩</div>
+              <div class="basket_pruduct_price">₩<span class="price_text" data-price ="${PRODUCT_PRICE}">${
+        (PRODUCT_PRICE * BASKET_QUANTITY).toLocaleString()
+      }</span></div>
               <div class="basket_pruduct_size_category">
                 <span class="basket_product_size">${PRODUCT_SIZE}</span>&nbsp;|&nbsp;<span
                   class="basket_product_category"
@@ -179,10 +179,11 @@ async function changeBasketCount(json, loading_box) {
 function calculateTotalPrice() {
   //각 장바구니의 가격정보 불러오기
   const priceList = document.querySelectorAll("span.price_text");
-  // 총 가격 생성성
+  // 총 가격 생성
   let totlaPrice = 0;
   priceList.forEach((element) => {
-    totlaPrice += Number(element.textContent);
+	//총 가격을 더할 때 콤마를 제거 한 후 저장
+    totlaPrice += Number(element.textContent.replaceAll(",",""));
   });
   document.querySelector("span#total_price").textContent =
     totlaPrice.toLocaleString();
@@ -203,6 +204,19 @@ document.addEventListener("DOMContentLoaded", function () {
   const basket_list = document.querySelector("div#basket_list");
   const loading_box = document.getElementById("roading_container");
   const next_button = document.querySelector("#basket_footer_next_button");
+  const basket_header = document.querySelector("div#basket_header");
+  const header = document.querySelector("div.header");
+  const category = document.querySelector("div#category_box");
+  
+  //장바구니 헤더를 헤더 밑에 위치시키기 위해서
+  basket_header.style.top = `${header.offsetHeight}px`;
+  basket_header.style.zIndex = "150";
+  header.style.backgroundColor = "white";
+  header.style.zIndex = "150";
+  
+  //카테고리 메뉴를 항상위에 올림
+  category.style.zInddx= "500";
+  
   //장바구니 목록을 가져오기—
   getBasketList().then((html) => {
     basket_list.innerHTML = html;

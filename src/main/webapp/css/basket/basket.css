@@ -7,6 +7,9 @@ main {
   --border_size: 0.7px solid black;
 }
 
+body {
+	font-weight:lighter !important;
+}
 /* 장바구니 헤더 */
 div#basket_header {
   top: 2%;
@@ -33,7 +36,7 @@ div#basket_header > div {
 div#basket_explain {
   background-color: rgb(235, 235, 235);
   border: var(--border_size);
-  padding: 1% 1%;
+  padding: 1.3% 2.5%;
   border-top: 0;
 }
 
@@ -61,15 +64,14 @@ div.basket_product_info_header {
   display: flex;
   width: 100%;
 }
-.basket_product_info_header > div:first-child {
-  margin-left: 0.7vw;
+div.basket_product_info_header > div:first-child {
   width: 85%;
 }
 /* 상품 이름에 호버가 될 때 */
-.basket_product_info_header > div:first-child {
+div.basket_product_info_header > div:first-child {
   cursor: pointer;
 }
-.basket_product_info_header > div:last-child:hover {
+div.basket_product_info_header > div:last-child:hover {
   cursor: pointer;
 }
 
@@ -81,23 +83,36 @@ img {
 }
 
 /* 이미지를 담는 div의 디자인을 신경쓴다 */
-.basket_img {
+div.basket_img {
   width: 100%;
   border-bottom: var(--border_size);
 }
 
-.basket_product_info {
+/* 상품 상세 부분 */
+div.basket_product_info {
   width: 100%;
   height: 25%;
   margin: 1vh 0;
 }
 
+div.basket_product_info > div {
+	margin : 0.7vh 0;
+	padding-left : 0.7vw;
+	
+}
+div.basket_pruduct_size_category {
+	margin : 2vh 0 !important;
+}
+
+
 /* 개수 관련 div 스타일 설정 */
 div.basket_product_count_container {
   display: flex;
   border: var(--border_size);
-  width: 35%;
-  margin-left: 0.7vw;
+  width: 30%;
+  padding-left: 0 !important;
+  margin-left: 0.7vw !important;
+  height: 3vh;
 }
 div.basket_product_count_container > button {
   width: 33.3%;
@@ -107,9 +122,11 @@ div.basket_product_count_container > button {
 
 div.basket_product_count {
   width: 33.3%;
-  text-align: center;
+  display : flex;
   border-left: var(--border_size);
   border-right: var(--border_size);
+  justify-content: center;
+  align-items: center;
 }
 
 /* 개수와 카테고리 div */
@@ -125,12 +142,13 @@ div.basket_product_count {
 div#basket_footer {
   border-top: var(--border_size);
   position: fixed;
-  top: 90vh;
+  top: 91.5vh;
   background-color: white;
   width: 100%;
   opacity: 0.9;
-  height: 10vh;
+  height: 8.5vh;
   display: table;
+  z-index: 150;
 }
 
 div#basket_footer_info {
@@ -160,7 +178,7 @@ div#basket_footer_next_button {
   background-color: black;
   text-align: center;
   color: white;
-  width: 10%;
+  width: 7%;
   margin: 0 0 0 auto;
   display: table-cell;
   vertical-align: middle;

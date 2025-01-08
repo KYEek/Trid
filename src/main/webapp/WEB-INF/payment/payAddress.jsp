@@ -75,7 +75,7 @@
     <div id="address_list_container">
       <div id="address_list">
         <div id="address_list_close"><span>x</span></div>
-        <div id="address_list_header">배송 위치를 선택하세요</div>
+        <div id="address_list_header"><h1>배송 위치를 선택하세요</h1></div>
         <div id="address_list_main">
           <!-- <ul>
             <li>
@@ -99,7 +99,7 @@
         <div id="shipment_main">
           <h1>물품을 배송 받을 주소</h1>
           <div id="address_select_box">
-            <div><i class="fa-solid fa-truck"></i><span> 주소정보</span></div>
+            <div><i class="fa-solid fa-truck"></i><span>&nbsp;&nbsp;주소정보</span></div>
             <div id="address_info_and_select">
               <div>경기 성남시 분당구 판교역로 4</div>
               <a href="#">변경</a>

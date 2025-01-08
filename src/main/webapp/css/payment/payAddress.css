@@ -16,6 +16,7 @@ div#shipment_main {
   font-size: 17px;
 }
 
+/* 배송정보가 표시되는 부분 */
 div#address_select_box {
   text-align: center;
   border: var(--border-var);
@@ -24,10 +25,19 @@ div#address_select_box {
 }
 div#address_select_box > :first-child {
   border-bottom: var(--border-var);
+  height: 7vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 div#address_select_box > :last-child {
   text-align: left;
-  padding: 1.5vh 2vw;
+  padding: 2.5vh 2vw;
+}
+
+/* 변경글자와 주소와의 간격을 띄운다 */
+div#address_info_and_select > div:first-child {
+	margin-bottom: 2vh;
 }
 
 div#delivery_select_box {
@@ -57,7 +67,7 @@ div#address_list_container {
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: 100;
+  z-index: 151;
   background-color: rgba(255, 255, 255, 0.5);
 }
 
@@ -65,11 +75,17 @@ div#address_list_container {
 div#address_list {
   position: fixed;
   border-left: var(--border-var);
-  margin-left: 60%;
-  width: 40%;
+  margin-left: 65%;
+  width: 35%;
   height: 100%;
-  z-index: 101;
+  z-index: 152;
   background-color: rgba(255, 255, 255);
+  z-index: 200;
+}
+
+/* 주소목록의 제목 */
+div#address_list h1 {
+  margin: 3vh 2vw 5vh 2vw;
 }
 
 div#address_list_main {
@@ -83,9 +99,12 @@ div#address_list_header {
 }
 
 div#address_list_add {
-  text-align: center;
+  display:flex;
   border-top: var(--border-var);
   border-bottom: var(--border-var);
+  height: 5vh;
+  justify-content: center;
+  align-items: center;
 }
 
 div#address_list_close {
@@ -102,16 +121,19 @@ div#address_info_and_select {
   cursor: pointer;
 }
 
-ul {
+
+/* 주소 리스트의 밑줄을 설정 */
+div#address_list_main > ul {
   border-top: var(--border-var);
   list-style: none;
   padding: 0;
 }
 
-li {
+div#address_list_main li {
   border-bottom: var(--border-var);
   margin-left: 0;
 }
+
 /* radio 간격 띄우기 */
 form > div:first-child {
   margin-bottom: 2vh;
@@ -134,4 +156,8 @@ a:hover {
 .address_list_item {
   padding: 2vh 2vw;
   cursor: pointer;
+}
+
+div#address_list a {
+  color: black;
 }
