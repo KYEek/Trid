@@ -62,6 +62,7 @@
         <div id="roading_box">변경사항 저장중입니다.</div>
       </div>
     </div>
+    <%@include file="../header.jsp"%>
     <main>
       <div id="order_detail_header">
         <div>주문번호<span id="orderNo">1000</span></div>
@@ -102,6 +103,7 @@
         </div>
       </div>
     </main>
+    <%@include file="../footer.jsp"%>
   </body>
 </html>
 

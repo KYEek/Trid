@@ -7,7 +7,15 @@
     String address = (String)temp_address_info.get("addr_address");
     String addr_detail = (String)temp_address_info.get("addr_detail");
     String post_no = (String)temp_address_info.get("addr_post_no");
-    String mobile = (String)temp_address_info.get("member_mobile");%>
+    String mobile = (String)temp_address_info.get("member_mobile");
+    if(temp_address_info != null) {
+    	name = (String)temp_address_info.get("member_name");
+        address = (String)temp_address_info.get("addr_address");
+        addr_detail = (String)temp_address_info.get("addr_detail");
+        post_no = (String)temp_address_info.get("addr_post_no");
+        mobile = (String)temp_address_info.get("member_mobile");
+    }%>
+    
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -56,6 +64,15 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/payment/paymentInfo.js"></script>
     <title>배송지 정보 사이트</title>
     <!-- <link rel="stylesheet" href="styles.css"> -->
+    <script>
+     const id_Map = "<%=name %>";
+     //맵이 비어있으면 (비정상상황이면)
+     if(id_Map == "null") {
+		//alert("비정상 접근은 안됩니다 순서에 따라 접속해 주세요");
+		location.href="address.trd";
+     }
+     
+    </script>
   </head>
   <body>
     <div id="loading">
@@ -63,6 +80,7 @@
         <div id="roading_box">변경사항 저장중입니다.</div>
       </div>
     </div>
+    <%@include file="../header.jsp"%>
     <main>
       <div id="payment_info_container">
         <!-- 배송지 본문 -->
@@ -76,8 +94,7 @@
               >
                 <div id="payment_shipment_method">
                   <div>자택 배송</div>
-                  <div>배송 화요일 31, 12월 - 목요일 02, 1월</div>
-                  <div>편집</div>
+                  <div>배송 <span id="delivery_date">화요일 31, 12월 - 목요일 02, 1월</span></div>
                 </div>
                 <div id="payment_address_info" class="address_list_item">
                   <div id="payment_address_name"><%=name %></div>
@@ -124,7 +141,7 @@
             </div>
           </div>
           <div id="basket_footer_total_price">
-            <div>총 <span id="total_price">₩3000</span></div>
+            <div>총 <span id="total_price"></span></div>
           </div>
           <div id="basket_footer_next_button">
             <span>결제승인</span>
@@ -132,7 +149,9 @@
         </div>
       </div>
     </main>
-    <form id="payComplete" action="paying.trd">
+    <%@include file="../footer.jsp"%>
+    <form id="payComplete" action="paying.trd" method = "post">
+   	<input type="hidden" name= "product_info">
       <input type="hidden" name="total_price" />
     </form>
   </body>

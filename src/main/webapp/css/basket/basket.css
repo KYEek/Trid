@@ -1,8 +1,13 @@
+@charset "UTF-8";
+
+main {
+	height:auto !important;
+}
 :root {
   --border_size: 0.7px solid black;
 }
 
-/* �棗�ｰ緋ｵｬ�笈 �陸�鵠 */
+/* 장바구니 헤더 */
 div#basket_header {
   top: 2%;
   width: 100%;
@@ -12,7 +17,8 @@ div#basket_header {
   background-color: white;
 }
 
-/* �棗�ｰ緋ｵｬ�笈 �擽�ｦ��ｳｼ �ｰ懍��  */
+
+/* 장바구니 이름과 개수  */
 div#basket_header > div {
   font-weight: bold;
   text-align: center;
@@ -23,7 +29,7 @@ div#basket_header > div {
   border-bottom: 0;
 }
 
-/* �棗�ｰ緋ｵｬ�笈 �└�ｪ��ｬｸ */
+/* 장바구니 설명문 */
 div#basket_explain {
   background-color: rgb(235, 235, 235);
   border: var(--border_size);
@@ -31,14 +37,14 @@ div#basket_explain {
   border-top: 0;
 }
 
-/* �棗�ｰ緋ｵｬ�笈 �ｪｩ�｡� */
+/* 장바구니 목록 */
 div#basket_list {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   margin-bottom: 9.8vh;
 }
 
-/* �棗�ｰ緋ｵｬ�笈 �ｪｩ�｡晧攪 �ｰ� �墳�ｪｩ */
+/* 장바구니 목록의 각 항목 */
 div#basket_list > div {
   width: 100%;
   border-right: var(--border_size);
@@ -50,7 +56,7 @@ a.product_link {
   text-decoration: none;
 }
 
-/* �メ�宙 �擽�ｦ��ｳｼ �く��罹ｲ�款*/
+/* 상품 이름과 삭제버튼*/
 div.basket_product_info_header {
   display: flex;
   width: 100%;
@@ -59,7 +65,7 @@ div.basket_product_info_header {
   margin-left: 0.7vw;
   width: 85%;
 }
-/* �メ�宙 �擽�ｦ�乱 �从�ｲ��ｰ� �摺 �阜 */
+/* 상품 이름에 호버가 될 때 */
 .basket_product_info_header > div:first-child {
   cursor: pointer;
 }
@@ -67,13 +73,14 @@ div.basket_product_info_header {
   cursor: pointer;
 }
 
-/* �擽�ｯｸ�ｧ��･ｼ basket_img�乱 �ｽ餓梵�ｲ� �復�共 */
+/* 이미지를 basket_img에 꽉자게 한다 */
 img {
   width: 100%;
   aspect-ratio: 750/1125;
+  height:100%;
 }
 
-/* �擽�ｯｸ�ｧ��･ｼ �橋�株 div�攪 �粕�梵�攤�揆 �侠�ｲｽ�洞�共 */
+/* 이미지를 담는 div의 디자인을 신경쓴다 */
 .basket_img {
   width: 100%;
   border-bottom: var(--border_size);
@@ -85,7 +92,7 @@ img {
   margin: 1vh 0;
 }
 
-/* �ｰ懍�� �ｴ���ｨ div �侃�ム�攵 �└��� */
+/* 개수 관련 div 스타일 설정 */
 div.basket_product_count_container {
   display: flex;
   border: var(--border_size);
@@ -105,7 +112,7 @@ div.basket_product_count {
   border-right: var(--border_size);
 }
 
-/* �ｰ懍�們凰 �ｹｴ��語ｳ��ｦｬ div */
+/* 개수와 카테고리 div */
 .basket_pruduct_price {
   margin-left: 0.7vw;
 }
@@ -113,7 +120,7 @@ div.basket_product_count {
   margin-left: 0.7vw;
 }
 
-/* �尊�┣ �ｴ���ｨ */
+/* 푸터 관련 */
 
 div#basket_footer {
   border-top: var(--border_size);
@@ -168,17 +175,19 @@ span.basket_item {
   font-size: 30px;
 }
 
-/* �｡罹畠�剩�ｩｴ */
+/* 로딩화면 */
 div#roading_container {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  z-index: 100;
-  background-color: rgba(255, 255, 255, 0.5);
-  display: none;
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	z-index: 100;
+	background-color: rgba(255, 255, 255, 0.5);
+	top: 0px;
+	display: none;
 }
 
 div#roading_box {
+  padding-top: 1vh;
   position: fixed;
   top: 45%;
   left: 40%;
@@ -190,7 +199,13 @@ div#roading_box {
   background-color: white;
 }
 
+img#roading_img {
+  width: 40px;
+  height: 40px;
+}
 
+
+/* 재고가 없는 경우 */
 div.no_inventory {
   background-color: rgba(255, 255, 255, 0.3);
   width: 100%;
@@ -209,5 +224,6 @@ div.no_inventory_text {
 }
 
 .basket_delete {
-	z-index: 99;
+  z-index: 99;
 }
+

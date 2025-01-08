@@ -35,39 +35,41 @@ public class PaymentCompleted extends AbstractController {
 		
 		//요청이 포스트 방식일 때(결제가 완료 됐을 때)
 		if("post".equalsIgnoreCase(method)) {
-			Map<String, String> orderData = new HashMap<>();
-			Map<String, String> orderDetailData = new HashMap<>();
-			
-			//즉시결제인지 파악하기 위한 변수
-			String instantPay = request.getParameter("instantPay");
-
-			System.out.println(request.getParameter("orderDetailArr"));
-			System.out.println(request.getParameter("selected_address_no"));
-			System.out.println(request.getParameter("total_price"));
-			
-			//주문 데이터들을 Map에 저장
-			orderDetailData.put("orderDetailArr", request.getParameter("orderDetailArr"));
-
-			//주소와 가격, 멤버번호를 저장
-			orderData.put("selected_address_no", request.getParameter("selected_address_no"));
-			orderData.put("total_price", request.getParameter("total_price"));
-			orderData.put("member_No", String.valueOf(member.getPk_member_no()));
-			//결과로 나온 주문번호를 저장할 변수
-			int resultOrderNo = 0;
-			
-			//즉시결제일 경우
-			if("true".equalsIgnoreCase(instantPay)) {
-				//sql문을 실행해서 주문번호를 불러온다
-				resultOrderNo = pdao.instantPay(orderData, orderDetailData);
-			}
-			else {
-				//sql문을 실행해서 주문번호를 불러온다
-				resultOrderNo = pdao.insertOrderDate(orderData, orderDetailData);
-			}
-			System.out.println(orderData.toString());
-			System.out.println(resultOrderNo);
+//			Map<String, String> orderData = new HashMap<>();
+//			Map<String, String> orderDetailData = new HashMap<>();
+//			
+//			//즉시결제인지 파악하기 위한 변수
+//			String instantPay = request.getParameter("instantPay");
+//
+//			System.out.println(request.getParameter("orderDetailArr"));
+//			System.out.println(request.getParameter("selected_address_no"));
+//			System.out.println(request.getParameter("total_price"));
+//			
+//			//주문 데이터들을 Map에 저장
+//			orderDetailData.put("orderDetailArr", request.getParameter("orderDetailArr"));
+//
+//			//주소와 가격, 멤버번호를 저장
+//			orderData.put("selected_address_no", request.getParameter("selected_address_no"));
+//			orderData.put("total_price", request.getParameter("total_price"));
+//			orderData.put("member_No", String.valueOf(member.getPk_member_no()));
+//			//결과로 나온 주문번호를 저장할 변수
+//			int resultOrderNo = 0;
+//			
+//			//즉시결제일 경우
+//			if("true".equalsIgnoreCase(instantPay)) {
+//				//sql문을 실행해서 주문번호를 불러온다
+//				resultOrderNo = pdao.instantPay(orderData, orderDetailData);
+//			}
+//			else {
+//				//sql문을 실행해서 주문번호를 불러온다
+//				resultOrderNo = pdao.insertOrderDate(orderData, orderDetailData);
+//			}
+//			System.out.println(orderData.toString());
+//			System.out.println(resultOrderNo);
 			//주문번호를 전송
-			request.setAttribute("orderNo", resultOrderNo);
+			request.setAttribute("orderNo", session.getAttribute("resultOrderNo"));
+			request.setAttribute("memberName", member.getMember_name());
+			session.removeAttribute("orderNo");
 			
 			super.setRedirect(false);
 			super.setViewPage(Constants.PAYMENT_COMPLETED);

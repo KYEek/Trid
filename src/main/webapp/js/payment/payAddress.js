@@ -29,9 +29,16 @@ document.addEventListener("DOMContentLoaded", function () {
     };
     item_arr.push(item);
 
+    sessionStorage.setItem("total_price", `${productInfo.PRODUCT_PRICE}`);
     sessionStorage.setItem("basket_item_arry", JSON.stringify(item_arr));
     sessionStorage.setItem("instantPay", "true");
   }
+  // 비정상적인 접근이라면
+  if (sessionStorage.getItem("basket_item_arry") == null) {
+    alert("비정상적인 접근입니다.");
+    location.href = "/Trid/";
+  }
+  //주소 목록을 표시해준다
   for (const item of addrList) {
     // console.log(item[key]);
     address_arr.push(item);
@@ -44,6 +51,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="address_list_item_text">${item["member_mobile"]}</div>
               </div>
             </li>`;
+
+    //추가 주소가 없을경우 공백으로 변경
+    if (item["addr_extraaddr"] == null) {
+      item["addr_extraaddr"] = "";
+    }
     if (item["addr_isdefault"] == "1") {
       sessionStorage.setItem("selected_address_no", item["pk_addr_no"]);
       insertAddressInfo(selected_addr, item);
@@ -60,6 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //주소목록의 각각의 주소를 클릭했을때 이벤트
   address_list_item.forEach((item) => {
     item.addEventListener("click", (e) => {
+      //자식요소가 선택되면
       if (e.target.getAttribute("class") != "address_list_item") {
         // console.log(e.target.parentElement.getAttribute("data-addr_no"));
         sessionStorage.setItem(
@@ -67,6 +80,11 @@ document.addEventListener("DOMContentLoaded", function () {
           e.target.parentElement.getAttribute("data-addr_no")
         );
         address_arr.forEach((item) => {
+          //추가 주소가 없을경우 공백으로 변경
+          if (item["addr_extraaddr"] == null) {
+            item["addr_extraaddr"] = "";
+          }
+
           if (
             e.target.parentElement.getAttribute("data-addr_no") ==
             item["pk_addr_no"]
@@ -84,6 +102,11 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         address_arr.forEach((item) => {
+          //추가 주소가 없을경우 공백으로 변경
+          if (item["addr_extraaddr"] == null) {
+            item["addr_extraaddr"] = "";
+          }
+
           if (e.target.getAttribute("data-addr_no") == item["pk_addr_no"]) {
             address_info_and_select.innerHTML = ` <div>${item["addr_address"]}${item["addr_extraaddr"]}</div>
                     <a href="#">변경</a>`;
@@ -130,6 +153,24 @@ document.addEventListener("DOMContentLoaded", function () {
     addressList.style.display = "block";
   });
 
+  //배송비 계산
+  if (
+    Number(sessionStorage.getItem("total_price").replaceAll(",", "")) >=
+    Number(50000)
+  ) {
+    document.querySelector("span#total_price").textContent = "0";
+  }
+  //날짜를 계산
+  const today = new Date();
+  const nextday = new Date();
+  nextday.setDate(today.getDate() + 2);
+
+  const next_month = today.getMonth() + 1;
+  const next_date = today.getDate();
+
+  document.querySelector("div#delevery_date").textContent =
+    next_month + "/" + next_date + " 배송";
+
   //계속 버튼 클릭시시
   document
     .querySelector("#basket_footer_next_button")
@@ -174,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.body.appendChild(form);
       form.submit();
     });
-});
+}); // end of DOMContentLoaded-------------------
 
 function insertAddressInfo(selected_addr, item) {
   selected_addr["member_name"] = item["member_name"];

@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let PRODUCT_IMAGE_NAME = "";
   let PRODUCT_NO = "";
   count_number = 0;
+  total_price = 0;
 
   //각 상품의 정보를 html로 저장
   orderDetail.forEach((order) => {
@@ -63,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
           </div>`;
     count_number = count_number + 1;
+    total_price = total_price + Number(PRODUCT_PRICE);
   }); // end of forEach-------------------------------
 
   //배송지 정보를 한글로 변경
@@ -81,12 +83,12 @@ document.addEventListener("DOMContentLoaded", function () {
       break;
   }
   //가격을 입력
-  document.querySelector("span#order_status").textContent = `₩ ${ORDER_STATUS}`;
+  document.querySelector("span#order_status").textContent = `${ORDER_STATUS}`;
   document.querySelector(
     "div#order_price_sum"
-  ).textContent = `₩ ${PRODUCT_PRICE}`;
+  ).textContent = `₩ ${total_price}`;
   document.querySelector("div#delevery_cost").textContent = `₩ ${
-    Number(ORDER_TOTAL_PRICE) - Number(PRODUCT_PRICE)
+    Number(ORDER_TOTAL_PRICE) - Number(total_price)
   }`;
   document.querySelector(
     "div#order_price_total"

@@ -17,7 +17,7 @@ div.order_item_images {
   height: 40vh;
 }
 
-img {
+main img {
   border-bottom: var(--border-var);
   border-top: var(--border-var);
   border-right: var(--border-var);

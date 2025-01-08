@@ -121,16 +121,34 @@ public class AddressDAO_imple implements AddressDAO {
 		int result = 0;
 		conn = ds.getConnection();
 		
+		
+		//주소가 있는지 조회
+		sql = " select * from tbl_addr where fk_member_no = ?";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, addrDto.getMember_no());
+		rs = pstmt.executeQuery();
+		
+		//기본 주소를 담을 변수
+		int defaultAddr = 1;
+		
+		//주소가 없으면 일반 주소로 설정
+		if(rs.next()) {
+			defaultAddr = 0;
+			
+		}
+		
 		sql = " insert into tbl_addr(PK_ADDR_NO, FK_MEMBER_NO, ADDR_POST_NO, ADDR_ADDRESS, ADDR_DETAIL, ADDR_EXTRAADDR, addr_isdefault) "
-				+ "values (PK_ADDR_NO_SEQ.nextval, ?, ?,?, ?, ?, 0) ";
+				+ "values (PK_ADDR_NO_SEQ.nextval, ?, ?,?, ?, ?, ?) ";
 		pstmt = conn.prepareStatement(sql);
 		pstmt.setInt(1, addrDto.getMember_no());
 		pstmt.setInt(2, addrDto.getPost_no());
 		pstmt.setString(3, addrDto.getAddress());
 		pstmt.setString(4, addrDto.getDetail());
 		pstmt.setString(5, addrDto.getExtraaddr());
+		pstmt.setInt(6, defaultAddr);
 		
 		result = pstmt.executeUpdate();
+		
 
 		close();
 		

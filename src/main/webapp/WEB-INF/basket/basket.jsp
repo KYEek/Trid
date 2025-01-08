@@ -21,13 +21,14 @@ const basketList = JSON.parse(basketListStr);
 </head>
 <body>
 
-<%-- <%@ include file="../header.jsp"%><style> --%>
-<!-- .header { -->
-<!-- 	display: sticky; -->
-<!-- } -->
+<%@ include file="../header.jsp"%><style>
+.header {
+	display: sticky;
+}
 </style>
  <div id="roading_container">
-      <div id="roading_box">변경사항 저장중입니다.</div>
+      <div id="roading_box">변경사항 저장중입니다.<br/><img id="roading_img" src="/Trid/images/loading.gif"/>
+        </div>
     </div>
     <main>
       <div id="basket_container">
@@ -51,7 +52,7 @@ const basketList = JSON.parse(basketListStr);
             </div>
           </div>
           <div id="basket_footer_total_price">
-            <div>총 <span id="total_price">₩739,400</span></div>
+            <div>총 <span id="total_price">₩739,400</span>₩</div>
             <div>부가세 포함함</div>
           </div>
           <div id="basket_footer_next_button">

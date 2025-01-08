@@ -1,5 +1,7 @@
 package orders.controller;
 
+import java.sql.SQLException;
+
 import org.json.JSONArray;
 
 import common.Constants;
@@ -24,6 +26,7 @@ public class OrdersController extends AbstractController {
 		JSONArray orderList = null;
 		
 		
+		
 		//로그인 되어 있지 않으면 메인으로 돌려보내기
 		if(!super.checkLogin(request)) {
 			System.out.println("로그인 안되어짐");
@@ -32,13 +35,21 @@ public class OrdersController extends AbstractController {
 			return;
 		}
 		
+		try {
 		//sql에서 주문 값을 가져오기
 		orderList = odao.selectOrderListByMember(member.getPk_member_no());
 		request.setAttribute("orderList", orderList.toString());
 		
 		super.setRedirect(false);
 		super.setViewPage(Constants.ORDERS_PAGE);
-
+		}
+		//sql 오류시 오류페이지로 이동
+		catch(SQLException e) {
+			e.printStackTrace();
+			
+			super.setRedirect(false);
+			super.setViewPage(request.getContextPath()+"/error.jsp");
+		}
 	}
 
 }

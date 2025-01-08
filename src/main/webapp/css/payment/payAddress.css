@@ -73,7 +73,7 @@ div#address_list {
 }
 
 div#address_list_main {
-  background-color: wheat;
+  background-color: white;
   height: calc(100% - 200px);
   overflow: auto;
 }
@@ -117,12 +117,12 @@ form > div:first-child {
   margin-bottom: 2vh;
 }
 /* 이미지 크기와 테두리 설정 */
-img {
+main img {
   width: 30%;
   border-right: var(--border-var);
 }
 /* a관련 스타일 */
-a {
+main a {
   text-decoration: underline;
   color: black;
 }

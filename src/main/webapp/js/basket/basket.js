@@ -6,11 +6,11 @@ let is_inventory = true;
 //장바구니 목록을 가져오는 함수
 async function getBasketList() {
   try {
-//    const response = await fetch("json/basketList.json", {
-//      method: "get",
-//      headers: { contentType: "application/json" },
-//    });
-//    const basketList = await response.json();
+    //    const response = await fetch("json/basketList.json", {
+    //      method: "get",
+    //      headers: { contentType: "application/json" },
+    //    });
+    //    const basketList = await response.json();
 
     //각 json객체를 순환
 
@@ -93,16 +93,16 @@ async function getBasketList() {
               <div class="basket_product_count_container">
                 <button class="plus_count">+</button>
                 <div class="basket_product_count">
-                  <span class="pruduct_count_num">${BASKET_QUANTITY}</span>
+                  <span class="pruduct_count_num" data-inventory="${PRODUCT_INVENTORY}">${BASKET_QUANTITY}</span>
                 </div>
                 <button class="minus_count">-</button>
               </div>
             </div>`;
-			if (PRODUCT_INVENTORY ==0) {
-	        html += `<div class="no_inventory"><div class="no_inventory_text">재고가 없습니다</div></div>`;
-	        is_inventory = false;
-	      }
-	      html += `</div>`;
+      if (PRODUCT_INVENTORY == 0) {
+        html += `<div class="no_inventory"><div class="no_inventory_text">재고가 없습니다</div></div>`;
+        is_inventory = false;
+      }
+      html += `</div>`;
       //장바구니의 총 개수를 증가
       basketCount = basketCount + 1;
     }); // end of forEach-------------------------------
@@ -113,58 +113,64 @@ async function getBasketList() {
 }
 
 //장바구니 삭제 비동기 메서드
-async function deleteBasketList(basket_no) {
+async function deleteBasketList(basket_no, loading_box) {
   try {
+    showLoading(loading_box);
     // console.log(basket_no);
     //자바 실행 요청
     const response = await fetch("/Trid/basket/delete.trd", {
       method: "post",
-       headers: { "Content-Type": "text/plain" },
-       body: basket_no,
+      headers: { "Content-Type": "text/plain" },
+      body: basket_no,
     });
     //자바의 실행 결과를 받는다
     const text = await response.text();
     //자바에서 반환 된 값이 success인 경우(정상적으로 실행)
-//    if (text == "success") {
+    if (text.trim() == "success") {
       console.log("삭제 함수 성공");
+      hideLoading(loading_box);
       return "success";
-//    }
-//    //자바에서 반환 된 값이 success가 아닌 경우(실패)
-//    else {
-//      console.log("fail");
-//      return "fail";
-//    }
+    }
+    //    //자바에서 반환 된 값이 success가 아닌 경우(실패)
+    else {
+      console.log("fail");
+      return "fail";
+    }
   } catch (error) {
     //에러 발생시
     console.error(error.message);
+    hideLoading(loading_box);
     return "fail";
   }
 }
 
 //개수 변경 비동기 메서드
-async function changeBasketCount(json) {
+async function changeBasketCount(json, loading_box) {
   try {
+    showLoading(loading_box);
     //자바 실행 요청
     const response = await fetch("/Trid/basket/change.trd", {
       method: "post",
-       headers: { "Content-Type": "application/json" },
-       body: JSON.stringify(json),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(json),
     });
     //자바의 실행 결과를 문자형태로 저장한다
     const result = await response.text();
     //자바의 실행 결과가 success인 경우
-//    if (result == "success") {
-      console.log("개수변경성공");
+    if (result.trim() == "success") {
+      console.log(result.trim());
+      hideLoading(loading_box);
       return "success";
-//    }
+    }
     //자바의 실행 결과가 success가 아닌 경우
-//    else {
-//      console.log("실패");
-//      return "fail";
-//    }
+    else {
+      console.log("실패");
+      return "fail";
+    }
   } catch (error) {
     //에러 발생시
     console.error(error.message);
+    hideLoading(loading_box);
     return "fail";
   }
 }
@@ -178,7 +184,8 @@ function calculateTotalPrice() {
   priceList.forEach((element) => {
     totlaPrice += Number(element.textContent);
   });
-  document.querySelector("span#total_price").textContent = totlaPrice;
+  document.querySelector("span#total_price").textContent =
+    totlaPrice.toLocaleString();
 }
 
 //로딩화면을 보여주는 함수
@@ -191,6 +198,7 @@ function hideLoading(loading_box) {
   loading_box.style.display = "none";
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", function () {
   const basket_list = document.querySelector("div#basket_list");
   const loading_box = document.getElementById("roading_container");
@@ -219,7 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
       //삭제버튼 클릭시
       if (e.target.className == "basket_delete") {
         //삭제 비동기 실행
-        deleteBasketList(basket_No)
+        deleteBasketList(basket_No, loading_box)
           .then((result) => {
             console.log("비동기 실행결과 : ", result);
             if (result == "success") {
@@ -244,10 +252,17 @@ document.addEventListener("DOMContentLoaded", function () {
         // console.log(e.target.nextElementSibling.firstElementChild);
         //span 태그를 가져온다
         const count_num = e.target.nextElementSibling.firstElementChild;
+        const inventory = count_num.getAttribute("data-inventory");
+
+        //재고 이상으로 증가시키려 할 때
+        if (inventory < Number(count_num.textContent)) {
+          alert("재고가 부족합니다");
+          return;
+        }
 
         //요청 json객체 생성
         request_json = { basketNo: basket_No, status: "plus" };
-        changeBasketCount(request_json)
+        changeBasketCount(request_json, loading_box)
           .then((result) => {
             if (result == "success") {
               console.log("증가성공");
@@ -276,7 +291,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const count_num = e.target.previousElementSibling.firstElementChild;
         //요청 json객체 생성
         request_json = { basketNo: basket_No, status: "minus" };
-        changeBasketCount(request_json)
+        changeBasketCount(request_json, loading_box)
           .then((result) => {
             if (result == "success") {
               console.log("감소성공");
@@ -314,39 +329,47 @@ document.addEventListener("DOMContentLoaded", function () {
     },
     true
   );
-  
+
   //계속 버튼 클릭시 결제페이지로 이동, 개수가 0 이 아니고
   next_button.addEventListener("click", (e) => {
-	if(Number(document.querySelector("span#total_price").textContent) > 0 && is_inventory ) {
-	      const basket_item_arry = [];
-	      const basket_item_list = document.querySelectorAll("div.basket_item");
-	      basket_item_list.forEach((element) => {
-	        const imgSrc = element.querySelector(".basket_img img").src;
-	        const productDetailNo = element
-	          .querySelector(".basket_product_info")
-	          .getAttribute("data-product_detail_no");
-	        const productCountNum =
-	          element.querySelector(".pruduct_count_num").textContent;
-	        const productPrice = element
-	          .querySelector(".price_text")
-	          .getAttribute("data-price");
-//			console.log(element.querySelector(".price_text"));
-	        let item = {
-	          imgSrc: imgSrc,
-	          productDetailNo: productDetailNo,
-	          productCountNum: productCountNum,
-	          productPrice: productPrice,
-	        };
+    if (
+      Number(document.querySelector("span#total_price").textContent) != "0" &&
+      is_inventory
+    ) {
+      const basket_item_arry = [];
+      const basket_item_list = document.querySelectorAll("div.basket_item");
+      basket_item_list.forEach((element) => {
+        const imgSrc = element.querySelector(".basket_img img").src;
+        const productDetailNo = element
+          .querySelector(".basket_product_info")
+          .getAttribute("data-product_detail_no");
+        const productCountNum =
+          element.querySelector(".pruduct_count_num").textContent;
+        const productPrice = element
+          .querySelector(".price_text")
+          .getAttribute("data-price");
+        //			console.log(element.querySelector(".price_text"));
+        let item = {
+          imgSrc: imgSrc,
+          productDetailNo: productDetailNo,
+          productCountNum: productCountNum,
+          productPrice: productPrice,
+        };
 
-	        basket_item_arry.push(item);
-	      });
-//	      console.log(basket_item_arry);
-	      sessionStorage.setItem(
-	        "basket_item_arry",
-	        JSON.stringify(basket_item_arry)
-	      );
+        basket_item_arry.push(item);
+      });
+      //	      console.log(basket_item_arry);
+      sessionStorage.setItem(
+        "basket_item_arry",
+        JSON.stringify(basket_item_arry)
+      );
 
-	      location.href = "payment/address.trd";
-	  }
-    });
+      sessionStorage.setItem(
+        "total_price",
+        document.querySelector("span#total_price").textContent
+      );
+
+      location.href = "payment/address.trd";
+    }
+  });
 });

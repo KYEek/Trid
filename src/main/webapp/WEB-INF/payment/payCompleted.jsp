@@ -3,13 +3,23 @@
 <%@ page import ="java.util.HashMap, java.util.Map" %>
 
  <%
+ 	//주소에 들어갈 값을 세션에서 불러온다
     Map temp_address_info = (HashMap)session.getAttribute("temp_address_info");
-    String name = (String)temp_address_info.get("member_name");
-    String address = (String)temp_address_info.get("addr_address");
-    String addr_detail = (String)temp_address_info.get("addr_detail");
-    String post_no = (String)temp_address_info.get("addr_post_no");
-    String mobile = (String)temp_address_info.get("member_mobile");
-    session.removeAttribute("temp_address_info");%>
+	String name = null;
+	String address = null;
+	String addr_detail = null;
+	String post_no = null;
+	String mobile = null;
+	//주소가 저장된 경우(정상적인 방법으로 들어온 경우)
+ 	if(temp_address_info != null) {
+ 	    name = (String)temp_address_info.get("member_name");
+ 	    address = (String)temp_address_info.get("addr_address");
+ 	    addr_detail = (String)temp_address_info.get("addr_detail");
+ 	    post_no = (String)temp_address_info.get("addr_post_no");
+ 	    mobile = (String)temp_address_info.get("member_mobile");
+	 }
+	
+    %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -83,6 +93,33 @@
         text-decoration: none;
       }
     </style>
+    
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+		is_correct_way = "<%=name %>";
+		console.log(is_correct_way);
+    	if(is_correct_way =="null") {
+			alert("정상적인 방법으로 들어오지 않았습니다.");
+			location.href = "/Trid/";
+    	}
+    	//요일을 계산해서 보여줌
+	    const today = new Date();
+	    const nextday = new Date();
+	    nextday.setDate(today.getDate() + 2);
+	    const week = ["일", "월", "화", "수", "목", "금", "토"];
+	
+	    const month = today.getMonth() + 1;
+	    const date = today.getDate();
+	    const day = today.getDay();
+	    
+	    const next_month = nextday.getMonth() + 1;
+	    const next_date = nextday.getDate();
+	    const next_day = nextday.getDay();
+	    //요일을 넣는다
+	    document.querySelector("span#delivery_day").textContent = "배송 " + week[day] + "요일 - " + week[next_day] + "요일"; 
+	    
+    });
+    </script>
   </head>
   <body>
     <!-- 로딩창 -->
@@ -92,16 +129,16 @@
       </div>
     </div> -->
     <!-- 주소 리스트 -->
-
+<%@include file="../header.jsp"%>
     <main>
       <div id="select_shipment_container">
         <!-- 배송지 본문 -->
         <div id="shipment_main">
-          <h1><span>연규영</span>님, Trid에서 쇼핑해 주셔서 감사합니다.</h1>
+          <h1><sapn>${requestScope.memberName}</sapn>님, Trid에서 쇼핑해 주셔서 감사합니다.</h1>
           <div id="order_info">
             <div>
               <div>예상 배송일</div>
-              <div><strong>배송 화요일 - 목요일</strong></div>
+              <div id="delivery_day"><strong><span id="delivery_day">배송</span></strong></div>
             </div>
             <div>
               <div>배송지</div>
@@ -115,11 +152,12 @@
               <div>주문번호 : <sapn>${requestScope.orderNo}</sapn></div>
             </div>
             <div id="order_info_button">
-              <div><a href="http://localhost:9090/Trid/orders/detail.trd?orderNo=${requestScope.orderNo}">주문 정보 보기 </a></div>
+              <div id="go_order_detail"><a href="http://localhost:9090/Trid/orders/detail.trd?orderNo=${requestScope.orderNo}">주문 정보 보기 </a></div>
             </div>
           </div>
         </div>
       </div>
     </main>
+    <%@include file="../footer.jsp"%>
   </body>
 </html>

@@ -32,9 +32,11 @@ public class AddressController extends AbstractController {
 		//주소 데이터를 불러온다
 		JSONArray addrList = addr_dao.selectAddrs(member.getPk_member_no());
 	
+		String addrList_str = null;
 		//주소 데이터를 스트링으로 변환
-		String addrList_str = addrList.toString();
-		
+		if (addrList != null) {
+			addrList_str = addrList.toString();
+		}
 		//데이터 전송
 		request.setAttribute("addrList", addrList_str);
 		

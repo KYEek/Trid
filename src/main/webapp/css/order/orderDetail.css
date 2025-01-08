@@ -2,6 +2,10 @@
 :root {
   --border-var: 0.7px solid black;
 }
+
+img {
+	height:100%;
+}
 #order_detail_header {
   width: 40vw;
   margin: 5vh 7vw;
