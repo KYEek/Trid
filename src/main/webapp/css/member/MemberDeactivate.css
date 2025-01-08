@@ -1,54 +1,55 @@
-/* 가장 바깥 div */
-div#container {
-	width: 88%;
-	margin: auto;
+* {
+  box-sizing: border-box;
 }
 
-/* 휴면 해제 하기 */
+div#container {
+  width: 88%;
+  max-width: 50%;
+  overflow-x: hidden;
+  margin: 2% 5%;
+}
+
+div#update_box {
+	border: 0.7px solid black;
+	height: 300px;
+	width: 50%;
+}
+
 h2 {
 	margin-top: 3%;
 }
 
-
-div#update_box {
-	border: 3px solid black;
-	height: 500px;
-	margin-top: 4%;
-	margin-right: 40%;
-}
-
-/* 휴대폰 문자인증 */
 h3 {
 	margin: 2% 2%;
 }
 
-div.box{
- 	border: solid 0px blue;
-    display: block;
-    outline: none;
-    font-size: 10pt;
-    color: red;
-    margin-bottom: 2%;
+div.box {
+	border: solid 0px blue;
+	display: block;
+	outline: none;
+	font-size: 10pt;
+	color: red;
+	margin-bottom: 2%;
+}
+
+p.box {
+	display: block;
+	margin: 2% 2%;
 }
 
 div.message {
-    font-size: 10pt;
-    color: red;
-    margin: none;
+	font-size: 10pt;
+	color: red;
 }
 
-button#code {
-	border: solid 1px gray;
-	border-radius: 5px;
-	font-size: 9pt;
-	text-align: center;
-	cursor: pointer;
-	margin: 1% 0 0 1%;
-	padding: 0.2%;
-	background-color: white;
+input#mobileCheck {
+	margin: 2% 2%;
 }
 
-button#codecheck{
+button#code, 
+button#codecheck, 
+button#Deactivate {
+	margin: 2% 2%;
 	border: solid 1px gray;
 	border-radius: 5px;
 	font-size: 9pt;
@@ -56,6 +57,13 @@ button#codecheck{
 	cursor: pointer;
 	padding: 0.2%;
 	background-color: white;
+	width: 150px;
+	height: 50px;
 }
 
 
+button#code:hover ,   
+button#codecheck:hover , 
+button#Deactivate:hover {
+	border: solid 2px black;
+}

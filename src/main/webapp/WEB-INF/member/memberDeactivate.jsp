@@ -12,10 +12,6 @@
 <%-- 직접 만든 CSS --%>
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/css/member/MemberDeactivate.css" />
 
-
-
-
-
 </head>
 <body>
 
@@ -29,24 +25,21 @@
 		
 		<div id="update_box">
 			<h3>휴대폰 문자인증</h3>
-	     	<!-- 2단계: 인증 코드 입력 -->
+	     	<%-- 2단계: 인증 코드 입력 --%>
 		    <div class="box"> 
-			    
 			    <button type="button" id="codecheck" onclick="sendCode()">인증번호 받기</button>
 			</div>
 			
-			<p>휴대폰 인증을 위해 SMS를 보내드립니다.</p>
+			<p class="box">휴대폰 인증을 위해 SMS를 보내드립니다.</p>
 				<input type="text" name="mobileCheck" id="mobileCheck" maxlength="60" placeholder="인증번호를 입력하세요."/>
 				<div class="code_message message"><i class="fa-solid fa-circle-info"></i>&nbsp;</div>
 				<button type="button" id="code" onclick="MobileCodeCheck()">인증확인</button>
 				<input type="hidden" name="codeCheck" id="codeCheck" value="${sessionScope.certification_code}"/>
 				
-				<button id="button" type="button" onclick ="goDeactivate()">휴면 해제하기</button>
+				<button type="button" id="Deactivate" onclick ="goDeactivate()">휴면 해제하기</button>
 				
 			<br>
 		</div>
-		
-		
 		
 	</div>
 
@@ -91,25 +84,32 @@ function sendCode() {
 
 }// end of function sendCode()-----------
 
-
-
+// 입력값이 공백인지 체크하는 메소드
+function isBlank(value) {
+    return (value == null) || (value == undefined) || (value.trim() == "");
+}
 
 
 //문자로 받은 인증번호가 일치한지 확인하는 함수
 function MobileCodeCheck(){
 
-	const mobileCheck = $("input#mobileCheck").val().trim();
-	const codeCheck = $("input#codeCheck").val().trim();
-	
-	if(!(mobileCheck == codeCheck)){
-		alert("인증번호가 잘못 입력되었습니다. 다시 시도하세요.");
-	}
-	else {
-		alert("인증성공!!");
-		codeCheck_click = true;
-		
-	}
-	
+   const mobileCheck = $("input#mobileCheck").val().trim();
+   const codeCheck = $("input#codeCheck").val().trim();
+   
+   
+   if (isBlank(mobileCheck) || isBlank(codeCheck)) {
+	   <%-- 인증번호가 공백인 경우 --%>
+      alert("인증번호가 잘못 입력되었습니다. 다시 시도하세요.");   
+   }
+   else if(!(mobileCheck == codeCheck)){
+	  <%-- 인증번호가 틀린 경우 --%>
+      alert("인증번호가 잘못 입력되었습니다. 다시 시도하세요.");
+   }
+   else {
+      alert("인증성공!!");
+      codeCheck_click = true;
+   }
+   
 }// end of function codeCheck()------------------------------
 
 
