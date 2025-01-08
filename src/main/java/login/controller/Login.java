@@ -35,6 +35,8 @@ public class Login extends AbstractController {
 			
 			MemberDTO loginuser = mdao.login(paraMap);
 			
+			HttpSession session = request.getSession();
+			
 			if(loginuser == null) {
 				
 				 String message = "사용자 이메일과 비밀번호 조합이 Trid.trd 계정과 일치하지 않습니다.";
@@ -54,12 +56,17 @@ public class Login extends AbstractController {
 				
 				// 사용자 계정이 휴면처리된 경우
 				if(loginuser.getMember_idle() == 0) {
-					request.setAttribute("memberNo", loginuser.getPk_member_no());
+					session.setAttribute("memberNo", loginuser.getPk_member_no());
+					session.setAttribute("memberMobile", loginuser.getMember_mobile());
+					
+					System.out.println(loginuser.getPk_member_no());
+					System.out.println(loginuser.getMember_mobile());
+					
 					super.handleMessage(request, "휴면처리된 계정입니다. 휴면해제를 요청하세요", Constants.MEMBER_DEACTIVATE_URL);
 					return;
 				}
 				
-				HttpSession session = request.getSession();
+				
 				
 				session.setAttribute("loginuser", loginuser);
 				
