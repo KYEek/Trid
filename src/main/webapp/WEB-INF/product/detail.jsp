@@ -90,7 +90,7 @@ $(document).ready(function() {
    <div id="container">
       
       <%-- 추천 상품이 있을때만 보여주기 --%>
-      <c:if test="${fn:length(recommendProductMapList) != 0}">   
+      <c:if test="${fn:length(recommendProductMapList) % 2 == 0 && fn:length(recommendProductMapList) != 0}">   
 	      <div id="recommend_bar">
 	         
 	         <div id="recommend_product_title">추천 상품리스트</div>

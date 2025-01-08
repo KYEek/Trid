@@ -183,7 +183,7 @@ public class BoardDAO_imple implements BoardDAO {
 					   + " from tbl_question "
 					   + " where pk_question_no = ?";
 			
-			if(question_isprivate.equals("0")) {
+			if("0".equals(question_isprivate)) {
 				// "전체공개" 인 글은 로그인 하지 않아도 조회가 가능
 				sql += " and question_isprivate = 0 ";
 				
