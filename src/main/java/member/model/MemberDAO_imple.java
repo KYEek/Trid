@@ -859,10 +859,10 @@ public class MemberDAO_imple implements MemberDAO {
 		      
 		      sql = " insert into tbl_login"
 		      	  + " ( "
-		      	  + " pk_login_no "
-		      	  + " fk_member_no "
-		      	  + " login_member_email "
-		      	  + " login_date "
+		      	  + " pk_login_no, "
+		      	  + " fk_member_no, "
+		      	  + " login_member_email, "
+		      	  + " login_date, "
 		      	  + " login_client_ip "
 		      	  + " ) "
 		      	  + " values(pk_login_no_seq.nextval, ?, ?, sysdate, ? ) " ;
