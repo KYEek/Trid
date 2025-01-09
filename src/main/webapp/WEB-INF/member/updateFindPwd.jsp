@@ -71,6 +71,16 @@ button {
     margin-top: 3%;
 }
 
+button:hover {
+    text-align: center;
+    width: 35%;
+    height: 50px;
+    background-color: #ecf2f8;
+    border: solid 1px black;
+    font-size: 13pt;
+    margin-top: 3%;
+}
+
 div#update{
 	margin-bottom: 4%;
 	font-size: 13pt;

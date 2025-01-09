@@ -73,6 +73,16 @@ button#goOn {
     margin-top: 3%;
 }
 
+button#goOn:hover {
+    text-align: center;
+    width: 35%;
+    height: 40px;
+    background-color: #ecf2f8;
+    border: solid 1px black;
+    font-size: 13pt;
+    margin-top: 3%;
+}
+
 button#codecheck,
 button#code {
 	border: solid 1px gray;

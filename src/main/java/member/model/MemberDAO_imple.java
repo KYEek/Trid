@@ -262,7 +262,7 @@ public class MemberDAO_imple implements MemberDAO {
 			  
 			  String sql = " select member_email "
 			  		     + " from tbl_member "
-			  		     + " where member_email = ? and member_status = 1 ";
+			  		     + " where member_email = ? ";
 			  
 			  pstmt = conn.prepareStatement(sql);
 			  pstmt.setString(1, aes.encrypt(newEmail));

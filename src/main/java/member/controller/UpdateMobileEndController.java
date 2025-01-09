@@ -50,7 +50,7 @@ public class UpdateMobileEndController extends AbstractController {
 	               loginuser.setMember_mobile(newMobile);
 	               
 	        	   String message = "회원전화번호 수정 성공!!";
-	        	   String loc = "/Trid/member/updateMobile.trd"; 
+	        	   String loc = "/Trid/member/memberDetail.trd"; 
 	             
 	               request.setAttribute("message", message);
 	               request.setAttribute("loc", loc);
