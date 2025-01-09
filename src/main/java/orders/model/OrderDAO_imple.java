@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -201,7 +202,7 @@ public class OrderDAO_imple implements OrderDAO {
 		
 		String searchWord = (String)paraMap.get("searchWord");
 		
-		String sortCategory = (String)paraMap.get("sortCategory") == null ? "" : (String)paraMap.get("sortCategory");
+		String sortCategory = (String)paraMap.get("sortCategory") == null ? "0" : (String)paraMap.get("sortCategory");
 		
 		String orderStatus = (String)paraMap.get("orderStatus");
 		
@@ -227,7 +228,12 @@ public class OrderDAO_imple implements OrderDAO {
 						
 			if(!StringUtil.isBlank(searchWord)) {
 				if("1".equals(searchType)) {
-					sql += " and product_name like '%' || ? || '%' ";
+					sql 	+= " and fk_order_no in ( select fk_order_no "
+							+ " 					 from tbl_order_detail sod join tbl_product_detail spd "
+							+ " 					 on sod.fk_product_detail_no = spd.pk_product_detail_no"
+							+ "						 join tbl_product sp on spd.fk_product_no = sp.pk_product_no "
+							+ "  					 where sp.product_name like '%' || ? || '%' "
+							+ "						) ";
 				}
 			}
 			
@@ -266,8 +272,24 @@ public class OrderDAO_imple implements OrderDAO {
 				sql += " and order_date >= to_date(?, 'yyyy-mm-dd') ";
 			}
 			
-			sql += " 	order by o.order_date desc "
-				+ " ) a "
+			if(!StringUtil.isBlank(sortCategory)) {
+				switch(sortCategory) {
+					case "0" : {
+						sql += " order by o.order_date desc ";
+						break;
+					}
+					case "1" : {
+						sql += " order by o.order_date ";
+						break;
+					}
+					default : {
+						sql += " order by o.order_date desc ";
+						break;
+					}
+				}
+			}
+			
+			sql += " ) a "
 				+ " where rnum between ? and ? ";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -400,8 +422,10 @@ public class OrderDAO_imple implements OrderDAO {
 			
 			sql = " select count(*) over() as total_detail_count, "
 				+ "	od.pk_order_detail_no, od.order_detail_price, od.order_detail_quantity, "
-				+ " p.pk_product_no, p.product_name, "
-				+ "	pd.product_detail_size "
+				+ " p.pk_product_no, p.product_name, p.product_price, "
+				+ "	pd.product_detail_size,"
+				+ " (select product_image_path from tbl_product_image i where rownum = 1 "
+				+ "		and i.fk_product_no = p.pk_product_no) as product_image_path "
 				+ " from tbl_order o "
 				+ "	join tbl_order_detail od on od.fk_order_no = o.pk_order_no "
 				+ " join tbl_product_detail pd on pd.pk_product_detail_no = od.fk_product_detail_no "
@@ -428,6 +452,8 @@ public class OrderDAO_imple implements OrderDAO {
 				orderDetailDTO.setProductName(rs.getString("product_name"));
 				orderDetailDTO.setProductNo(rs.getInt("pk_product_no"));
 				orderDetailDTO.setProductSize(rs.getInt("product_detail_size"));
+				orderDetailDTO.setProductPrice(rs.getInt("product_price"));
+				orderDetailDTO.setProductImagePath(rs.getString("product_image_path"));
 				
 				orderDetailList.add(orderDetailDTO);
 				
@@ -601,5 +627,192 @@ public class OrderDAO_imple implements OrderDAO {
 		}
 		return jsonArr;
 	}//end of public JSONArray selectOrderDetail(int pk_member_no, int orderNO) throws SQLException ----------------------------------------------
+
+
+	// 관리자 일주일간 주문 내역 개수 (결제완료 수, 상품 준비 수, 배송 중 수, 배송완료 수)
+	@Override
+	public Map<String, Integer> selectWeekPayment() throws SQLException {
+		Map<String, Integer> weekPaymentMap = new HashMap<>(); // (결제완료 수, 상품준비 수, 배송중 수, 배송완료 수)
+		
+		weekPaymentMap.put("paid", 0);
+		weekPaymentMap.put("preparing", 0);
+		weekPaymentMap.put("shipping ", 0);
+		weekPaymentMap.put("delivered ", 0);
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql 	= " select order_status "
+						+ " from tbl_order "
+						+ " where order_date between sysdate-6 and sysdate ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				switch(rs.getInt("order_status")) {
+					case 0 : {
+						int pc = weekPaymentMap.get("paid");
+						weekPaymentMap.put("paid", ++pc);
+						break;
+					}
+					case 1 : {
+						int pc = weekPaymentMap.get("preparing");
+						weekPaymentMap.put("preparing", ++pc);
+						break;
+					}
+					case 2 : {
+						int pc = weekPaymentMap.get("shipping");
+						weekPaymentMap.put("shipping", ++pc);
+						break;
+					}
+					case 3 : {
+						int pc = weekPaymentMap.get("delivered");
+						weekPaymentMap.put("delivered", ++pc);
+						break;
+					}
+				}
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return weekPaymentMap;
+	}
+
+	// 관리자 일주일간 일간 매출 조회
+	@Override
+	public List<Map<String, String>> selectdailySalesList() throws SQLException {
+		List<Map<String, String>> dailySalesList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql 	= " select to_char(order_date, 'yyyy-mm-dd') as orderdate, sum(order_total_price) as sales "
+						+ " from tbl_order"
+						+ " where order_date between sysdate-6 and sysdate "
+						+ " group by to_char(order_date, 'yyyy-mm-dd')"
+						+ " order by orderdate ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Map<String, String> map = new HashMap<>();
+				
+				map.put("orderdate", rs.getString("orderdate"));
+				map.put("sales", String.valueOf(rs.getInt("sales")));
+				
+				dailySalesList.add(map);
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return dailySalesList;
+	}
+
+	// 관리자 월간 매출 조회
+	@Override
+	public List<Map<String, String>> selectMonthlySalesList() throws SQLException {
+		List<Map<String, String>> monthlySalesList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql 	
+					= "WITH months AS ( "
+					+ "    SELECT LEVEL AS month "
+					+ "    FROM DUAL "
+					+ "    CONNECT BY LEVEL <= 12 "
+					+ ") "
+					+ "SELECT "
+					+ "    LPAD(m.month, 2, '0') AS month, "
+					+ "    NVL(SUM(o.order_total_price), 0) AS sales "
+					+ "FROM "
+					+ "    months m "
+					+ "LEFT JOIN "
+					+ "    tbl_order o "
+					+ "ON  "
+					+ "    EXTRACT(MONTH FROM o.order_date) = m.month "
+					+ "    AND EXTRACT(YEAR FROM o.order_date) = EXTRACT(YEAR FROM SYSDATE) "
+					+ "GROUP BY "
+					+ "    m.month "
+					+ "ORDER BY "
+					+ "    m.month ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Map<String, String> map = new HashMap<>();
+				
+				map.put("month", rs.getString("month"));
+				map.put("sales", String.valueOf(rs.getInt("sales")));
+				
+				monthlySalesList.add(map);
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return monthlySalesList;
+	}
+
+	
+	// 관리자 연 매출 조회
+	@Override
+	public List<Map<String, String>> selectYearSalesList() throws SQLException {
+		List<Map<String, String>> yearSalesList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql 	
+					= "WITH years AS ( "
+					+ "    SELECT (EXTRACT(YEAR FROM SYSDATE) - LEVEL + 1) AS year "
+					+ "    FROM DUAL "
+					+ "    CONNECT BY LEVEL <= 5 "
+					+ ") "
+					+ "SELECT "
+					+ "    y.year AS year, "
+					+ "    NVL(SUM(o.order_total_price), 0) AS sales "
+					+ "FROM "
+					+ "    years y "
+					+ "LEFT JOIN "
+					+ "    tbl_order o "
+					+ "ON  "
+					+ " EXTRACT(YEAR FROM o.order_date) = y.year "
+					+ "GROUP BY "
+					+ "    y.year "
+					+ "ORDER BY "
+					+ "    y.year ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Map<String, String> map = new HashMap<>();
+				
+				map.put("year", rs.getString("year"));
+				map.put("sales", String.valueOf(rs.getInt("sales")));
+				
+				yearSalesList.add(map);
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return yearSalesList;
+	}
 
 }

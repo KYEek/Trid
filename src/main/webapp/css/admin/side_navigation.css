@@ -5,10 +5,34 @@
 	src: url("../../fonts/Pretendard/Pretendard-Medium.ttf") format("truetype");
 }
 
+* {
+	font-family: "Pretendard";
+}
+
+/* 스크롤바 전체 영역 */
+::-webkit-scrollbar {
+    width: 3px; /* 세로 스크롤바의 너비 */
+    height: 8px; /* 가로 스크롤바의 높이 */
+    background: transparent; /* 투명 배경 */
+}
+
+/* 스크롤바 슬라이더(핸들) */
+::-webkit-scrollbar-thumb {
+    background-color: #0a111a; /* 슬라이더 색상 */
+    border-radius: 0; /* 각진 모양 */
+    border: 2px solid transparent; /* 공간 추가 효과 */
+}
+
+/* 스크롤바의 위아래 화살표 숨김 (Windows 환경) */
+::-webkit-scrollbar-button {
+    display: none; /* 화살표 제거 */
+}
+
 /* 사이드 네비게이션 최상위 컨테이너 */
 div#admin_side_navigation {
-	width: 250px;
-	min-width: 200px;
+	height : 100%;
+	min-width: 250px;
+	/*min-width: 200px;*/
 	padding: 30px 0;
 	display: flex;
 	flex-direction: column;
@@ -16,7 +40,6 @@ div#admin_side_navigation {
 	align-items: center;
 	background-color: #0a111a;
 	color: #918f9b;
-	font-family: "Pretendard";
 }
 
 /* 로고 컨테이너 */

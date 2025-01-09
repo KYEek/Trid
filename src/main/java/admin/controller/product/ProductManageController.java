@@ -58,9 +58,7 @@ public class ProductManageController extends AbstractController {
 				paraMap.put("pagingDTO", pagingDTO);
 				
 				List<ProductDTO> productList = productDAO.selectProductList(paraMap); // 상품 리스트 조회
-				List<CategoryDTO> categoryList = productDAO.selectCategoryList(); // 카테고리 리스트 조회
 
-				request.setAttribute("categoryList", categoryList);
 				request.setAttribute("productList", productList);
 				request.setAttribute("pagingDTO", pagingDTO);
 				request.setAttribute("searchWord", paraMap.get("searchWord"));

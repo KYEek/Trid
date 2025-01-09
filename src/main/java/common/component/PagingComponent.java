@@ -21,7 +21,7 @@ public class PagingComponent {
 		pagingDTO.setCurPage(curPage);
 		pagingDTO.setTotalRowCount(totalRowCount);
 		pagingDTO.setPageSize(5);
-		pagingDTO.setRowSizePerPage(10);
+		pagingDTO.setRowSizePerPage(8);
 		pagingDTO.pageSetting(); // 페이징 시 필요한 나머지 정보 계산
 		
 		return pagingDTO;

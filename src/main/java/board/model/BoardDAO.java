@@ -35,5 +35,8 @@ public interface BoardDAO {
 	
 	// Q&A 게시판의 질문에 대해 답변 및 답변 상태를 수정하는 메소드
 	int updateQuestion(Map<String, String> paraMap) throws SQLException;
+
+	// 관리자 일주일간 미답변 질문 리스트
+	List<Map<String, String>> selectWeekUnansweredQuestionList() throws SQLException;
 	
 }

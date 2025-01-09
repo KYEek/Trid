@@ -41,16 +41,10 @@ public class ProductUpdateController extends AbstractController {
 				List<ImageDTO> imageList = FileComponent.saveImages(request); 
 				
 				String message = "";
-
-				// 상품 이미지가 존재하는지 확인
-				if (imageList.size() < 1) {
-					System.out.println("[ERROR] : imageList is empty");
-					message = "failed";
-				}
 				
 				// 이미지를 제외한 정보 저장
 				ProductDTO productDTO = createProductDTO(request);
-
+				
 				productDTO.setImageList(imageList);
 				
 				// DB에 상품 추가 요청

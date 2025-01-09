@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <%-- pageContextPath --%>
 <c:set var="ctxPath" value="${pageContext.request.contextPath}" />
@@ -18,7 +19,7 @@
 
 <%-- css --%>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/manage.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/order/order_manage.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/order_manage.css">
 
 <%-- js --%>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/admin/util.js"></script>
@@ -34,7 +35,7 @@
 		<div class="content_container">
 		
 			<%-- 검색 카테고리 --%>
-			<div id="search_container">
+			<div class="search_container">
 			<form id="sort_frm" name="sort_frm">
 	
 				<div class="manage_header">
@@ -50,16 +51,16 @@
 								<option value="1">주문상품</option>
 							</select>
 							<input type="text" id="search_word" name="searchWord"/>
+							
+							<span>주문 상태</span>
+							<select id="order_status" name="orderStatus">
+								<option value="">전체</option>
+								<option value="0">결제완료</option>
+								<option value="1">상품준비</option>
+								<option value="2">배송중</option>
+								<option value="3">배송완료</option>
+							</select>
 						</div>
-						
-						<label for="orderStatus">주문 상태</label>
-						<select id="order_status" name="orderStatus">
-							<option value="">전체</option>
-							<option value="0">결제완료</option>
-							<option value="1">상품준비</option>
-							<option value="2">배송준비</option>
-							<option value="3">배송완료</option>
-						</select>
 					
 						<div class="range">
 							<span>기간</span> 
@@ -76,7 +77,7 @@
 							<option value="1">오래된순</option>
 						</select>
 
-						<button type="button" id="search_button">검색</button>
+						<button type="button" class="button--ujarak" id="search_button">검색</button>
 					</div>
 				</div>
 			</form>
@@ -91,7 +92,7 @@
 						<th scope="col">회원번호</th>
 						<th scope="col">회원명</th>
 						<th scope="col">주문상품</th>
-						<th scope="col">총 주문가격</th>
+						<th scope="col">총 주문가격(&#8361;)</th>
 						<th scope="col">주문상태</th>
 						<th scope="col">주문일자</th>
 					</tr>
@@ -111,8 +112,7 @@
 									</c:if>
 								
 								</td>
-								<td>${orderDTO.orderTotalPrice}</td>
-	
+								<td><fmt:formatNumber value="${orderDTO.orderTotalPrice}" pattern="#,###" /></td>
 								<c:choose>
 									<c:when test="${orderDTO.orderStatus == 0}">
 										<td>결제완료</td>
@@ -158,10 +158,18 @@
 			
 			keepSearchConditions();
 			
+			$(document).on("keydown", "input#search_word" , function(e) {
+				if(e.keyCode == 13) {
+					$("button#search_button").click();	
+				}
+			});
+			
 			// 검색버튼 클릭 시 정렬, 검색 조건이 포함되어 페이지 요청
 			$(document).on("click","#search_button",function() {
 				const frm = document.sort_frm;
 				frm.action = 'orderManage.trd?curPage='+ ${paging.curPage};
+				
+				frm.searchWord.value = frm.searchWord.value.trim();  // 검색어 trim
 				
 				let dateMin = frm.dateMin.value; // 최소 등록일
 				let dateMax = frm.dateMax.value; // 최대 등록일

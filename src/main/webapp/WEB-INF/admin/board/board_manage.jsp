@@ -39,59 +39,56 @@
 				<h1 class="main_heading">Q&A Manage</h1>
 			</div>
 
-			<div class="manage_category">
-				<div class="category_box">
-				
+			<div class="manage_category" style="align-items : flex-end;">
+				<div class="board_search_box">
 					<div>
-					
-						<div id="search_box">
+						<div>
 							<select id="search_type" name="searchType">
 								<option value="0">제목</option>
 								<option value="1">작성자명</option>
 							</select>
 							<input type="text" id="search_word" name="searchWord"/>
 						</div>
-						
-						<div class="range">
-							<span>기간</span> 
-							<input type="date" id="date_min_input" name="dateMin"/>
-								&nbsp;~&nbsp;
-							<input type="date" id="date_max_input" name="dateMax"/>
+						<div class="flexbox">
+							<div>
+								<span>답변상태</span>
+								<select class="answer_select" name="answerStatus">
+								    <option value="">전체</option>
+								    <option value="0">답변대기</option>
+								    <option value="1">답변완료</option>
+								</select>
+							</div> 
+							<div>
+								<span style="margin-left:20px;">비밀글 여부</span>
+								<select class="private_select" name="privateStatus">
+								    <option value="">전체</option>
+								    <option value="0">공개글</option>
+								    <option value="1">비밀글</option>
+								</select>
+							</div> 
+							<div class="range">
+								<span>기간</span> 
+								<input type="date" id="date_min_input" name="dateMin"/>
+									&nbsp;~&nbsp;
+								<input type="date" id="date_max_input" name="dateMax"/>
+							</div>
 						</div>
-						
 					</div>
-					
-					<div>
-						<label for="privateStatus">비밀글 여부</label>
-						<select class="private_select" name="privateStatus">
-						    <option value="">전체</option>
-						    <option value="0">공개글</option>
-						    <option value="1">비밀글</option>
-						</select>
-					</div> 
-					
-					<div>
-						<label for="answerStatus">답변상태</label>
-						<select class="answer_select" name="answerStatus">
-						    <option value="">전체</option>
-						    <option value="0">답변대기</option>
-						    <option value="1">답변완료</option>
-						</select>
-					</div> 
 				</div>
 
-				<div class="sort_box">
+				<div class="sort_box" style="margin-bottom:10px;">
 					<select id="sort_select" name="sortCategory">
 						<option value="0">최신순</option>
 						<option value="1">오래된순</option>
 					</select>
 
-					<button type="button" id="search_button">검색</button>
+					<button type="button" class="button--ujarak" id="search_button">검색</button>
 				</div>
 			</div>
-
 		</form>
 	</div>
+	
+	<span>총 ${pagingDTO.totalRowCount}개 질문</span>
 
 		<table class="table">
 			<thead>
@@ -160,11 +157,19 @@
 		let url = "";
 		
 		keepSearchConditions();
+		
+		$(document).on("keydown", "input#search_word" , function(e) {
+			if(e.keyCode == 13) {
+				$("button#search_button").click();	
+			}
+		});
 
 		// 검색버튼 클릭 시 정렬, 검색 조건이 포함되어 페이지 요청
 		$(document).on("click","#search_button",function() {
 			const frm = document.sort_frm;
 			frm.action = 'boardManage.trd?curPage='+ ${paging.curPage};
+			
+			frm.searchWord.value = frm.searchWord.value.trim();  // 검색어 trim
 			
 			let dateMin = frm.dateMin.value; // 최소 등록일
 			let dateMax = frm.dateMax.value; // 최대 등록일

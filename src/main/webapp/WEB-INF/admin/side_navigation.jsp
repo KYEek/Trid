@@ -8,6 +8,7 @@
 
 <%-- css --%>
 <link rel="stylesheet" href="${ctxPath}/css/admin/side_navigation.css">
+<link rel="stylesheet" href="${ctxPath}/css/admin/button.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/bootstrap-4.6.2-dist/css/bootstrap.min.css">
 
 <%-- js --%>
@@ -21,12 +22,16 @@
 	<div>
 		<%-- 로고 --%>
 		<div id="logo_container">
-			<img src="${ctxPath}/images/logo/logo_white.svg" width="120" /> 
+			<a href="main.trd" ><img src="${ctxPath}/images/logo/logo_white.svg" width="120" /></a> 
 		</div>
 	
 		<%-- 관리자 메뉴 --%>
 		<div id="admin_menu_container">
 			<span>Admin Menu</span>
+			<a class="menu" href="main.trd">
+				<img src="${ctxPath}/images/icon/analysis.svg" width="30" />
+				<span class="admin_menu">Analysis</span>
+			</a> 
 			<a class="menu" href="productManage.trd">
 				<img src="${ctxPath}/images/icon/product.svg" width="30" />
 				<span class="admin_menu">Product Manage</span>
@@ -37,7 +42,7 @@
 			</a> 
 			<a class="menu" href="memberManage.trd">
 				<img src="${ctxPath}/images/icon/user.svg" width="30" />
-				<span class="admin_menu">User Manage</span>
+				<span class="admin_menu">Member Manage</span>
 			</a> 
 			<a class="menu" href="boardManage.trd">
 				<img src="${ctxPath}/images/icon/message.svg" width="30" />

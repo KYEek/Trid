@@ -62,10 +62,10 @@ public interface MemberDAO {
    // 관리자 회원 로그인 기록 리스트 조회 메소드
    List<Map<String, String>> selectLoginHistoryByAdmin(Map<String, Object> paraMap) throws SQLException;
    
-
    // 휴면 상태를 해제해주는 메소드
    int UpdateMemberIdle(String meberNo, String clientip) throws SQLException;
 
-
+   // 일주일간 사용자 접속 수 
+   List<Map<String, String>> selectWeekLoginUserList() throws SQLException;
 	
 }

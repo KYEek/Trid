@@ -35,7 +35,15 @@ div#pageNo_box > li {
 a.pageNo {
 	font-size: 22px;
 	color: black;
-	border-bottom: solid 2px black;
+	text-decoration : none;
+}
+
+.active a.pageNo {
+	border-bottom: solid 2px black;	
+}
+
+a.pageNo:hover {
+	border-bottom: solid 2px black;	
 }
 
 /* 페이징바의 버튼을 감싸고 있는 박스 */

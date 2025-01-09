@@ -38,12 +38,11 @@
 			<form id="sort_frm" name="sort_frm">
 
 				<div class="manage_header">
-					<h1 class="main_heading">Product Manage</h1>
-
-					<div>
-						<input type="text" class="manage_name" name="searchWord" placeholder="상품명" /> 
-						<a class="register_button" href="productRegister.trd">상품추가</a>
+					<div style="display : flex; align-items : center">
+						<h1 class="main_heading">Product Manage</h1>	 
+						<button class="button--ujarak register_button" onclick="location.href='productRegister.trd'">상품추가</button>
 					</div>
+					<input type="search" class="manage_name" name="searchWord" placeholder="상품명"  />
 				</div>
 
 				<div class="manage_category">
@@ -87,7 +86,7 @@
 							<option value="3">낮은 가격순</option>
 						</select>
 
-						<button type="button" id="search_button">검색</button>
+						<button type="button" class="button--ujarak" id="search_button" >검색</button>
 					</div>
 				</div>
 
@@ -128,10 +127,10 @@
 
 							<c:choose>
 								<c:when test="${productDTO.status == 0}">
-									<td>비활성화</td>
+									<td>판매중단</td>
 								</c:when>
 								<c:otherwise>
-									<td>활성화</td>
+									<td>판매중</td>
 								</c:otherwise>
 							</c:choose>
 						</tr>
@@ -162,11 +161,20 @@
 
 		// 페이징 시 기존 요청정보를 유지하기 위한 처리
 		keepSearchConditions();
+		
+		// 상품 검색창 엔터 처리
+		$(document).on("keydown", "input.manage_name" , function(e) {
+			if(e.keyCode == 13) {
+				$("button#search_button").click();	
+			}
+		});
 
 		// 검색버튼 클릭 시 정렬, 검색 조건이 포함되어 페이지 요청
 		$(document).on("click","#search_button",function() {
 			const frm = document.sort_frm;
 			frm.action = 'productManage.trd?curPage='+ ${paging.curPage};
+			
+			frm.searchWord.value = frm.searchWord.value.trim();  // 검색어 trim
 			
 			let priceMin = frm.priceMin.value; // 최소값 입력
 			let priceMax = frm.priceMax.value; // 최대값 입력
@@ -226,7 +234,7 @@
 		function keepSearchConditions() {
 			
 			if (!isBlank(oldSearchWord)) {
-				$("input:text[name='searchWord']").val(oldSearchWord);
+				$("input[name='searchWord']").val(oldSearchWord);
 				url += "&searchWord=" + oldSearchWord;
 			}
 

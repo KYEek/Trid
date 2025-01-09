@@ -35,11 +35,10 @@
 			<%-- 검색 카테고리 --%>
 			<div id="search_container">
 			
-	
 				<div class="manage_header">
-					<h1 class="main_heading">Member Login History</h1>
+					<h2 style="margin-right:20px;">회원 로그인 이력</h2>
+					<button class="button--ujarak" onclick="location.href='memberDetail.trd?memberNo=${historyList.get(0).memberNo}'">돌아가기</button>
 				</div>
-	
 				
 			</div>
 		
@@ -81,7 +80,7 @@
 	$(document).on("click", "a.page_button", function () {
 		const page = $(this).data("page");
 
-		location.href = "memberLoginHistory.trd?curPage=" + page;
+		location.href = "memberLoginHistory.trd?memberNo=${requestScope.memberNo}&curPage=" + page;
 	});
 	
 	</script>

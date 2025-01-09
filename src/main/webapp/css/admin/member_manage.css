@@ -1,14 +1,6 @@
 @charset "UTF-8";
 
-div#search_box {
-	margin-bottom : 10px;
-}
-
-select#search_type{
-	padding: 5px;
-}
-
-div#board_search_box {
+div#member_search_box {
 	display:flex;
 	align-items : flex-end;
 }
