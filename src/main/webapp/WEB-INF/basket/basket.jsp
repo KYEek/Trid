@@ -47,13 +47,13 @@ const basketList = JSON.parse(basketListStr);
         <div id="basket_footer">
           <div id="basket_footer_info">
             <div>
-              * 계속 진행함으로써 본인은 구매 조건을 읽고 이에 동의하며 Zara의
+              * 계속 진행함으로써 본인은 구매 조건을 읽고 이에 동의하며 Trid의
               개인정보 및 쿠키 정책을 이해했음을 선언합니다.
             </div>
           </div>
           <div id="basket_footer_total_price">
             <div>총 <span id="total_price">₩739,400</span>₩</div>
-            <div>부가세 포함함</div>
+            <div>부가세 포함</div>
           </div>
           <div id="basket_footer_next_button">
             <span>계속</span>

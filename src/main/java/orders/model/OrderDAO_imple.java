@@ -601,4 +601,5 @@ public class OrderDAO_imple implements OrderDAO {
 		}
 		return jsonArr;
 	}//end of public JSONArray selectOrderDetail(int pk_member_no, int orderNO) throws SQLException ----------------------------------------------
+
 }

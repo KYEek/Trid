@@ -4,6 +4,7 @@ let count_number = 0;
 //json문자열을 json객체로 변환
 const orderDetail = JSON.parse(orderDetailStr);
 const addrInfo = JSON.parse(addrInfoStr);
+console.log(addrInfo);
 
 // dom이 로드되었을 때
 document.addEventListener("DOMContentLoaded", function () {
@@ -54,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
               <div class="basket_product_info_header">
                 <div><a href= "/Trid/product/detail.trd?productNo=${PRODUCT_NO}" class="product_link">${PRODUCT_NAME}</a></div>
               </div>
-              <div class="basket_pruduct_price"><span class="price_text" data-price ="${PRODUCT_PRICE}">₩${PRODUCT_PRICE}</span></div>
+              <div class="basket_pruduct_price"><span class="price_text" data-price ="${PRODUCT_PRICE}">₩${Number(PRODUCT_PRICE).toLocaleString()}</span></div>
               <div class="basket_pruduct_size_category">
                 <span class="basket_product_size">${PRODUCT_SIZE}</span>&nbsp;|&nbsp;<span
                   class="basket_product_category"
@@ -86,13 +87,13 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelector("span#order_status").textContent = `${ORDER_STATUS}`;
   document.querySelector(
     "div#order_price_sum"
-  ).textContent = `₩ ${total_price}`;
+  ).textContent = `₩ ${Number(total_price).toLocaleString()}`;
   document.querySelector("div#delevery_cost").textContent = `₩ ${
     Number(ORDER_TOTAL_PRICE) - Number(total_price)
   }`;
   document.querySelector(
     "div#order_price_total"
-  ).textContent = `₩ ${ORDER_TOTAL_PRICE}`;
+  ).textContent = `₩ ${Number(ORDER_TOTAL_PRICE).toLocaleString()}`;
 
   //날짜를 입력
   document.querySelector("div#order_date").textContent = ORDER_DATE.substring(
@@ -100,6 +101,15 @@ document.addEventListener("DOMContentLoaded", function () {
     11
   );
 
+  
+  //주소를 입력
+  const delivery_addr_div = document.querySelector("div#delivery_addr_div");
+  delivery_addr_div.innerHTML = `  <div class="addr_li addr_name">${addrInfo.member_name}</div>
+                <div class="addr_li">${addrInfo.addr_address}</div>
+                <div class="addr_li">${addrInfo.addr_detail}</div>
+                <div class="addr_li">${addrInfo.addr_post_no}</div>
+                <div class="addr_li">${addrInfo.member_mobile}</div>`;
+  
   //주문번호 입력
   document.querySelector("span#orderNo").textContent = ` ${PK_ORDER_NO}`;
 

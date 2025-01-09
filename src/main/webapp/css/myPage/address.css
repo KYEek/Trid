@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+main {
+	height : auto !important;
+}
+
 /* 주소 제목과 주소추가 버튼 div */
 div#address_header {
   margin-left: 7vw;

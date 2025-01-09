@@ -116,11 +116,28 @@ document.addEventListener("DOMContentLoaded", function () {
     let is_submit = true;
     input_text.forEach((item, index) => {
       if (index == 0 || index == 1 || index == 2 || index == 5) {
-        if (item.value == "") {
-          item.dispatchEvent(new Event("blur"));
-          is_submit = false;
-        }
-      }
+		  if (item.value == "") {
+			  item.dispatchEvent(new Event("blur"));
+			  is_submit = false;
+		  }
+		  if (index == 5) {
+			  //전화번호의 색깔이 빨간색 이라면 넘어가지 않는다
+			  if (item.nextSibling.nextSibling.style.color == "red") {
+				  is_submit = false;
+				  console.log(item.nextSibling.nextSibling.style.color);
+				  console.log("실패");
+				  return
+			  }
+		  }
+		  if (index == 1) {
+			  if (item.value.length != 5) {
+				  alert("올바른 우편주소를 입력하세요");
+				  is_submit = false;
+				  console.log(item.value);
+				  return;
+			  }
+		  }
+	  }
     });
     if (is_submit) {
       const form = document.querySelector("#address_form");
@@ -179,6 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
           document.getElementById("input2"),
           "label"
         ).classList.add("position_move2");
+		document.querySelectorAll("div.warning_div")[1].style.display = "none";
         document.getElementById("input3").value = addr;
         getSibilingElement(
           document.getElementById("input3"),
