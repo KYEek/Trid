@@ -52,6 +52,7 @@ public class PwdCheckController extends AbstractController {
 					
 			} catch (SQLException e) {
 				e.printStackTrace();
+				
 				super.handleServerError(); // 에러 페이지로 이동
 			}
 
