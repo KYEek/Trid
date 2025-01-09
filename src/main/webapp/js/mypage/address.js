@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
       //html에 표시해줌줌
       html += `</ul><div class="dropdown">
 				  <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				    <i class='fa-solid fa-ellipsis'></i>
+				    ...
 				  </button>
 				  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"><form action="addressButtonController.trd" method = "post">
 				  <input name="address_no" type="text"
