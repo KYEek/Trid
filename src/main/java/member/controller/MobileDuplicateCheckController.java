@@ -1,16 +1,12 @@
 package member.controller;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.json.JSONObject;
 
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import member.domain.MemberDTO;
 import member.model.MemberDAO;
 import member.model.MemberDAO_imple;
 /*

@@ -7,6 +7,45 @@ $(document).ready(function(){
 	$("div.newPwdCheck_message").hide();
 	$("div.newPwd_message").hide();
 	
+	
+	
+	
+	// 비밀번호 유효성 검사
+	$("input#newPwd").blur((e) => {
+		const pwd = $(e.target).val(); // blur 이벤트가 일어난 pwd input의 값
+		$("div.newPwd_message").show();
+		// 유효한 비밀번호를 입력하지 않았을 경우
+		if(!checkPwd(pwd)) {
+			$("div.newPwd_message").html(
+				'<i class="fa-solid fa-circle-info"></i>&nbsp;안전한 비밀번호를 입력하세요. 영어대소문자,숫자 및 특수기호를 포함한 최소 8자리 이상이어야 합니다.'
+			).show();
+		}
+		else{
+			// 공백이 아닌 글자를 입력했을 경우
+			$("div.newPwd_message").hide();
+			pwdValid = true;
+		}
+	});
+	
+	// 비밀번호 확인 검사	
+	$("input#newPwdCheck").blur((e) => {
+		const newPwd = $("input#newPwd").val(); // 비밀번호 입력값
+		const pwdCheck = $(e.target).val(); // 비밀번호 확인 입력값
+		
+		// 초기에 비밀번호 확인 경고 메시지가 보여진다
+		$("div.newPwdCheck_message").show(); 
+		
+		// 비밀번호와 비밀번호 확인 값이 같을 경우
+		if(newPwd == pwdCheck) {
+			$("div.newPwdCheck_message").hide();
+			pwdCheckValid = true;
+		}
+		// 같지 않은 경우
+		else{
+			$("div.newPwdCheck_message").show();
+		}
+	});
+			
 });// end of $(document).ready(function(){})--------------
 
 let isCurrentPwd = false; // 현재 비밀번호가 테이블에 존재하는지 알아오기 위한 용도
@@ -79,41 +118,7 @@ function goUpdatePwd(){// 기존 비밀번호와 같다면 alert를 띄워준다
 	
 		
 		
-		// 비밀번호 유효성 검사
-		$("input#newPwd").blur((e) => {
-			const pwd = $(e.target).val(); // blur 이벤트가 일어난 pwd input의 값
-			$("div.newPwd_message").show();
-			// 유효한 비밀번호를 입력하지 않았을 경우
-			if(!checkPwd(pwd)) {
-				$("div.newPwd_message").html(
-					'<i class="fa-solid fa-circle-info"></i>&nbsp;안전한 비밀번호를 입력하세요. 영어대소문자,숫자 및 특수기호를 포함한 최소 8자리 이상이어야 합니다.'
-				).show();
-			}
-			else{
-				// 공백이 아닌 글자를 입력했을 경우
-				$("div.newPwd_message").hide();
-				pwdValid = true;
-			}
-		});
 		
-		// 비밀번호 확인 검사	
-		$("input#newPwdCheck").blur((e) => {
-			const newPwd = $("input#newPwd").val(); // 비밀번호 입력값
-			const pwdCheck = $(e.target).val(); // 비밀번호 확인 입력값
-			
-			// 초기에 비밀번호 확인 경고 메시지가 보여진다
-			$("div.newPwdCheck_message").show(); 
-			
-			// 비밀번호와 비밀번호 확인 값이 같을 경우
-			if(newPwd == pwdCheck) {
-				$("div.newPwdCheck_message").hide();
-				pwdCheckValid = true;
-			}
-			// 같지 않은 경우
-			else{
-				$("div.newPwdCheck_message").show();
-			}
-		});
 		
 		// 직전 비밀번호와 새로운 비밀번호 비교 둘이 같으면 좋은게 나쁜거
 		if (pwdValid && pwdCheckValid && isCurrentPwd) {
@@ -133,7 +138,6 @@ function goUpdatePwd(){// 기존 비밀번호와 같다면 alert를 띄워준다
 		}
 	
 		
-				
 		if (pwdValid && pwdCheckValid && isCurrentPwd) {// 현재 비밀번호가 존재하고 현재와 같지 않은 새비밀번호를 작성했을 때 
 		//	alert("DB에 사용자 정보를 수정하러 간다.");
 
@@ -142,7 +146,6 @@ function goUpdatePwd(){// 기존 비밀번호와 같다면 alert를 띄워준다
 			frm.method = "post";
 			frm.submit();
 		}
-	
 	
 	
 }// end of function goUpdatePwd()---------------

@@ -52,8 +52,8 @@ function goMobileUpdate(){
 	
 	// *** 업데이트할 전화번호를 tbl_member 에 넣어주기 *** // 
 	$.ajax({
-		url: "updateMobileCheck.trd",
-		data: {"newMobile": $("input#newMobile").val(),
+		url: "mobileDuplicateCheck.trd",
+		data: {"mobile": $("input#newMobile").val(),
 			   "pkNum":$("input#pkNum").val()}, 
 		type: "post", 
 
@@ -63,15 +63,16 @@ function goMobileUpdate(){
 		success: function(json) {
 
 			if (json.isExists) {
-				// 입력한 전화번호가 존재하지 않는 경우라면 
-				$("div.message").html("변경 가능한 전화번호 입니다.").css({ "color": "navy", "display":"block", "font-size": "10pt "});
-				isCurrentMobile = true;
-			}
-			else {
 				// 입력한 전화번호가 사용중이라면
 				$("div.message").html($("input#newMobile").val() +"은(는) 기존 전화번호 입니다. 새로운 전화번호를 입력해주세요.").css({ "color": "red" , "display":"block", "font-size": "10pt "});
 				$("input#newMobile").val("");
 				isCurrentMobile = false;
+				
+			}
+			else {
+				// 입력한 전화번호가 존재하지 않는 경우라면 
+				$("div.message").html("변경 가능한 전화번호 입니다.").css({ "color": "navy", "display":"block", "font-size": "10pt "});
+				isCurrentMobile = true;
 			}
 		},
 		
