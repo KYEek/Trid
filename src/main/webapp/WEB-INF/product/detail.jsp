@@ -240,7 +240,7 @@ $(document).ready(function() {
             </div>
 
             <div id="paymentbar">
-               <input id="go_basket" class="paymentBtn" type="button" value="장바구니에 추가하기"> 
+               <input id="go_basket" class="paymentBtn" type="button" value="장바구니에 추가"> 
                <input id="go_payment" class="paymentBtn" type="button" value="바로 결제하기">
             </div>
             
@@ -264,6 +264,6 @@ $(document).ready(function() {
          </div>
       </div>
    </div>
-
+	
 </body>
 </html>

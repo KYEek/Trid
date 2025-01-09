@@ -112,7 +112,7 @@ div#product_detailbox {
    width: 300px;
    height: 700px;
    border: solid 2px black;
-   margin-left: 10%;
+   margin-left: 8%;
    margin-top: auto;
 }
 
@@ -217,7 +217,7 @@ div#paymentbar {
 
 input.paymentBtn {
    height: 88px;
-   width: 50%;
+   width: 150px;
    display: flex;
    align-items: center;
    background-color: white;
@@ -225,7 +225,6 @@ input.paymentBtn {
    border: none;
    border-top: solid 2px black;
    border-bottom: solid 2px black;
-   font-size: 11pt;
    margin-top: auto;
 }
 
