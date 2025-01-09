@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -534,6 +535,44 @@ public class BoardDAO_imple implements BoardDAO {
 		}
 		
 		return boardDTO;
+	}
+
+
+	// 관리자 일주일간 미답변 질문 리스트
+	@Override
+	public List<Map<String, String>> selectWeekUnansweredQuestionList() throws SQLException {		
+		List<Map<String, String>> weekUnansweredQuestionList = new ArrayList<>();
+		
+		try {
+			
+			conn = ds.getConnection();
+			
+			String sql 	= " select pk_question_no, member_name, question_title, question_registerday "
+						+ " from tbl_question join tbl_member on fk_member_no = pk_member_no "
+						+ " where question_status = 0 "
+						+ " and question_registerday between sysdate-6 and sysdate "
+						+ " order by question_registerday ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Map<String, String> map = new HashMap<>();
+				
+				map.put("questionNo", String.valueOf(rs.getInt("pk_question_no")));
+				map.put("memberName", rs.getString("member_name"));
+				map.put("title", rs.getString("question_title"));
+				map.put("registerday", rs.getString("question_registerday"));
+				
+				weekUnansweredQuestionList.add(map);
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return weekUnansweredQuestionList;
 	}
 	
 }

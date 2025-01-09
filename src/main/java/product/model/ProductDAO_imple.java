@@ -728,7 +728,7 @@ public class ProductDAO_imple implements ProductDAO {
 			
 			conn.setAutoCommit(false);
 			
-			String sql 	= " update tbl_product set product_name = ?, product_explanation = ?, product_price = ? "
+			String sql 	= " update tbl_product set product_name = ?, product_explanation = ?, product_price = ?, product_updateday = sysdate "
 						+ " where pk_product_no = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -745,7 +745,7 @@ public class ProductDAO_imple implements ProductDAO {
 			}
 			
 			for(ProductDetailDTO productDetailDTO : productDTO.getProductDetailList()) {
-				sql = " update tbl_product_detail set product_inventory = ? "
+				sql = " update tbl_product_detail set product_inventory = ?, product_detail_updateday = sysdate "
 					+ " where pk_product_detail_no = ? ";
 				
 				pstmt = conn.prepareStatement(sql);
@@ -793,6 +793,9 @@ public class ProductDAO_imple implements ProductDAO {
 		return result;
 	}
 
+	/*
+	 * 관리자 상품 이미지 삭제
+	 */
 	@Override
 	public int deleteProductImage(String pkProductImageNo) throws SQLException {
 		int result = 0;
@@ -800,15 +803,37 @@ public class ProductDAO_imple implements ProductDAO {
 		try {
 
 			conn = ds.getConnection();
-
-				String sql 	= " delete from tbl_product_image where pk_product_image_no = ? ";
-
-				pstmt = conn.prepareStatement(sql);
-
-				pstmt.setString(1, pkProductImageNo); // 상품 이미지 일련번호
-
-				result = pstmt.executeUpdate();
 			
+			conn.setAutoCommit(false);
+
+			String sql 	= " delete from tbl_product_image where pk_product_image_no = ? ";
+
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, pkProductImageNo); // 상품 이미지 일련번호
+			
+			result = pstmt.executeUpdate();
+			
+			if(result != 1) {
+				System.out.println("[ERROR] tbl_product_image update failed ");
+				conn.rollback();
+				return 0;
+			}
+	
+			// 상품 수정 일자 변경
+			sql = " update tbl_product set product_updateday = sysdate "
+				+ " where pk_product_no = ( select fk_product_no from tbl_product_image where pk_product_image_no = ? ) ";
+
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, pkProductImageNo); // 상품 이미지 일련번호
+
+			if(pstmt.executeUpdate() != 1) {
+				System.out.println("[ERROR] tbl_product update failed ");
+				conn.rollback();
+				return 0;
+			}
+		
 		} finally {
 			close();
 		}
@@ -816,6 +841,9 @@ public class ProductDAO_imple implements ProductDAO {
 		return result;
 	}
 
+	/*
+	 * 관리자 상품 이미지 등록
+	 */
 	@Override
 	public int insertProductImage(List<ImageDTO> imageList, int productNo) throws SQLException {
 		String sql = "";
@@ -1547,6 +1575,43 @@ public class ProductDAO_imple implements ProductDAO {
 		    return totalRowCount;
 			
 			
+		}
+
+		/*
+		 *  일주일 재고가 빈 상품 리스트
+		 */
+		@Override
+		public List<Map<String, String>> selectWeekEmptyInventoryList() throws SQLException {
+			List<Map<String, String>> weekEmptyInventoryList = new ArrayList<>();
+			
+			try {
+				conn = ds.getConnection();
+				
+				String sql  = " select pk_product_no, product_name, product_detail_size , product_detail_updateday "
+							+ " from tbl_product join tbl_product_detail on pk_product_no = fk_product_no "
+							+ " where product_detail_updateday between sysdate-6 and sysdate "
+							+ " and product_inventory = 0 ";
+				
+				pstmt = conn.prepareStatement(sql);
+				
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					Map<String, String> map = new HashMap<>();
+					
+					map.put("productNo", String.valueOf(rs.getInt("pk_product_no")));
+					map.put("productName", rs.getString("product_name"));
+					map.put("size", String.valueOf(rs.getInt("product_detail_size")));
+					map.put("updateday", rs.getString("product_detail_updateday"));
+					
+					weekEmptyInventoryList.add(map);
+				}
+				
+			} finally {
+				close();
+			}
+			
+			return weekEmptyInventoryList;
 		}
 		
 }

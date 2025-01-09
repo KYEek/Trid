@@ -230,7 +230,7 @@ public class MemberDAO_imple implements MemberDAO {
 		try {
 			conn = ds.getConnection();
 			
-			String sql = " update tbl_member set member_email = ? "
+			String sql = " update tbl_member set member_email = ?, member_updateday = sysdate "
 					   + " where pk_member_no = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -323,7 +323,7 @@ public class MemberDAO_imple implements MemberDAO {
 		try {
 			conn = ds.getConnection();
 			
-			String sql = " update tbl_member set member_mobile = ? "
+			String sql = " update tbl_member set member_mobile = ?, member_updateday = sysdate "
 					   + " where pk_member_no = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -382,7 +382,7 @@ public class MemberDAO_imple implements MemberDAO {
 		try {
 			conn = ds.getConnection();
 			
-			String sql = " update tbl_member set member_password = ? "
+			String sql = " update tbl_member set member_password = ?, member_updateday = sysdate "
 					   + " where pk_member_no = ? ";
 			
 			pstmt = conn.prepareStatement(sql);// 우편배달부
@@ -808,12 +808,17 @@ public class MemberDAO_imple implements MemberDAO {
 			
 			conn = ds.getConnection();
 			
-			String sql 	= " SELECT *"
+			String sql 	= " SELECT * "
 						+ " FROM "
 						+ " ( "
-						+ "		select ROWNUM AS RN, pk_login_no, fk_member_no, login_member_email, login_date, login_client_ip "
-						+ " 	from tbl_login "
-						+ " 	where fk_member_no = ? "
+						+ " 	SELECT ROWNUM AS RN, L.* "
+						+ " 	FROM "
+						+ " 	( "
+						+ "			select pk_login_no, fk_member_no, login_member_email, login_date, login_client_ip "
+						+ " 		from tbl_login "
+						+ " 		where fk_member_no = ?"
+						+ "			order by pk_login_no desc "
+						+ " 	) L "
 						+ " ) "
 						+ " WHERE RN BETWEEN ? AND ? ";
 			
@@ -953,6 +958,38 @@ public class MemberDAO_imple implements MemberDAO {
 		
 	}// end of public boolean mobileDuplicateCheck(String mobile) throws SQLException-----------------	
 
-	
+	// 일주일간 사용자 접속 수 
+	@Override
+	public List<Map<String, String>> selectWeekLoginUserList() throws SQLException {
+		List<Map<String, String>> weekLoginUserList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql 	= " select to_char(login_date, 'yyyy-mm-dd') as logindate, count(*) as count "
+						+ " FROM tbl_login "
+						+ " where login_date between sysdate-6 and sysdate "
+						+ " group by to_char(login_date, 'yyyy-mm-dd') "
+						+ " order by logindate ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Map<String, String> map = new HashMap<>();
+				
+				map.put("logindate", rs.getString("logindate"));
+				map.put("count", String.valueOf(rs.getInt("count")));
+				
+				weekLoginUserList.add(map);
+			}
+			
+		} finally {
+			close();
+		}
+		
+		return weekLoginUserList;
+	}
 
 }
