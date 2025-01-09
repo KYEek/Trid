@@ -145,5 +145,8 @@
 		<!-- END : 페이지네이션  -->
 		
     </div>
+    
+    <jsp:include page="/WEB-INF/footer.jsp" />
+    
 </body>
 </html>
