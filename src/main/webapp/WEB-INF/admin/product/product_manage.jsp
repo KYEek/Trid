@@ -103,9 +103,9 @@
 					<th scope="col">카테고리</th>
 					<th scope="col">상품명</th>
 					<th scope="col">상품 가격(&#8361;)</th>
+					<th scope="col">상태</th>
 					<th scope="col">등록일자</th>
 					<th scope="col">수정일자</th>
-					<th scope="col">상태</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -122,9 +122,7 @@
 							<td>${productDTO.categoryDTO.categoryName}</td>
 							<td>${productDTO.productName}</td>
 							<td><fmt:formatNumber value="${productDTO.price}" pattern="#,###" /></td>
-							<td>${productDTO.registerday.substring(0, 10)}</td>
-							<td>${productDTO.updateday.substring(0, 10)}</td>
-
+							
 							<c:choose>
 								<c:when test="${productDTO.status == 0}">
 									<td>판매중단</td>
@@ -133,6 +131,10 @@
 									<td>판매중</td>
 								</c:otherwise>
 							</c:choose>
+							
+							<td>${productDTO.registerday}</td>
+							<td>${productDTO.updateday}</td>
+
 						</tr>
 					</c:forEach>
 				</c:if>

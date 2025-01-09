@@ -40,6 +40,7 @@
 				</div>
 			
 				<div id="detail_container">		
+					<span>${boardDTO.question_registerday}</span>
 					<h3 class="value_span">question .no ${boardDTO.pk_question_no}</h3>
 					<h1>${boardDTO.question_title}</h1>
 					
