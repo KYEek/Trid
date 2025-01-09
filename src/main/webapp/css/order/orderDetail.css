@@ -51,3 +51,26 @@ div.order_price_summary_item {
 div.order_price_summary_item > div:nth-child(2) {
   margin: 0 0 0 auto;
 }
+
+/* 헤더 간격 설정 */
+div#order_detail_header > div {
+  margin: 4vh;
+}
+
+
+/* 주문번호 강조 */
+div#order_detail_header > div:first-child {
+  font-weight: bold;
+  font-size: 18px !important;
+}
+
+/* 배송지 간격 변경 */
+div.addr_li {
+  margin: 2vh 0;
+}
+
+/* 이름 강조 */
+div.addr_li.addr_name {
+  font-size: 20px;
+  margin-bottom: 3vh;
+}

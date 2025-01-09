@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
           <div class="order_itme_header">
             <div>${ORDER_STATUS}</div>
             <div class="order_itme_price_detail">
-              <span>₩${ORDER_TOTAL_PRICE}</span> <a href="orders/detail.trd?orderNo=${FK_ORDER_NO}">주문 보기</a>
+              <span>₩${Number(ORDER_TOTAL_PRICE).toLocaleString()}</span> <a href="orders/detail.trd?orderNo=${FK_ORDER_NO}">주문 보기</a>
             </div>
           </div>
           <div class="order_item_images">
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
           <div class="order_itme_header">
             <div>${ORDER_STATUS}</div>
             <div class="order_itme_price_detail">
-              <span>₩${ORDER_TOTAL_PRICE}</span> <a href="orders/detail.trd?orderNo=${FK_ORDER_NO}">주문 보기</a>
+              <span>₩${Number(ORDER_TOTAL_PRICE).toLocaleString()}</span> <a href="orders/detail.trd?orderNo=${FK_ORDER_NO}">주문 보기</a>
             </div>
           </div>
           <div class="order_item_images">

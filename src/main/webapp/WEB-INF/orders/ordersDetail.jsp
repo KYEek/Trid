@@ -78,12 +78,12 @@
         <div id="order_detail_footer">
           <div id="order_address_summary">
             <div>발송주소</div>
-            <div>
-              <div>연규영</div>
-              <div>경기 성남시 분당구 판교역로 4</div>
-              <div>202호</div>
-              <div>13536</div>
-              <div>01040209698</div>
+            <div id="delivery_addr_div">
+              <div class="addr_li addr_name">연규영</div>
+              <div class="addr_li">경기 성남시 분당구 판교역로 4</div>
+              <div class="addr_li">202호</div>
+              <div class="addr_li">13536</div>
+              <div class="addr_li">01040209698</div>
             </div>
           </div>
           <div id="order_price_summary">

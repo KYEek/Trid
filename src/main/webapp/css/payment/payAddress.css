@@ -46,19 +46,20 @@ div#delivery_select_box {
 }
 
 div#delivery_select_box > :first-child {
-  padding: 1.5vh 2vw;
+  padding: 3vh 2vw;
   border-bottom: var(--border-var);
 }
 /* 상품 목록 페이지지 */
 div#delivery_product_list {
   border-bottom: var(--border-var);
   overflow: scroll;
+  display: flex;
   white-space: nowrap;
   width: 100%;
 }
 /* 라디오 버튼 바깥 간격 설정 */
 div#delivery_radio_box {
-  padding: 1.5vh 2vw;
+  padding: 5vh 2vw;
 }
 
 /* 주소 목록 사이드바 관련 설정 */
@@ -160,4 +161,8 @@ a:hover {
 
 div#address_list a {
   color: black;
+}
+/* 주소목록 글자 간격 설정 */
+.address_list_item > div {
+  margin: 1.5vh auto;
 }

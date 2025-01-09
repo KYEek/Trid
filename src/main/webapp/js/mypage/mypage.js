@@ -24,13 +24,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         break;
       case 2:
-        //알림
-        item.addEventListener("click", function () {
-          // alert("알림");
-          location.href = "";
-        });
-        break;
-      case 3:
         //프로필
         item.addEventListener("click", function () {
           // alert("프로필");

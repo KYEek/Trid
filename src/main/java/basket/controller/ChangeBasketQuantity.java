@@ -22,6 +22,14 @@ public class ChangeBasketQuantity extends AbstractController{
 	
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
+		// 로그인 되어 있지 않으면 메인으로 돌려보내기
+		if (!super.checkLogin(request)) {
+			System.out.println("로그인 안되어짐");
+			super.setRedirect(true);
+			super.setViewPage("/main.trd");
+			return;
+		}
+
 		String method = request.getMethod();
 		HttpSession session = request.getSession();
 		MemberDTO member = (MemberDTO) session.getAttribute("loginuser");

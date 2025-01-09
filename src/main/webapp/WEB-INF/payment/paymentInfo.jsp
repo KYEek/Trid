@@ -119,12 +119,12 @@
               class="payment_content_container"
             >
               <div>
-                <div>
+                <div id="delivery_day_div">
                   <span id="delivery_day"
                     >화요일 31, 12월 - 목요일 02, 1월</span
                   >
                 </div>
-                <div><sapn id="item_count">3</sapn> 상품</div>
+                <div id="item_count_div"><sapn id="item_count">3</sapn> 상품</div>
                 <div id="delivery_product_list">
                   <!-- <img src="images/basket/00155055500-p.jpg" /> -->
                 </div>

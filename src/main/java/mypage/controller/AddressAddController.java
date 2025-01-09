@@ -23,10 +23,11 @@ public class AddressAddController extends AbstractController {
 		MemberDTO member = (MemberDTO)session.getAttribute("loginuser");
 		
 		
-		//로그인 하지 않은 상태로 접근하면 메인페이지로 이동
-		if(!super.checkLogin(request)) {
-			super.setRedirect(false);
-			super.setViewPage(request.getContextPath());
+		// 로그인 되어 있지 않으면 메인으로 돌려보내기
+		if (!super.checkLogin(request)) {
+			System.out.println("로그인 안되어짐");
+			super.setRedirect(true);
+			super.setViewPage("/main.trd");
 			return;
 		}
 		//포스트 방식일 경우 실행

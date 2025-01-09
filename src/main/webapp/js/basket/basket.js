@@ -282,11 +282,11 @@ document.addEventListener("DOMContentLoaded", function () {
               console.log("증가성공");
               //상품의 가격에서 증가시킨다
               const after_price =
-                Number(product_price.textContent) +
+                Number(product_price.textContent.replaceAll(",","")) +
                 Number(product_price.getAttribute("data-price"));
               //span태그의 값을 증가시킨다
               count_num.textContent = Number(count_num.textContent) + 1;
-              product_price.textContent = after_price;
+              product_price.textContent = after_price.toLocaleString();
               // 가격을 다시 계산한다.
               calculateTotalPrice();
             } else {
@@ -311,7 +311,7 @@ document.addEventListener("DOMContentLoaded", function () {
               console.log("감소성공");
               //상품의 가격에서 감소시킨다
               const after_price =
-                Number(product_price.textContent) -
+                Number(product_price.textContent.replaceAll(",","")) -
                 Number(product_price.getAttribute("data-price"));
               //만약 상품의 개수가 1개일 때 -버튼을 누르면 삭제
               if (count_num.textContent == 1) {
@@ -328,7 +328,7 @@ document.addEventListener("DOMContentLoaded", function () {
               } //end of if(count_num.textContent == 1)-------------------------------
               //span태그의 값을 감소시킨다
               count_num.textContent = Number(count_num.textContent) - 1;
-              product_price.textContent = after_price;
+              product_price.textContent = after_price.toLocaleString();
               // 가격을 다시 계산한다.
               calculateTotalPrice();
             } else {

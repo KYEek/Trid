@@ -6,6 +6,7 @@
 h1 {
   font-size: 17pt;
   font-weight: lighter;
+  margin: 2vh 0 4vh 0;
 }
 div#paymanet_main {
   display: flex;
@@ -31,9 +32,22 @@ div#payment_shipment_method {
 }
 
 div#payment_pay_method {
+  padding: 3vh;
   text-align: center;
 }
 .payment_content_container {
   width: 30vw;
   border: var(--border-var);
+}
+
+div#delivery_day_div {
+    margin: 2vh 2vw;
+}
+
+div#item_count_div {
+    margin: 2vh 2vw;
+}
+
+main img {
+    border-top: var(--border-var);
 }
