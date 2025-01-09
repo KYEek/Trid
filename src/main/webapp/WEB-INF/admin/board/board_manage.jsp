@@ -129,7 +129,7 @@
 								</c:otherwise>
 							</c:choose>
 							
-							<td>${boardDTO.question_registerday.substring(0, 10)}</td>
+							<td>${boardDTO.question_registerday}</td>
 						</tr>
 					</c:forEach>
 				</c:if>
