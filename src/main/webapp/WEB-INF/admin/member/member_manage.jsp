@@ -8,6 +8,8 @@
 <%-- MemberDTO List --%>
 <c:set var="memberList" value="${requestScope.memberList}" />
 
+
+
 <%-- 질문 게시판 리스트 조회 페이지 --%>
 <!DOCTYPE html>
 <html>
@@ -18,13 +20,11 @@
 
 <%-- css --%>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/manage.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/order/order_manage.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/member_manage.css">
 
 <%-- js --%>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/admin/util.js"></script>
-
 </head>
-
 <body>
 	<div class="main_container">
 	
@@ -41,49 +41,50 @@
 					<h1 class="main_heading">Member Manage</h1>
 				</div>
 	
-				<div class="manage_category">
-					<div class="category_box">
-					
-						<div id="search_box">
-							<select id="search_type" name="searchType">
-								<option value="0">회원명</option>
-								<option value="1">이메일</option>
-							</select>
-							<input type="text" id="search_word" name="searchWord"/>
+				<div class="manage_category" style="align-items : flex-end;">
+					<div id="member_search_box">
+						<div>
+							<div>
+								<select id="search_type" name="searchType">
+									<option value="0">회원명</option>
+									<option value="1">이메일</option>
+								</select>
+								<input type="text" id="search_word" name="searchWord"/>
+							</div>
+							<div class="flexbox">
+								<span>성별</span>
+								<select id="member_gender" name="memberGender">
+									<option value="">전체</option>
+									<option value="0">여성</option>
+									<option value="1">남성</option>
+								</select>
+								
+								<span style="margin-left : 10px;">휴면상태</span>
+								<select id="member_idle" name="memberIdle">
+									<option value="">전체</option>
+									<option value="0">휴면</option>
+									<option value="1">비휴면</option>
+								</select>
+								
+								<span style="margin-left : 10px;">회원상태</span>
+								<select id="member_status" name="memberStatus">
+									<option value="">전체</option>
+									<option value="0">탈퇴</option>
+									<option value="1">가입</option>
+									<option value="2">정지</option>
+								</select>
+								
+								<div class="range">
+									<span>가입 기간</span> 
+									<input type="date" id="date_min_input" name="dateMin"/>
+										&nbsp;~&nbsp;
+									<input type="date" id="date_max_input" name="dateMax"/>
+								</div>
+							</div>
 						</div>
-						
-						<label for="memberGender">성별</label>
-						<select id="member_gender" name="memberGender">
-							<option value="">전체</option>
-							<option value="0">여성</option>
-							<option value="1">남성</option>
-						</select>
-						
-						<label for="memberIdle">휴무상태</label>
-						<select id="member_idle" name="memberIdle">
-							<option value="">전체</option>
-							<option value="0">휴면</option>
-							<option value="1">비휴면</option>
-						</select>
-						
-						<label for="memberStatus">회원 상태</label>
-						<select id="member_status" name="memberStatus">
-							<option value="">전체</option>
-							<option value="0">탈퇴</option>
-							<option value="1">가입</option>
-							<option value="2">정지</option>
-						</select>
-					
-						<div class="range">
-							<span>가입 기간</span> 
-							<input type="date" id="date_min_input" name="dateMin"/>
-								&nbsp;~&nbsp;
-							<input type="date" id="date_max_input" name="dateMax"/>
-						</div>
-					
 					</div>
 					
-					<div class="sort_box">
+					<div class="sort_box" style="margin-bottom:10px;">
 						<select id="sort_select" name="sortCategory">
 							<option value="0">회원명 &#9650;</option>
 							<option value="1">회원명 &#9660;</option>
@@ -91,7 +92,7 @@
 							<option value="3">가입일 &#9660;</option>
 						</select>
 
-						<button type="button" id="search_button">검색</button>
+						<button type="button" class="button--ujarak" id="search_button">검색</button>
 					</div>
 				</div>
 			</form>
@@ -168,10 +169,18 @@
 			
 			keepSearchConditions();
 			
+			$(document).on("keydown", "input#search_word" , function(e) {
+				if(e.keyCode == 13) {
+					$("button#search_button").click();	
+				}
+			});
+			
 			// 검색버튼 클릭 시 정렬, 검색 조건이 포함되어 페이지 요청
 			$(document).on("click","#search_button",function() {
 				const frm = document.sort_frm;
 				frm.action = 'memberManage.trd?curPage='+ ${paging.curPage};
+				
+				frm.searchWord.value = frm.searchWord.value.trim();  // 검색어 trim
 				
 				let dateMin = frm.dateMin.value; // 최소 등록일
 				let dateMax = frm.dateMax.value; // 최대 등록일

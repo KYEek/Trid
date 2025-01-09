@@ -21,7 +21,7 @@ $(document).ready(function () {
 							<span>색상명 : ${colorName}</span>
 							<span>색상코드 : ${colorCode}</span>
 							<div style="border:solid 1px; width:30px; height:30px; background-color : ${colorCode};" ></div>
-							<button type="button" class="delete_color_button">색상 제거</button>
+							<button type="button" class="button--ujarak delete_color_button">색상 제거</button>
 					  </div>`;
 
         $("div#color_box").append(html);
@@ -54,6 +54,16 @@ function addColorItem(colorName, colorCode) {
     $("div#color_box").append(html);
 }
 
+function addColorItemInUpdate(colorName, colorCode) {
+	const html = `<div class="color_item">
+							<span>색상명 : ${colorName}</span>
+							<span>색상코드 : ${colorCode}</span>
+							<div style="border:solid 1px; width:30px; height:30px; background-color : ${colorCode};" ></div>
+						</div>`;
+
+	    $("div#color_box").append(html);
+}
+
 // 상품 등록 전 등록 요소 유효성 검사
 function validateProductDetailsOnRegister() {
     const $productName = $("input:text[name='productName']"); // 상품명
@@ -79,7 +89,8 @@ function validateProductDetailsOnRegister() {
     }
 
     // 3. 상품 가격 유효성 검사
-    if (isBlank($productPrice.val()) || !isValidNumber($productPrice.val())) {
+    if (isBlank($productPrice.val()) || !isValidNumber($productPrice.val()) 
+		|| (Number($productPrice.val()) == 0)) {
         alert("올바른 상품 가격을 입력하세요");
         $productPrice.val("");
         $productPrice.focus();
@@ -149,7 +160,8 @@ function validateProductDetailsOnUpdate() {
     }
 
     // 3. 상품 가격 유효성 검사
-    if (isBlank($productPrice.val()) || !isValidNumber($productPrice.val())) {
+    if (isBlank($productPrice.val()) || !isValidNumber($productPrice.val())
+		|| (Number($productPrice.val()) == 0)) {
         alert("올바른 상품 가격을 입력하세요");
         $productPrice.val("");
         $productPrice.focus();
@@ -178,8 +190,9 @@ function validateProductDetailsOnUpdate() {
         return false;
     }
 
+	console.log($("div.product-slide").length);
     // 6. 이미지 유효성 검사
-    if (fileList.items.length == 0) {
+    if (fileList.items.length == 0 && $("div.product-slide").length == 0) {
         alert("이미지를 업로드해주세요");
         return false;
     }

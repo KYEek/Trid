@@ -8,8 +8,9 @@ div.main_container {
 
 /* 우측 메인 컨테이너 */
 div.content_container {
-	padding: 20px 20px 20px 30px;
+	padding: 20px 20px 0 30px;
 	width: 100%;
+	overflow-y : auto;
 }
 
 /* 관리 페이지 헤더 */
@@ -62,12 +63,12 @@ select#category_select {
 
 /* 범위로 카테고리를 잡는 요소 컨테이너 */
 div.range {
-	margin-right: 20px;
+	margin: 0 20px;
 	display: flex;
 	align-items: center;
 }
 
-div.range > span {
+div.content_container span {
 	font-weight: bold;
 	margin-right: 5px;
 }
@@ -80,29 +81,30 @@ div.range > input[type="date"] {
 	width: 120px;
 }
 
-select#sort_select {
-	margin-right: 20px;
-}
-
-/* 검색 버튼 */
-button#search_button {
-	margin-right: 20px;
-	background-color: white;
-}
-
-/* 추가 버튼 */
-a.register_button {
-	margin-left: 30px;
-	text-decoration: none;
-	color: black;
-}
-
-/* 리스트 요소 호버링 */
-tr.product_item:hover {
-	background-color: rgb(217, 217, 255);
-}
-
 /* 모든 select 태그 패딩 */
 select {
 	padding: 5px;
+}
+
+div.sort_box {
+	display : flex;
+}
+
+input#search_word {
+	margin : 0 20px 0 10px;
+	padding : 2.8px;
+}
+
+button.register_button {
+	height : 40px;
+}
+
+tbody tr:hover {
+	background-color: #e5e5e5;
+	cursor : pointer;
+}
+
+div#search_box {
+	display:flex;
+	align-items : center;
 }
