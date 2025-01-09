@@ -4,6 +4,7 @@ import common.Constants;
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import member.model.MemberDAO;
 import member.model.MemberDAO_imple;
 
@@ -16,39 +17,51 @@ public class MemberDeactivate extends AbstractController {
 		
 		 String method = request.getMethod();
 		  
+		 // 로그인 시도한 사람을 알아오기 위한 세션
+		 HttpSession session = request.getSession();
+		 
 		 if("POST".equalsIgnoreCase(method)) {
-		  
-			 // 로그인한 회원의 멤버 PK를 맵에 넣어주기 paraMap.put("pk_member_no",
-		 // String.valueOf(loginuser.getPk_member_no() );
 			 
-			 String memberNo = (String) request.getAttribute("memberNo");
+			 // 로그인 시도한 멤버의 pk 번호 알아오기
+			 String memberNo = String.valueOf(session.getAttribute("memberNo"));
+			 
 			 // === 요청한 클라이언트의 IP 주소를 알아온다 === //
 			 String clientip = request.getRemoteAddr();
 			 
+			 // 휴면 상태를 해제해주는 메소드
 			 int result = mdao.UpdateMemberIdle(memberNo, clientip);
 			 
 			 if(result != 1) {
+				 // 휴면 해제를 실패 한 경우
+				 // 다시 휴면 해제 패이지로 이동
 				 super.handleMessage(request, "휴면 해제를 실패했습니다", Constants.MEMBER_DEACTIVATE_URL);
-				 return;
+				 return;	// 종료
 			 }
+			 
+			 // 휴면 해제를 성공한 경우
+			 // 로그인 페이지로 이동 (재로그인 해야됨)
 			 super.handleMessage(request, "휴면해제가 완료되었습니다. 로그인을 해주세요", Constants.MEMBER_LOGIN_URL);
+			 // 세션 초기화
+			 session.invalidate();
 		 
-		 // 휴면 상태를 해제해주는 메소드 int n = 0; // input 태그의 밸류 값과 문자로 보낸 인증번호의 값이 일치하면 실행 //
-		 // if( request.getParameter()로 가져온 입력값 == 문자로 보낸 인증번호의 값 ) // 메인페이지로 보내기 try { n
-		 // = mdao.UpdateMemberIdle(paraMap); } catch (SQLException e) {
-		 // e.printStackTrace(); } request.setAttribute("n", n);
-		 
-		 // else { 다를 경우에는 } // super.setRedirect(false); //
-		 // super.setViewPage(Constants.MEMBER_DEACTIVATE_PAGE);
-		 
-		 }// end of if("POST".equalsIgnoreCase(method)) ------------------------- else
+		 }// end of if("POST".equalsIgnoreCase(method)) -------------------------
 		 else {
-			 super.setRedirect(false);
-			 super.setViewPage(Constants.MEMBER_DEACTIVATE_PAGE);
+			// 정상적으로 로그인한 경우 또는 URL을 통해 비정상적으로 접근한 경우
+			if ( super.checkLogin(request) || session.getAttribute("memberNo") == null ) {
+				// URL을 통한 접근이므로 메인페이지로 이동
+				super.handleMessage(request, Constants.INVALID_REQUEST, Constants.MAIN_URL);
+				return; // 종료
+			}
+			// 휴면 해제 페이지로 이동
+			else {
+				super.setRedirect(false);
+				super.setViewPage(Constants.MEMBER_DEACTIVATE_PAGE);
+			}
+
 		 }
 		 
 
 
-	}
+	}// end of public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {} ---------
 
 }

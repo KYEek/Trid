@@ -28,7 +28,7 @@
     <div id="container">
 		
 		<c:if test="${not empty sessionScope.loginuser}">
-			<div id="register_btn" onclick="go_register()">질문하기</div>
+			<div id="register_btn" class="custom-btn btn-3" onclick="go_register()"><div id="items">질문하기</div></div>
 		</c:if>
 
         <div id="list_header">
@@ -47,7 +47,9 @@
 				
 				<%-- 글 작성자와 로그인한 유저가 일치한지 비교 --%>
 				<c:set var="is_writer" value="${boardDTO.fk_member_no eq sessionScope.loginuser.pk_member_no}"></c:set>
-				<div class="list_item" onclick="go_detail(${boardDTO.pk_question_no}, ${boardDTO.question_isprivate}, ${is_writer})">
+				
+				<div class="list_item custom-btn btn-3" onclick="go_detail(${boardDTO.pk_question_no}, ${boardDTO.question_isprivate}, ${is_writer})">
+					<div id="items">
 					<div id="seq">${firstRow}</div>
 					
 					<%-- 질문을 '공개' 로 선택한 경우 --%>
@@ -90,12 +92,12 @@
 					<c:if test="${boardDTO.question_isprivate == 1}">
 		            	<div id="private"><i class="bi bi-lock-fill"></i></div>
 		            </c:if>
-		           
+		            </div>
 	            </div>
 	            
 	            <c:set value="${firstRow + 1}" var="firstRow"></c:set>
-	            
 			</c:forEach>
+			
 		</c:if>
 		
 
@@ -121,7 +123,7 @@
 						</c:if>
 						
 						<c:if test="${paging.curPage eq i}">
-							<li class="active"><a class="pageNo" href="#">${i}</a></li>
+							<li class="active"><a class="pageNo active" href="#">${i}</a></li>
 						</c:if>
 						
 					</c:forEach>

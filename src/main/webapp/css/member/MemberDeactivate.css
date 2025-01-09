@@ -1,46 +1,69 @@
-/* 가장 바깥 div */
-div#container {
-	width: 88%;
-	margin: auto;
+* {
+  box-sizing: border-box;
 }
 
-/* 휴면 해제 하기 */
+div#container {
+  width: 88%;
+  max-width: 50%;
+  overflow-x: hidden;
+  margin: 2% 5%;
+}
+
+div#update_box {
+	border: 0.7px solid black;
+	height: 300px;
+	width: 50%;
+}
+
 h2 {
 	margin-top: 3%;
 }
 
-/* 휴대폰 문자인증 */
 h3 {
-	margin: 5% 0 5% 5%;
+	margin: 2% 2%;
 }
 
-div#update_box {
-	border: 3px solid black;
-	height: 500px;
-	margin-top: 4%;
-	margin-right: 40%;
-}
-
-/* 인증번호 입력한 감싸는 div */
-div#codeStep {
-	margin: 5%;
-}
-
-/* 인증 번호 */
-div#authCodeText {
-	margin-bottom: 3%;
-}
-
-/* 인증번호 입력 input, 인증하기 버튼 감싸는 div */
-div#authCodeContents {
+div.box {
+	border: solid 0px blue;
+	display: block;
+	outline: none;
+	font-size: 10pt;
+	color: red;
 	margin-bottom: 2%;
 }
 
-/* 인증번호 입력 input */
-button#authCodeButton {
-	margin-left: 1%;
+p.box {
+	display: block;
+	margin: 2% 2%;
+}
+
+div.message {
+	font-size: 10pt;
+	color: red;
+}
+
+input#mobileCheck {
+	margin: 2% 2%;
+}
+
+button#code, 
+button#codecheck, 
+button#Deactivate {
+	margin: 2% 2%;
+	border: solid 1px gray;
+	border-radius: 5px;
+	font-size: 9pt;
+	text-align: center;
+	cursor: pointer;
+	padding: 0.2%;
+	background-color: white;
+	width: 150px;
+	height: 50px;
 }
 
 
-
-
+button#code:hover ,   
+button#codecheck:hover , 
+button#Deactivate:hover {
+	border: solid 2px black;
+}
