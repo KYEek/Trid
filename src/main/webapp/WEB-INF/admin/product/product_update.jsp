@@ -82,8 +82,8 @@
 
 							</div>
 
-							<div style="display: flex; justify-content: space-between; align-items: start;">
-								<span>사이즈별 재고</span>
+							<div style="display: flex; justify-content: space-between; align-items: flex-start;">
+								<span style="width:120px;">사이즈별 재고</span>
 
 								<div class="size_container">
 									<div class="size_box">

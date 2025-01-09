@@ -57,18 +57,18 @@
 
 					<div id="header_buttons">
 						<%-- 상품 수정 --%>
-						<button class="button--ujarak" onclick="location.href='productUpdate.trd?productNo=${productDTO.productNo}';">수정하기</button>
+						<button type="button" class="button--ujarak" onclick="location.href='productUpdate.trd?productNo=${productDTO.productNo}';">수정하기</button>
 
 						<%-- 이미 삭제 상태인 상품은 삭제버튼을 비활성화 한다. --%>
 						<c:if test="${productDTO.status == 1}">
 							<form name="delete_product_frm">
 								<input type="hidden" name="productNo" value="${productDTO.productNo}" />
-								<button class="button--ujarak" id="delete_product_button" type="button">삭제하기</button>
+								<button type="button" class="button--ujarak" id="delete_product_button">삭제하기</button>
 							</form>
 						</c:if>
 
 						<%-- 돌아가기 버튼을 클릭 시 이전 페이지로 돌아간다. --%>
-						<button class="button--ujarak" onclick="location.href='productManage.trd';">돌아가기</button>
+						<button type="button" class="button--ujarak" onclick="location.href='productManage.trd';">돌아가기</button>
 					</div>
 
 				</div>

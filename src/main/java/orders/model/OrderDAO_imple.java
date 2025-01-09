@@ -242,13 +242,16 @@ public class OrderDAO_imple implements OrderDAO {
 				+ " ) " 
 				+ " select * "
 				+ " from ( "
-				+ " 	select ROWNUM as rnum, o.pk_order_no, o.order_date, o.order_status, order_total_price, "
-				+ " 	m.pk_member_no, m.member_name, m.member_mobile, m.member_email, "
-				+ " 	a.pk_addr_no, a.addr_post_no, a.addr_address, a.addr_detail, a.addr_extraaddr,"
-				+ "		T.product_name, T.total_detail_count "
-				+ " 	from tbl_order o join tbl_member m on o.fk_member_no = m.pk_member_no "
-				+ " 	join tbl_addr a on o.fk_addr_no = a.pk_addr_no "
-				+ "		join T on T.fk_order_no = o.pk_order_no ";
+				+ " 	select ROWNUM as rnum, a.* "
+				+ "		from "
+				+ "		( "
+				+ "			select o.pk_order_no, o.order_date, o.order_status, order_total_price, "
+				+ " 		m.pk_member_no, m.member_name, m.member_mobile, m.member_email, "
+				+ " 		a.pk_addr_no, a.addr_post_no, a.addr_address, a.addr_detail, a.addr_extraaddr,"
+				+ "			T.product_name, T.total_detail_count "
+				+ " 		from tbl_order o join tbl_member m on o.fk_member_no = m.pk_member_no "
+				+ " 		join tbl_addr a on o.fk_addr_no = a.pk_addr_no "
+				+ "			join T on T.fk_order_no = o.pk_order_no ";
 			
 			if(!StringUtil.isBlank(searchWord)) {
 				if("0".equals(searchType)) {
@@ -275,21 +278,22 @@ public class OrderDAO_imple implements OrderDAO {
 			if(!StringUtil.isBlank(sortCategory)) {
 				switch(sortCategory) {
 					case "0" : {
-						sql += " order by o.order_date desc ";
+						sql += " order by order_date desc ";
 						break;
 					}
 					case "1" : {
-						sql += " order by o.order_date ";
+						sql += " order by order_date ";
 						break;
 					}
 					default : {
-						sql += " order by o.order_date desc ";
+						sql += " order by order_date desc ";
 						break;
 					}
 				}
 			}
 			
 			sql += " ) a "
+				+ ") "
 				+ " where rnum between ? and ? ";
 			
 			pstmt = conn.prepareStatement(sql);

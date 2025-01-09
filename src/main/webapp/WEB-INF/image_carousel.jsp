@@ -36,7 +36,9 @@
 					let touchEndY = 0;
 
 					// 첫 슬라이드 표시
-					$slides.eq(0).show();
+					$slides.fadeOut(0);
+					$slides.eq(0).fadeIn(0);
+					$thumbnails.removeClass('active');
 					$thumbnails.eq(0).addClass('active');
 
 					// 썸네일 클릭 이벤트

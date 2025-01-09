@@ -30,11 +30,12 @@ public class ImageDeleteController extends AbstractController {
 		// POST 요청인 경우
 		if("POST".equalsIgnoreCase(method)) {
 			String imageNo = request.getParameter("imageNo"); // 상품 이미지 일련번호
+			String productNo = request.getParameter("productNo"); // 상품 일련번호
 			
 			String message = ""; // 응답 메시지
 			
 			try {
-				int result = productDAO.deleteProductImage(imageNo); // 상품 이미지 삭제
+				int result = productDAO.deleteProductImage(imageNo, productNo); // 상품 이미지 삭제
 				message = result == 1 ? "success" : "failed";
 			} catch (SQLException e) { // 예외 발생 시 실패 처리
 				e.printStackTrace();

@@ -36,8 +36,8 @@
 
 				<div id="detail_header">
 					<h2 style="margin-right:20px;">주문 상세조회</h2>
-					<button class="button--ujarak" onclick="location.href='orderManage.trd'">돌아가기</button>
-					<button class="button--ujarak" onclick="updateOrder(${orderDTO.pkOrderNo})" style="width:140px;">주문 상태 수정</button>
+					<button type="button" class="button--ujarak" onclick="location.href='orderManage.trd'">돌아가기</button>
+					<button type="button" class="button--ujarak" onclick="updateOrder(${orderDTO.pkOrderNo})" style="width:140px;">주문 상태 수정</button>
 				</div>
 
 				<div id="detail_container">
