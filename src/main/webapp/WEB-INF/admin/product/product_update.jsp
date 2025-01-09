@@ -14,6 +14,7 @@
 
 <%-- css --%>
 <link rel="stylesheet" href="${ctxPath}/css/admin/product_register.css">
+<link rel="stylesheet" href="${ctxPath}/css/admin/button.css">
 
 <%-- js --%>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.7.1.min.js"></script>
@@ -32,21 +33,34 @@
 	<%-- ImageDTO List --%>
 	<c:set var="imageList" value="${requestScope.productDTO.imageList}" />
 
-	<div id="product_register_container">
+	<div id="product_edit_container">
 
 		<%@ include file="../side_navigation.jsp"%>
 
-		<div id="main_container">
+		<div id="image_register_container">
+			<div id="image_container">
+				<%@ include file="../../image_carousel_update.jsp"%>
+				<div id="image_frm_container">
+					<input type="hidden" name="fileName" />
+					<button type="button" class="button--ujarak" id="file_upload_button">추가</button>
 
-			<div id="register_header">
-				<h2>상품 수정</h2>
-				<div>
-					<a id="return" href="productManage.trd">돌아가기</a>
+					<input type="file" id="image_input" name="file" multiple onchange="readURL(this);" />
+					<button type="button" class="button--ujarak" id="delete_image_button">삭제</button>
 				</div>
 			</div>
+		</div>
+
+		<div id="main_container">
 
 			<div id="register_container">
 				<form id="register_frm" name="product_register_frm" enctype="multipart/form-data">
+				
+					<div id="register_header">
+							<h2>상품 수정</h2>
+							<div>
+								<button type="button" class="button--ujarak" onclick="location.href='productDetail.trd?productNo=${productDTO.productNo}';">돌아가기</button>
+							</div>
+					</div>
 
 					<div id="form_register_container">
 
@@ -63,16 +77,7 @@
 							</div>
 
 							<div id="select_container">
-								<span>카테고리</span> 
-								<span>
-									<c:if test="${categoryDTO.gender eq 0}">남자&nbsp;</c:if>
-
-									<c:if test="${categoryDTO.gender eq 1}">여자&nbsp;</c:if>
-
-									<c:if test="${categoryDTO.type eq 0}">상의&nbsp;:</c:if>
-
-									<c:if test="${categoryDTO.type eq 1}">하의&nbsp;:</c:if> 
-									${categoryDTO.categoryName}
+								<span>카테고리</span> <span> <c:if test="${categoryDTO.gender eq 0}">남자&nbsp;</c:if> <c:if test="${categoryDTO.gender eq 1}">여자&nbsp;</c:if> <c:if test="${categoryDTO.type eq 0}">상의&nbsp;:</c:if> <c:if test="${categoryDTO.type eq 1}">하의&nbsp;:</c:if> ${categoryDTO.categoryName}
 								</span>
 
 							</div>
@@ -82,57 +87,33 @@
 
 								<div class="size_container">
 									<div class="size_box">
-										<span class="size_span">S</span>
-										<input type="number" id="${productDetailList[0].pkProductDetailNo}" class="size" value="${requestScope.inventoryArr[0]}" />
+										<span class="size_span">S</span> <input type="number" id="${productDetailList[0].pkProductDetailNo}" class="size" value="${requestScope.inventoryArr[0]}" min=0 />
 									</div>
 
 									<div class="size_box">
-										<span class="size_span">M</span>
-										<input type="number" id="${productDetailList[1].pkProductDetailNo}" class="size" value="${requestScope.inventoryArr[1]}" />
+										<span class="size_span">M</span> <input type="number" id="${productDetailList[1].pkProductDetailNo}" class="size" value="${requestScope.inventoryArr[1]}" min=0 />
 									</div>
 								</div>
 							</div>
 							<div class="size_container">
 								<div class="size_box">
-									<span class="size_span">L</span>
-									<input type="number" id="${productDetailList[2].pkProductDetailNo}" class="size" value="${requestScope.inventoryArr[2]}" />
+									<span class="size_span">L</span> <input type="number" id="${productDetailList[2].pkProductDetailNo}" class="size" value="${requestScope.inventoryArr[2]}" min=0 />
 								</div>
 								<div class="size_box">
-									<span class="size_span">XL</span>
-									<input type="number" id="${productDetailList[3].pkProductDetailNo}" class="size" value="${requestScope.inventoryArr[3]}" />
+									<span class="size_span">XL</span> <input type="number" id="${productDetailList[3].pkProductDetailNo}" class="size" value="${requestScope.inventoryArr[3]}" min=0 />
 								</div>
 							</div>
 
 
 						</div>
 
-						<input type="hidden" name="productNo" value="${productDTO.productNo}" /> 
-						<input type="hidden" name="inventory" /> 
-						<input type="hidden" name="productDetailNoArr" /> 
+						<input type="hidden" name="productNo" value="${productDTO.productNo}" /> <input type="hidden" name="inventory" /> <input type="hidden" name="productDetailNoArr" />
 
 						<div id="color_box"></div>
-
-
-					</div>
-
-					<div id="image_register_container">
-						<div id="image_container">
 						
-							<%@ include file="../../image_carousel_update.jsp"%>
-							
-							<div id="image_frm_container">
-								<input type="hidden" name="fileName" />
-								<button type="button" id="file_upload_button">이미지 추가</button>
-
-								<input type="file" id="image_input" name="file" multiple onchange="readURL(this);" />
-								<button type="button" id="delete_image_button">삭제</button>
-
-							</div>
-
-							<button type="button" id="product_register_button">등록하기</button>
-						</div>
 					</div>
-
+					
+					<button type="button" class="button--ujarak" id="product_register_button">등록하기</button>
 				</form>
 			</div>
 		</div>
@@ -149,12 +130,10 @@
 		</c:forEach >	
 
 		for (let i in colorNameArr) {
-				console.log(colorNameArr[i]);
-
 				const colorName = colorNameArr[i];
 				const colorCode = colorCodeArr[i];
 
-				addColorItem(colorName, colorCode);
+				addColorItemInUpdate(colorName, colorCode);
 			}
 
 			$(document).on("click", "#product_register_button", function () {
@@ -209,12 +188,6 @@
 			 	});
 
 			});
-
-
-			$("input[name='colorName']").change(function () {
-				console.log($("input[name='colorName']:checked").val());
-			});
-
 		});
 	</script>
 </body>

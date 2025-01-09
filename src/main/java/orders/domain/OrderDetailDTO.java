@@ -12,9 +12,11 @@ public class OrderDetailDTO {
 	
 	private int productPrice; // 상품당 가격
 	
-	private int orderDetailPrice; // 주문단가, 해당 상품를 여러 개 주문할 경우 집계되는 단가
+	private int orderDetailPrice; // 주문총액, 해당 상품를 여러 개 주문할 경우 집계되는 단가
 	
 	private int orderDetailQuantity; // 상품 개수
+	
+	private String productImagePath; // 상품 첫번째 이미지
 
 	public int getPkOrderDetailNo() {
 		return pkOrderDetailNo;
@@ -71,5 +73,14 @@ public class OrderDetailDTO {
 	public void setProductNo(int productNo) {
 		this.productNo = productNo;
 	}
+	
+	public String getProductImagePath() {
+		return productImagePath;
+	}
+
+	public void setProductImagePath(String productImagePath) {
+		this.productImagePath = productImagePath;
+	}
+
 	
 }

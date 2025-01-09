@@ -1,0 +1,41 @@
+@charset "UTF-8";
+
+#container {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	background: #fafafa;
+}
+
+#main_container {
+	width : clamp(400px, 55vw, 1000px);
+	margin-left : 30px;
+}
+
+div#detail_header {
+	width: 100%;
+	margin-bottom : 20px;
+	display: flex;
+	padding-top : 2px;
+	align-items : center;
+	justify-content: start;
+}
+
+div.item {
+	margin: 5px 0;
+	width: 30vw;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+span.value_span {
+	width : 250px;
+}
+
+div#member_summary_container {
+	margin : 0 0 10px 5px;
+	display: flex;
+	flex-direction: column;
+	font-size: 14pt;
+}

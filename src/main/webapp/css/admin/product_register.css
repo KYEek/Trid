@@ -1,76 +1,53 @@
-div#product_register_container {
-	width: 100%;
-	height: 100%;
-	padding: 40px;
+div#image_register_container button,
+div#form_register_container button {
+	min-width : 120px;
+}
+
+div#product_edit_container {
+	width: 100vw;
+	height: 100vh;
 	display: flex;
-	background: #fafafa;
+	overflow-x : hidden;
 }
 
 div#main_container {
 	width: 100vw;
-	height: 100%;
-	background: white;
-	margin-left: 40px;
+	padding : 10px 0;
+	height: clac(100% - 20px);
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 div#register_header {
-	margin: 5px 20px;
 	display: flex;
 	justify-content: space-between;
 }
 
 div#register_container {
-	height: calc(100% - 48px);
-}
-
-form#register_frm {
-	display: flex;
+	max-width: 500px;
+	display : block;
 	height: 100%;
 }
 
-button#return_button {
-	border: none;
-	background-color: transparent;
-	font-size: 14pt;
-	padding: 0;
-}
-
-button#return_button:after {
-	content: "";
-	position: absolute;
-	left: 0;
-	bottom: -5px;
-	width: 0px;
-	height: 2px;
-	transition: all 0.2s ease-in-out;
-	transition-duration: 0.3s;
-	opacity: 0;
-	background-color: black;
-}
-
-button#return_button:hover:after {
-	width: 100%;
-	opacity: 1;
+form#register_frm {
+	height: 100%;
 }
 
 div#form_register_container {
-	padding: 20px;
+	position : relative;
 	max-width: 500px;
+	padding-right : 10px;
+	height : calc(93vh - 60px);
 	flex: 1;
-	/* padding: 32px; */
+	overflow-y : scroll;
 }
 
 div#image_register_container {
-	position: relative;
-	top: -40px;
-	height: 600px;
+	height: 100%;
 	flex: 1;
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
-	padding: 20px 0 0 0;
 }
 
 div#input_container {
@@ -134,9 +111,7 @@ div.size_box input {
 
 div#color_box {
 	margin: 30px 0;
-	height: 150px;
 	border: none;
-	overflow-y: scroll;
 	border: solid 1px #eee;
 }
 
@@ -154,6 +129,7 @@ div#color_container {
 	width: 100%;
 	height: 40px;
 	display: flex;
+	justify-content : space-between;
 }
 
 input#color_code_input {
@@ -161,9 +137,6 @@ input#color_code_input {
 	width: 100px;
 }
 
-button#add_color_button {
-	background-color: transparent;
-}
 
 button#add_color_button:hover {
 	transition: 0.2s ease;
@@ -171,15 +144,12 @@ button#add_color_button:hover {
 	background-color: black;
 }
 
-button.delete_color_button {
-	background-color: transparent;
-}
-
 div#image_container {
 	height: 90%;
 }
 
 div#image_frm_container {
+	display:flex;
 	margin-top: 20px;
 }
 
@@ -191,32 +161,6 @@ div#color_box::-webkit-scrollbar-thumb {
 	background: #000;
 }
 
-button#return_button {
-	font-size: 14px;
-	letter-spacing: 0.5px;
-	/* 호버 언더라인 효과 제거하고 투명도로 대체 */
-}
-
-button#return_button:hover {
-	opacity: 0.7;
-}
-
-button#add_color_button,
-button#product_register_button,
-button#file_upload_button,
-button#delete_image_button {
-	padding: 8px 24px;
-	border: none;
-	background: #000;
-	color: white;
-	transition: opacity 0.2s;
-}
-
-button#add_color_button:hover {
-	opacity: 0.8;
-	background: #000; /* 호버 시 색상 변경 대신 투명도로 */
-}
-
 button#product_register_button {
 	float: right;
 	align-self: flex-end;
@@ -224,4 +168,20 @@ button#product_register_button {
 
 input#image_input {
 	display: none; /* 파일 input 숨기기 */
+}
+
+input#color_code_input {
+	height : 100%;
+	background-color : white;
+}
+
+button#product_register_button {
+	position : relative;
+	bottom : 0;
+	left : 0;
+	width : 100%;
+	height : 40px;
+	border : none;
+	background-color : #000;
+	color : #fff;
 }

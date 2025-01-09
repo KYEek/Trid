@@ -28,5 +28,16 @@ public interface OrderDAO {
 	// 유저의 주문 상세 정보를 불러온다
 	JSONArray selectOrderDetail(int pk_member_no, int orderNO) throws SQLException;
 
+	// 관리자 금주 주문 내역 개수 (결제완료 수, 상품 준비 수, 배송 중 수, 배송완료 수)
+	Map<String, Integer> selectWeekPayment() throws SQLException;
+
+	// 관리자 일주일간 일간 매출 조회
+	List<Map<String, String>> selectdailySalesList() throws SQLException;
+
+	// 관리자 월간 매출 조회
+	List<Map<String, String>> selectMonthlySalesList() throws SQLException;
+
+	// 관리자 연 매출 조회
+	List<Map<String, String>> selectYearSalesList() throws SQLException;
 
 }

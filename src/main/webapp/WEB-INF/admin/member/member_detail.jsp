@@ -13,11 +13,10 @@
 <title>관리자 회원 상세</title>
 
 <%-- css --%>
-<link rel="stylesheet" href="${ctxPath}/css/admin/product_detail.css">
+<link rel="stylesheet" href="${ctxPath}/css/admin/member_detail.css">
 
 <%-- js --%>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.7.1.min.js"></script>
-<script src="${ctxPath}/js/admin/product_detail.js"></script>
 </head>
 
 <body>
@@ -25,7 +24,7 @@
 	<c:set var="memberDTO" value="${requestScope.memberDTO}" />
 
 	<%-- 상품 상세 --%>
-	<div id="product_manage_container">
+	<div id="container">
 
 		<%-- 관리자 사이드 네비게이션 --%>
 		<%@ include file="../side_navigation.jsp"%>
@@ -35,33 +34,70 @@
 			<div id="item_container">
 			
 				<div id="detail_header">
-					<h2>회원 상세조회</h2>
-					<div id="header_buttons">
-						<%-- 돌아가기 버튼을 클릭 시 이전 페이지로 돌아간다. --%>
-						<a id="return" href="memberManage.trd">돌아가기</a> 
-					</div>
+					<h2 style="margin-right:20px;">회원 상세조회</h2>
+					<button type = button class="button--ujarak" onclick="location.href='memberManage.trd'">돌아가기</button>
+					<button type = button class="button--ujarak" onclick="location.href='memberLoginHistory.trd?memberNo=${memberDTO.pk_member_no}'" style="width:150px;">
+						로그인 이력 조회
+					</button>
 				</div>
 	
 				<%-- 상세 정보 --%>
-				<div id="detail_container">
-					<div class="item">
-						<span>회원 일련번호</span> 
-						<span>${memberDTO.pk_member_no}</span>
-						
-						<span>회원명</span> 
-						<span>${memberDTO.member_name}</span>
-						
-						<span>이메일</span> 
-						<span>${memberDTO.member_email}</span>
-						
-						<span>전화번호</span> 
-						<span>${memberDTO.member_mobile}</span>
-					</div>
+				<div id="detail_container">					
+					<div id="member_summary_container">
+						<div class="item">
+							<span>회원 일련번호</span> 
+							<span class="value_span">${memberDTO.pk_member_no}</span>
+						</div>
+						<div class="item">
+							<span>회원명</span> 
+							<span class="value_span">${memberDTO.member_name}</span>
+						</div>
+						<div class="item">
+							<span>성별</span> 
+							<span class="value_span">
+								<c:if test="${memberDTO.member_gender == 0}">여자</c:if>
+								<c:if test="${memberDTO.member_gender == 1}">남자</c:if>
+							</span>
+						</div>
+						<div class="item">
+							<span>이메일</span>
+							<span class="value_span">${memberDTO.member_email}</span>
+						</div>
 
+						<div class="item">
+							<span>전화번호</span> 
+							<span class="value_span">${memberDTO.member_mobile}</span>
+						</div>
+						
+						<div class="item">
+							<span>회원 상태</span> 
+							<span class="value_span">
+								<c:if test="${memberDTO.member_status == 0}">탈퇴</c:if>
+								<c:if test="${memberDTO.member_status == 1}">가입</c:if>
+							</span>
+						</div>
+						
+						<div class="item">
+							<span>휴면 유무</span> 
+							<span class="value_span">
+								<c:if test="${memberDTO.member_idle == 0}">휴면</c:if>
+								<c:if test="${memberDTO.member_idle == 1}">활성화</c:if>
+							</span>
+						</div>
+						
+						<div class="item">
+							<span>가입일자</span> 
+							<span class="value_span">${memberDTO.member_registerday}</span>
+						</div>
+						
+						<div class="item">
+							<span>수정일자</span> 
+							<span class="value_span">${memberDTO.member_updateday}</span>
+						</div>
+						
+					</div>
 	
 				</div>
-				
-				<a href="memberLoginHistory.trd?memberNo=${memberDTO.pk_member_no}">로그인 이력 조회</a>
 			
 			</div>
 			

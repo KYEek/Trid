@@ -14,6 +14,7 @@
 
 <%-- css --%>
 <link rel="stylesheet" href="${ctxPath}/css/admin/product_register.css">
+<link rel="stylesheet" href="${ctxPath}/css/admin/button.css">
 
 <%-- js --%>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.7.1.min.js"></script>
@@ -25,41 +26,52 @@
 <body>
 	<c:set var="categoryList" value="${requestScope.categoryList}" />
 
-	<div id="product_register_container">
+	<div id="product_edit_container">
 
 		<%@ include file="../side_navigation.jsp"%>
 
-		<div id="main_container">
+		<div id="image_register_container">
+			<div id="image_container">
+				<%@ include file="../../image_carousel_register.jsp"%>
+				<div id="image_frm_container">
+					<input type="hidden" name="fileName" />
+					<button type="button" class="button--ujarak" id="file_upload_button">이미지 추가</button>
 
-			<div id="register_header">
-				<h2>상품 추가</h2>
-				<div>
-					<a id="return" href="productManage.trd">돌아가기</a>
+					<input type="file" id="image_input" name="file" multiple onchange="readURL(this);" />
+					<button type="button" class="button--ujarak" id="delete_image_button">삭제</button>
 				</div>
 			</div>
+		</div>
+
+		<div id="main_container">
 
 			<div id="register_container">
+			
 				<form id="register_frm" name="product_register_frm" enctype="multipart/form-data">
+				
+					<div id="register_header">
+						<h2>상품 추가</h2>
+						<div>
+							<button type="button" class="button--ujarak" onclick="location.href='productManage.trd';">돌아가기</button>
+						</div>
+					</div>
 
-					<div id="form_register_container">
+					<div id="form_register_container">	
 
 						<div id="input_container">
 							<div class="input_box">
-								<span>상품명</span> 
-								<input type="text" name="productName" />
+								<span>상품명</span> <input type="text" name="productName" />
 							</div>
 							<div class="input_box" style="align-items: flex-start;">
 								<span>상품 설명</span>
 								<textarea id="explanation_textarea" cols="30" rows="5" name="explanation"></textarea>
 							</div>
 							<div class="input_box">
-								<span>상품 가격</span> 
-								<input type="text" name="price" />
+								<span>상품 가격</span> <input type="text" name="price" />
 							</div>
 
 							<div id="select_container">
-								<span>카테고리</span> 
-								<select name="categoryNo">
+								<span>카테고리</span> <select name="categoryNo">
 									<option value="">카테고리를 선택하세요</option>
 									<c:forEach items="${categoryList}" var="categoryDTO">
 										<option value="${categoryDTO.pkCategoryNo}">
@@ -70,9 +82,7 @@
 
 											<c:if test="${categoryDTO.type eq 0}">상의&nbsp;:</c:if>
 
-											<c:if test="${categoryDTO.type eq 1}">하의&nbsp;:</c:if> 
-											
-											${categoryDTO.categoryName}
+											<c:if test="${categoryDTO.type eq 1}">하의&nbsp;:</c:if> ${categoryDTO.categoryName}
 
 										</option>
 									</c:forEach>
@@ -84,26 +94,22 @@
 
 								<div class="size_container">
 									<div class="size_box">
-										<span class="size_span">S</span>
-										<input type="number" id="small" class="size" value=0 />
+										<span class="size_span">S</span> <input type="number" id="small" class="size" value=0 min=0 />
 									</div>
 
 									<div class="size_box">
-										<span class="size_span">M</span>
-										<input type="number" id="medium" class="size" value=0 />
+										<span class="size_span">M</span> <input type="number" id="medium" class="size" value=0 min=0 />
 									</div>
 								</div>
 							</div>
-							
+
 							<div class="size_container">
 								<div class="size_box">
-									<span class="size_span">L</span>
-									<input type="number" id="large" class="size" value=0 />
+									<span class="size_span">L</span> <input type="number" id="large" class="size" value=0 min=0 />
 								</div>
-								
+
 								<div class="size_box">
-									<span class="size_span">XL</span>
-									<input type="number" id="x_large" class="size" value=0 />
+									<span class="size_span">XL</span> <input type="number" id="x_large" class="size" value=0 min=0 />
 								</div>
 							</div>
 
@@ -112,8 +118,6 @@
 						<input type="hidden" name="inventory" /> 
 						<input type="hidden" id="colorName" name="colorName" /> 
 						<input type="hidden" id="colorCode" name="colorCode" />
-
-						<div id="color_box"></div>
 
 						<div id="color_container">
 
@@ -129,32 +133,19 @@
 								<option value="WHITE">WHITE</option>
 								<option value="BLACK">BLACK</option>
 								<option value="BROWN">BROWN</option>
-							</select>
-							
+							</select> 
 							<input id="color_code_input" type="color" />
 
-							<button type="button" id="add_color_button">색상 추가하기</button>
+							<button style="width:130px; height: 40px;" type="button" class="button--ujarak" id="add_color_button">색상 추가하기</button>
 
 						</div>
+						
+						<div id="color_box"></div>
 
 					</div>
-
-					<div id="image_register_container">
-						<div id="image_container">
-							<%@ include file="../../image_carousel_register.jsp"%>
-							<div id="image_frm_container">
-								<input type="hidden" name="fileName" />
-								<button type="button" id="file_upload_button">이미지 추가</button>
-
-								<input type="file" id="image_input" name="file" multiple onchange="readURL(this);" />
-								<button type="button" id="delete_image_button">삭제</button>
-
-							</div>
-
-							<button type="button" id="product_register_button">등록하기</button>
-						</div>
-					</div>
-
+					
+					<button type="button" id="product_register_button">등록하기</button>
+					
 				</form>
 			</div>
 		</div>

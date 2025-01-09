@@ -1,5 +1,7 @@
 package login.controller;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +19,7 @@ import member.model.*;
 public class Login extends AbstractController {
 
 	private MemberDAO mdao = new MemberDAO_imple();
-	
+
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -26,7 +28,7 @@ public class Login extends AbstractController {
 		if("POST".equalsIgnoreCase(method)) { // POST 방식이라면
 			String member_email = request.getParameter("email");
 			String member_password = request.getParameter("pwd");
-			String clientIp = request.getRemoteAddr();
+			String clientIp = getClientIp(request);
 			
 			Map<String , String> paraMap = new HashMap<>();
 			paraMap.put("member_email", member_email);
@@ -87,6 +89,43 @@ public class Login extends AbstractController {
 			super.setViewPage(Constants.MEMBER_LOGIN_PAGE);
 		}
 
-	}// end of public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception------------------------
-
+	}// end of public void execute(HttpServletRequest request, HttpServletResponse
+		// response) throws Exception------------------------
+	
+	/*
+	 * 클라이언트 IP를 구하는 메소드
+	 */
+	public String getClientIp(HttpServletRequest request) throws UnknownHostException {
+		String ip = request.getHeader("X-Forwarded-For");
+		
+		
+		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+		
+		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("WL-Proxy-Client-IP");
+		}
+		
+		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("HTTP_CLIENT_IP");
+		}
+		
+		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+		}
+		
+		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getRemoteAddr();
+		}
+		
+		if(ip.equals("0:0:0:0:0:0:0:1") || ip.equals("127.0.0.1")) {
+		InetAddress address = InetAddress.getLocalHost();
+		ip = address.getHostAddress();
+		
+		}
+		
+		return ip;
+	}
+	
 }

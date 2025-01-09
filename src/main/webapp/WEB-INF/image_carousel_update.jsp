@@ -24,8 +24,6 @@
 						<div data-no="${imageDTO.pkProductImageNo}" class="product-slide" style="display: block;">
 							<img src="${pageContext.request.contextPath}/${imageDTO.imagePath}" />
 						</div>
-						<span class="imageName">${imageDTO.imageName}</span>
-						<span class="imageRegisterday">${imageDTO.registerday}</span>
 					</c:forEach>
 				</div>
 				<div class="thumbnail-container">
