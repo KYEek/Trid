@@ -38,14 +38,15 @@
 
 <!-- 헤더 카테고리 -->
 <div id="header_menu">
-	<div id="menu_all">전체</div>
-
+	<a id="menu_all" href="${pageContext.request.contextPath}/product/category_list.trd?chooseGender=&chooseType=">
+		<div id="menu_all">전체</div>
+	</a>
 	
 	<c:forEach var="categoryDTO" items="${categoryList}">
 		<c:if test="${categoryDTO.gender == chooseGender && categoryDTO.type == chooseType }">
 		
 			<c:if test="${not empty categoryDTO.pkCategoryNo}">
-				<a href="${pageContext.request.contextPath}/product/category_list.trd?chooseGender=${categoryDTO.gender}&chooseType=${categoryDTO.type}&chooseCategoryNo=${categoryDTO.pkCategoryNo}">
+				<a id="clothing_category" href="${pageContext.request.contextPath}/product/category_list.trd?chooseGender=${categoryDTO.gender}&chooseType=${categoryDTO.type}&chooseCategoryNo=${categoryDTO.pkCategoryNo}">
 					<div id="categoryName">${categoryDTO.categoryName}</div>
 				</a>
 			</c:if>
@@ -63,28 +64,32 @@
 		색상
 	</button>
 	
-	<div id="choose_color_box">
-		<button id="red" class="onclick" type="button" style="background-color: red;"></button>
-		<button id="orange" class="onclick" type="button"  style="background-color: orange "> </button>
-		<button id="yellow" class="onclick" type="button" style="background-color: yellow "></button>
-		<button id="green" class="onclick" type="button" style="background-color: green "></button>
-		<button id="blue" class="onclick" type="button" style="background-color: blue "></button>
-		<button id="purple" class="onclick" type="button" style="background-color: purple "></button>
-		<button id="gray" class="onclick" type="button" style="background-color: gray "></button>
-		<button id="white" class="onclick" type="button" style="background-color: white "></button>
-		<button id="black" class="onclick" type="button" style="background-color: black "></button>
-		<button id="brown" class="onclick" type="button" style="background-color: brown "></button>
-	</div>
-	
 	<button id="choose_price_button" type="button">
 		가격
 	</button>
 	
+	<button id="apply_filter_button" type="button">
+		적용
+	</button>
+	
+	<div id="choose_color_box">
+		<button id="red" type="button" style="background-color: red;"></button>
+		<button id="orange" type="button"  style="background-color: orange "> </button>
+		<button id="yellow" type="button" style="background-color: yellow "></button>
+		<button id="green" type="button" style="background-color: green "></button>
+		<button id="blue" type="button" style="background-color: blue "></button>
+		<button id="purple" type="button" style="background-color: purple "></button>
+		<button id="gray" type="button" style="background-color: gray "></button>
+		<button id="white" type="button" style="background-color: white "></button>
+		<button id="black" type="button" style="background-color: black "></button>
+		<button id="brown" type="button" style="background-color: brown "></button>
+	</div>
+	
 	<!-- 가격 범위 설정 bootstrap -->
-	<div id="choose_price_box">
+	<div id="price_box">
 	    <div class="row">
 	        <div class="col-md-3">
-	            <div class="filter-section border p-3 rounded">
+	            <div id="price_choose_box" class="filter-section border p-3 rounded">
 	
 	                <!-- 가격 범위 설정 -->
 	                <div class="ms-3">
@@ -96,32 +101,24 @@
 	        </div>
 	    </div>
 	</div>
-	
-	<button id="apply_filter_button" type="button">
-		적용
-	</button>
-	
-	<button class="logo" id="2box">
+</div>	
+
+<!-- 	<button class="logo" id="2box">
 		<img src="../images/logo/2box.svg" alt="2box" />
 	</button>
 	
 	<button class="logo" id="4box">
 		<img src="../images/logo/4box.svg" alt="4box" />
-	</button>
+	</button> -->
 	
-</div>
 
-    <div id="container" style="overflow-y: auto">
+
+    <div id="container" style="height: 100%">
        
     	
     </div>
 
 <script>
-
-let pageNumber = 1;
-let pageSize = 18; // 한 번에 불러올 아이템 수
-let totalRowCount = 19;
-
 $(document).ready(function() {
 	
 	// 필터 적용 버튼 클릭 시 필터 적용 함수
@@ -173,7 +170,7 @@ $(document).ready(function() {
     loadMoreProducts();
     /* 무한스크롤 처리 함수 */
     $(window).scroll(function() {
-        if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
+        if (($(window).scrollTop()+1) + $(window).height() >= $(document).height()) {
             loadMoreProducts();
         }
     });
@@ -186,9 +183,21 @@ $(document).ready(function() {
     });
     
 });// end of $(document).ready(function() -------------------------
+		
+// 가격 범위 필터 설정 함수
+function updatePriceLabel() {
+    const rangeInput = document.getElementById('customRange2');
+    const priceLabel = document.getElementById('priceLabel'); // 최대 가격
+    priceLabel.textContent = rangeInput.value;
+    
+	console.log("내가 설정한 최대 가격", priceLabel);
+}
+
+let pageNumber = 1;
+let pageSize = 18; // 한 번에 불러올 아이템 수
+let totalRowCount = 19;
 
 const URL = location.href;
-		
 /* 무한스크롤 처리 ajax */
 function loadMoreProducts() {
 	
@@ -202,7 +211,6 @@ function loadMoreProducts() {
     });
 	
     const selectedPrice = $("span#priceLabel").text();
-    
     
     if(((pageNumber - 1) * pageSize) < totalRowCount ){
     	$.ajax({
@@ -230,54 +238,44 @@ function loadMoreProducts() {
         });	
     }
 }
-
-	// 가격 범위 필터 설정 함수
-	function updatePriceLabel() {
-	    const rangeInput = document.getElementById('customRange2');
-	    const priceLabel = document.getElementById('priceLabel'); // 최대 가격
-	    priceLabel.textContent = rangeInput.value;
-	    
-		console.log("내가 설정한 최대 가격", priceLabel);
-	}
 	
-	// 카테고리에 맞는 상품 리스트 업데이트 함수
-	function updateProductList(products) {
- 	    // console.log("업데이트할 상품 데이터:", products);
+// 카테고리에 맞는 상품 리스트 업데이트 함수
+function updateProductList(products) {
+	    // console.log("업데이트할 상품 데이터:", products);
 
-	    const productListDiv = $("div#container");
+    const productListDiv = $("div#container");
 
-	    if (!products || products.length === 0) {
-	        productListDiv.append("<p>상품이 없습니다.</p>");
-	        return;
-	    }
+    if (!products || products.length === 0) {
+        productListDiv.append("<p>상품이 없습니다.</p>");
+        return;
+    }
 
-	    // 서버에서 받은 JSON 데이터를 기반으로 HTML 생성
-	    products.forEach(product => {
-	    	
-	    	const path = "${pageContext.request.contextPath}" + product.imagePath;
-	    	const name = product.productName;
-	    	totalRowCount = Number(product.totalRowCount);
-	    	console.log(name);
-	    	
-	    	
-	    	// console.log(path);
-	        let productHtml = `
-				<div id="product" data-type=` + product.productNo + `>
-				    <div id="photo">
-				        <img src=`
-				        	productHtml += path;
-				        	
-				        	productHtml +=
-				        `${path} alt="상품 이미지" style="width: 100%; height: 100%; object-fit: cover;">
-				    </div>
-				    <div id="productInfo">
-				        <div id="name">` + product.productName + `</div>
-				        <div id="price">` + product.price + `&#8361;</div>
-				    </div>
-				</div>`;
-	        productListDiv.append(productHtml);
-	    });
-	}// end of function updateProductList(products) --------------------------------
+    // 서버에서 받은 JSON 데이터를 기반으로 HTML 생성
+    products.forEach(product => {
+    	
+    	const path = "${pageContext.request.contextPath}" + product.imagePath;
+    	const name = product.productName;
+    	totalRowCount = Number(product.totalRowCount);
+    	console.log(name);
+    	// console.log(path);
+    	
+        let productHtml = `
+			<div id="product" data-type=` + product.productNo + `>
+			    <div id="photo">
+			        <img src=`
+			        	productHtml += path;
+			        	
+			        	productHtml +=
+			        `${path} alt="상품 이미지" style="width: 100%; height: 100%; object-fit: cover;">
+			    </div>
+			    <div id="productInfo">
+			        <div id="name">` + product.productName + `</div>
+			        <div id="price">` + product.price + `원</div>
+			    </div>
+			</div>`;
+        productListDiv.append(productHtml);
+    });
+}// end of function updateProductList(products) --------------------------------
 	
 </script>
 

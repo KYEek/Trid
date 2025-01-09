@@ -64,4 +64,9 @@ public interface ProductDAO {
 
 	// 일주일 재고가 빈 상품 리스트
 	List<Map<String, String>> selectWeekEmptyInventoryList() throws SQLException;
+
+	// 검색어 입력시 검색된 상품의 총 개수를 구하는 메소드
+	public int searchCountProductByCategory(Map<String, String> paraMap) throws SQLException;
+
+
 }

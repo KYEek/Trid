@@ -61,6 +61,10 @@ div#category_box  {
 	transform: 0.5s linear; */
 }
 
+div#category_box a active- {
+	font-weight: bold;
+}
+
 /* 의류 카테고리 박스 */
 ul.clothing_box {
 	display: none;
@@ -91,10 +95,63 @@ ul.clothing_box a {
 	text-decoration: none;
 }
 
+
+
 /* 햄버거 클릭시 성별, 의류 카테고리 보이기 */
 ul.clothing_box.show,
 div#category_box.show {
     display: flex;
 }
 
+/* 성별 클릭시 생기는 클래스 */
+.choose_gender_active {
+	font-weight: bold;
+}
 
+
+/*위에서 살짝 떨어지는 밑줄*/
+div#category_box span,
+ul.clothing_box span.clothing_category {
+  position: relative;
+  padding-bottom: 8px;
+}
+div#category_box span:before,
+ul.clothing_box span.clothing_category:before {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: black;
+}
+div#category_box span:before,
+ul.clothing_box span.clothing_category:before {
+  opacity: 0;
+  -webkit-transform: translateY(-8px);
+  transform: translateY(-8px);
+  -webkit-transition: opacity 0s,
+    -webkit-transform 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: opacity 0s,
+    -webkit-transform 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0s;
+  transition: transform 0s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0s,
+    -webkit-transform 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+div#category_box span:hover:before,
+ul.clothing_box span.clothing_category:hover:before {
+  opacity: 1;
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+  -webkit-transition: opacity 0.2s,
+    -webkit-transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: opacity 0.2s,
+    -webkit-transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    opacity 0.2s;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    opacity 0.2s, -webkit-transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/*위에서 살짝 떨어지는 밑줄:끝*/
