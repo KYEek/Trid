@@ -5,54 +5,99 @@ div#header_menu {
 }
 
 /* 카테고리바 CSS */
+
+/* 색상 버튼 누르면 나오는 컬러 선택 바 */
+div#choose_color_box {
+	margin-bottom: 1.5%;
+}
+
+/* 밑줄 제거용 옷 종류 박스 a태그 */
+a#clothing_category,
+a#menu_all {
+	text-decoration: none;
+}
+
+/* 컬러 선택 박스의 버튼 */
 div#choose_color_box button {
-    width: 30px;
+    width:  30px;
     height: 30px;
     border: none;
 
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
-
+/* 컬러 박스 위에 마우스 올릴때 효과 */
 div#choose_color_box button:hover{
     border: solid 5px black;
 }
 
-button.choose_color_active {
-    border: solid 2px black;
-    /* background-color: red; */
+div#choose_color_box button.color_active {
+	border: solid 5px black;
 }
 
-button.color_active {
+
+/* 컬러 클릭시 효과 */
+button.choose_color_active {
     box-shadow: none;
     width: 30px;
+    border: solid 10px black;
 }
 
-button.logo {
-	border: none;
-	float: right;
-	background-color:transparent;
+/* 가격 버튼 클릭시 나오는 가격 선택 박스 */
+div#price_choose_box {
+	margin-left: 27.2%;
+	margin-bottom: 7%;
 }
 
-button#2box {
-	margin-right: 3%;
-} 
+/* 카테고리 박스 */
+div#header_menu div {
+	/* width: 75px; */
+	width: auto;
+	height: 30px;
+	
+	padding: 1.5px 0.58% 0 0.58%;
+	margin: 1.5% 0 1.5% 1%;
+}
 
+/* 카테고리 필터 선택 박스 */
 button#choose_color_button,
 button#choose_price_button,
 button#apply_filter_button {
-	width: 60px;
+	width: auto;
 	height: 30px;
+	
+	padding: 1.5px 0.58% 0 0.58%;
+	margin: 0 0 1.5% 1%;
+	
 	background: transparent;
-	margin: 1% 0 1% 0.5%;
 	border: solid 1px black;
 }
 
-button#choose_color_button {
-	margin-left: 6.5%
+.choose_category_active {
+	background-color: black;
+	color: white;
 }
 
-/* 상품 리스트 페이지 CSS */
 
+/* 왼쪽벽 이격을 위한 전체 버튼 마진용 */
+div#header_menu div#menu_all{
+	margin-left: 1.6%;
+}
+
+/* 왼쪽벽 이격을 위한 색상 선택 버튼 마진용 */
+button#red {
+	margin-left: 6.5%;
+}
+
+/* 왼쪽벽 이격을 위한 카테고리 컬러버튼 마진용 */
+button#choose_color_button {
+	margin-left: 6.5%;
+}
+
+
+
+
+
+/* 검색바 */
 div.search_box {
     text-align: center;
 }
@@ -68,13 +113,21 @@ input#product_name {
     margin:0 auto;
 }
 
+
+
+
+
+/* 상품 리스트 페이지 CSS */
+
 /* 상품사진+상품명 감싸는 div */
 div#container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
 
     width: 100%;
+    height: 100%;
 }
+
 
 /* 상품사진 div */
 div#container div#photo {
@@ -86,18 +139,40 @@ div#container div#productInfo {
     height: 80px;
 }
 
+/* 상품 사진, 이름 가격 박스 */
 div#container div#photo,
 div#container div#productInfo {
     border: solid 1px black;
 }
 
+/* 상품 이름, 가격 */
 div#name,
 div#price {
 	height: 40px;
+	padding-left: 3%;
+}
+
+/* 상품 이름 */
+div#name {
+	padding-top: 2%;
+	
+	line-height: 0.9;
 }
 
 /* 상품에 마우스를 올릴 시 커서 변환 */
 div#product:hover {
 	cursor: pointer;
 }
+
+
+/* 상품 리스트 페이지 정렬 변경 버튼 */
+/* button.logo {
+	border: none;
+	float: right;
+	background-color:transparent;
+}
+
+button#2box {
+	margin-right: 3%;
+}  */
 
