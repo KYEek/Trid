@@ -402,6 +402,38 @@ public class MemberDAO_imple implements MemberDAO {
 	}// end of public boolean updatePwdEnd(MemberDTO member) throws SQLException-------------
 
 	
+	// 비밀번호 찾기를 한 후 비밀번호 수정해주는 메소드
+	@Override
+	public int updateFindPwdEnd(Map<String, String> paraMap) throws SQLException {
+		
+		int result = 0; // 업데이트가 성공되어졌는지 알기위한 용도
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " update tbl_member set member_password = ? where member_mobile = ? ";
+			
+			pstmt = conn.prepareStatement(sql);// 우편배달부
+	        
+			pstmt.setString(1, Sha256.encrypt(paraMap.get("newPwd")));
+	        pstmt.setString(2, aes.encrypt(paraMap.get("mobile")) ); 
+	        
+	        result = pstmt.executeUpdate();
+	           
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return result;// 성공되어졌다면 result 값은 1이 나온다.
+		
+	}// end of public int updateFindPwdEnd(Map<String, String> paraMap) throws SQLException----------
+	
+	
+	
+	
+	
 	// 관리자 회원 리스트 조회 시 전체 회원 수를 구하는 메소드
 	@Override
 	public int selectTotalRowCountByAdmin(Map<String, Object> paraMap) throws SQLException {
@@ -920,5 +952,7 @@ public class MemberDAO_imple implements MemberDAO {
 		return isExists;
 		
 	}// end of public boolean mobileDuplicateCheck(String mobile) throws SQLException-----------------	
+
+	
 
 }

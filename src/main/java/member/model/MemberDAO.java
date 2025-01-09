@@ -39,6 +39,9 @@ public interface MemberDAO {
    // 비밀번호 변경을 처리해주는 메소드
    int updatePwdEnd(Map<String , String> paraMap) throws SQLException;
 
+   // 비밀번호 찾기를 한 후 비밀번호 수정해주는 메소드
+   int updateFindPwdEnd(Map<String, String> paraMap) throws SQLException;
+   
    // 관리자 회원 리스트 조회 시 전체 회원 수를 구하는 메소드
    int selectTotalRowCountByAdmin(Map<String, Object> paraMap) throws SQLException;
 
@@ -46,6 +49,7 @@ public interface MemberDAO {
 	// 회원가입시 전화번호 중복검사 (tbl_member 테이블에서 mobile 이 존재하면 true 를 리턴해주고, mobile 이 존재하지 않으면 false 를 리턴한다)
 	boolean mobileDuplicateCheck(String mobile) throws SQLException;
    
+	
    // 관리자 회원 리스트 조회 메소드
    List<MemberDTO> selectMemberListByAdmin(Map<String, Object> paraMap) throws SQLException;
    
@@ -61,5 +65,7 @@ public interface MemberDAO {
 
    // 휴면 상태를 해제해주는 메소드
    int UpdateMemberIdle(String meberNo, String clientip) throws SQLException;
+
+
 	
 }

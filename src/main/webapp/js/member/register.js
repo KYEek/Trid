@@ -23,6 +23,22 @@ $(document).ready(function(){
 	$("div#mobile_check_box").hide();
 	$("input#email").focus();
 	
+	$("input#email").blur(function(){
+		
+		const email = $("input#email").val();
+		
+		if(!checkEmail(email)){// 이메일을 잘못 입력했을 경우
+		//	alert("이메일 유효성 검사");
+			$("div.email_message").html("이메일 형식을 정확하게 입력해주세요").css({ "color": "red" });
+			$("div.email_message").show();
+			b_emailcheck_click = false;
+			$("input#email").val("");
+		}
+		
+	});
+	
+	
+	
 	// "이메일중복확인" 을 클릭했을 때 이벤트 처리하기
 	$("button#emailcheck").click(function() {
 
@@ -30,7 +46,7 @@ $(document).ready(function(){
 		
 		b_emailcheck_click = true;
 		
-		if(!checkEmail(email)){
+		if(!checkEmail(email)){// 이메일을 잘못 입력했을 경우
 		//	alert("이메일 유효성 검사");
 			$("div.email_message").html("이메일 형식을 정확하게 입력해주세요").css({ "color": "red" });
 			$("div.email_message").show();
@@ -39,12 +55,16 @@ $(document).ready(function(){
 			return false;
 		}
 		
+		else{ // 이메일을 올바르게 입력했을 경우
+		//	$("input#email").prop("readonly",true);
+		}
+		
 		$.ajax({
 			url: "member/emailDuplicateCheck.trd", 
 			//tbl_member 테이블에 같은 이메일을 사용하는 사용자가 있는지 알아온다.
 			
 			data: {
-				"newEmail": $("input#email").val(),
+				"newEmail":$("input#email").val(),
 			}, 
 			type: "post",  
 
@@ -95,7 +115,7 @@ $(document).ready(function(){
 	// 비밀번호 확인 검사	
 	$("input#pwdCheck").blur((e) => {
 		const pwd = $("input#pwd").val(); // 비밀번호 입력값
-		const pwdCheck = $(e.target).val(); // 비밀번호 확인 입력값
+		const pwdCheck = $(e.target).val().trim(); // 비밀번호 확인 입력값
 		
 		// 초기에 비밀번호 확인 경고 메시지가 보여진다
 		$("div.pwd_checkMessage").show(); 
@@ -197,8 +217,9 @@ function goRegister() {
 	// *** "이메일중복확인" 을 클릭했는지 검사하기 끝 *** //	
 		
 		if(!pwdValid || !pwdCheckValid) {
-			// 비밀번호를 입력하지 않을 경우
+			// 올바른 비밀번호를 입력하지 않을 경우
 			alert("비밀번호를 다시 입력해 주세요.");
+			$("input#pwdCheck").val("");
 			return;
 		}
 
@@ -303,7 +324,7 @@ function sendCode() {
 						if(json.success_count == 1) {
 							$("input#codeCheck").val(json.certification_code);	
 							$("div.code_message").html("");
-			                $("div.code_message").html("<span style='color:black; font-weight:bold;'>문자전송이 성공되었습니다.^^</span>");
+			                $("div.code_message").html("<span style='color:red; font-weight:bold;'>문자전송이 성공되었습니다.^^</span>");
 						    $("div#mobile_check_box").show(); // 문자 전송 성공 시 인증번호 확인 div show
 						   
 		                }
@@ -333,7 +354,7 @@ function sendCode() {
 }// end of function sendCode()------------
 
 
-// 문자로 받은 인증번호가 일치한지 확인하는 함수
+// 문자로 받은 인증번호가 일치하는지 확인하는 함수
 function MobileCodeCheck(){
 
 	const mobileCheck = $("input#mobileCheck").val().trim();
@@ -345,7 +366,8 @@ function MobileCodeCheck(){
 	else {
 		alert("인증성공!!");
 		codeCheck_click = true;
-		
+		pwdValid= true; 
+		pwdCheckValid = true;
 	}
 	
 }// end of function codeCheck()------------------------------

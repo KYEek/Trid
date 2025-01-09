@@ -68,62 +68,63 @@ function goMemberDelete(){
 
 <style>
 
-div#container{
-    border: solid 0px blue;
-    width: 70%;
-    margin: 10% 0 10% 3%;
+div#container {
+	border:solid 0px red;
+	margin: 6% 3% 8% 4%;
+	width: 80%;
 }
 
-button > span.line{
-    color: gray;
-    text-decoration: underline;
-    font-size: 10pt;
-}
-
-div.button-list{
-    border: solid 2px black;
-    width: 90%;
-    height: 400px;
-    margin: 2% 3% 3% 0;
-    padding-bottom: 0%;
-}
-
-button{
-    background-color: white;
-    border: none;
-}
-
-div.button{
-    border: solid 0px red;
-    width: 95%;
-    height: 60px;
-    margin: 0 2% 0 2%;
-    padding: 4% 0  0  0;
-
+div#memberInfo {
+	padding: 2% 1% 0 1%;
+	border:solid 1px black;
+	width: 60%;
+	padding-top: 2%;
+	margin-bottom: 1%;
+	margin-top: 1%;
 }
 
 label.arrow {
-    float: right;
-    color: #595959;
-    font-size: 20pt;
+	width: 100%;
+	margin: 0;
+	margin-bottom: 1%;
+
+}
+div.button {
+	width: 100%;
+	margin: 0 0 4% 2%;
 }
 
-button[type="button"]{
-    margin-bottom: 1%;
-    font-size: 13pt;
+button.line {
+	background-color: white;
+	color: gray;
+	border: none;
+	font-size: 10pt;
+	border-bottom: solid 1px gray;
+	margin-bottom: 1%;
+	font-size: 8pt;
+}
+
+button.button {
+	border:solid 1px black;
+	display: none;
+}
+
+span#name {
+	display:inline-block;
+	width: 30%;
+	margin: auto;
+}
+
+i{
+	margin-left: 65%;
+}
+
+div#name {
+	margin-left: 1%;
 }
 
 div.change{
-    font-size: 10pt;
-    padding: 0 0 0 1%;
-}
-
-i {
-    font-size: 13pt;
-}
-
-div.button {
-	margin-bottom: 4%;
+	font-size: 8pt;
 }
 
 </style>
@@ -134,37 +135,41 @@ div.button {
 
     <div id="container">
 
-        <div>${sessionScope.loginuser.member_name}님의 마이페이지</div>
+        <div id="name">${sessionScope.loginuser.member_name}님의 마이페이지</div>
 
         <div id="memberInfo">
+
             <div class="button-list">
 
                 <div class="button address">
                     <button type="button" id="address" onclick="goAddress()">주소</button><label for="address" class="arrow"><i class="fa-solid fa-greater-than"></i></label>
+
+                <div class="button">
+                	<label for="address" class="arrow"><button type="button" id="address" class="button" onclick="updateAddress()"></button><span id="name">주소</span><i class="fa-solid fa-greater-than"></i></label>
+                	<%-- <div id="address" class="change">${sessionScope.loginuser.member_address}</div> --%>
+                </div>
+                
+                <div class="button">
+                    <label for="email" class="arrow"><button type="button" id="email" class="button"  onclick="updateEmail()"></button><span id="name">이메일</span><i class="fa-solid fa-greater-than"></i></label>
+                    <div id="email" class="change">${sessionScope.loginuser.member_email}</div>
+
                 </div>
 
                 <div class="button">
-                        <button type="button" id="email" onclick="updateEmail()">이메일</button><label for="email" class="arrow"><i class="fa-solid fa-greater-than"></i></label>
-                        <div id="email" class="change">${sessionScope.loginuser.member_email}</div>
+                     <label for="mobile" class="arrow"><button type="button" id="mobile" class="button" onclick="updateMobile()"></button><span id="name">전화번호</span><i class="fa-solid fa-greater-than"></i></label>
+                     <div id="mobile" class="change">${fn:substring(sessionScope.loginuser.member_mobile, 0, 3)}&nbsp;-&nbsp;${fn:substring(sessionScope.loginuser.member_mobile, 3, 7)}&nbsp;-&nbsp;${fn:substring(sessionScope.loginuser.member_mobile, 7, 11)}</div>
                 </div>
 
                 <div class="button">
-                        <button type="button" id="mobile" onclick="updateMobile()">전화번호</button><label for="mobile" class="arrow"><i class="fa-solid fa-greater-than"></i></label>
-                        <div id="mobile" class="change">${fn:substring(sessionScope.loginuser.member_mobile, 0, 3)}&nbsp;-&nbsp;${fn:substring(sessionScope.loginuser.member_mobile, 3, 7)}&nbsp;-&nbsp;${fn:substring(sessionScope.loginuser.member_mobile, 7, 11)}</div>
-                </div>
-
-                <div class="button">
-                        <button type="button" id="pwd" onclick="updatePwd()">비밀번호</button><label for="pwd" class="arrow"><i class="fa-solid fa-greater-than"></i></label>
-                        <div class="change">**********</div>
-                </div>        
-            </div>
+                     <label for="pwd" class="arrow"><button type="button" id="pwd" class="button" onclick="updatePwd()"></button><span id="name">비밀번호</span><i class="fa-solid fa-greater-than"></i></label>
+                     <div class="change">**********</div>
+                </div>  
         </div>
 
         <div>
-            <button type="button" class="line" onclick="javascript:goLogOut('<%= ctx_Path%>')"><span class="line">로그아웃</span></button>
+            <button type="button" class="line" onclick="javascript:goLogOut('<%= ctx_Path%>')">로그아웃</button>
             <br>
-            <br>
-            <button type="button" class="line"><span class="line" onclick="javascript:goMemberDelete('<%= ctx_Path%>')">계정 삭제</span></button>
+            <button type="button" class="line" onclick="javascript:goMemberDelete('<%= ctx_Path%>')">계정 삭제</button>
         </div>
     </div>
 

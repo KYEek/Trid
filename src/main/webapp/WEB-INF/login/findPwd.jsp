@@ -32,7 +32,7 @@
 
 <!-- 직접 만든 JS -->
 <script type="text/javascript" src="<%= ctx_Path%>/js/login/findPwd.js"></script>
-
+<script type="text/javascript" src="<%= ctx_Path%>/js/member/util.js"></script>
 
 <style>
 
@@ -43,17 +43,27 @@ div#container {
     margin: 15% auto;
 }
 
-div#container > input {
+input.requiredInfo {
     border: none;
     border-bottom: 2px solid #ccc;
     padding-bottom: 5px;
-    display: block;
     margin-bottom: 2%;
     outline: none;
     width: 35%;
+    font-size: 10pt;
 }
 
-button {
+
+div.box{
+ 	border: solid 0px blue;
+    display: block;
+    outline: none;
+    font-size: 10pt;
+    color: red;
+    margin-bottom: 2%;
+}
+
+button#goOn {
     text-align: center;
     width: 35%;
     height: 40px;
@@ -61,6 +71,17 @@ button {
     border: solid 1px black;
     font-size: 13pt;
     margin-top: 3%;
+}
+
+button#codecheck,
+button#code {
+	border: solid 1px gray;
+	border-radius: 5px;
+	font-size: 9pt;
+	text-align: center;
+	cursor: pointer;
+	padding: 0.2%;
+	background-color: white;
 }
 
 div#find{
@@ -73,7 +94,7 @@ div#mobile {
 	font-size: 13pt;
 }
 
-div.message {
+div.code_message {
     font-size: 10pt;
 }
 
@@ -87,18 +108,33 @@ div#message {
 
 <jsp:include page="../header.jsp"/>
 
-    <form action="">
+    <form name="FindPwdFrm" method="post">
 		<div id="container">
 			<div id="find">비밀번호 찾기</div>
 			
-			<div id="message">복구 지침이 포함된 이메일을 보내드립니다.</div>
+			<div id="message">문자인증 후 비밀번호를 변경해주십시오.</div>
 			
-			<input type="text" name="email" id="email" maxlength="20" class="requiredInfo" placeholder="이메일" />
-	        <div class="message"></div>
+			
+			<div class="box"> 
+                <input type="text" name="mobile" id="mobile" maxlength="60" class="requiredInfo" placeholder="전화번호" />
+                <button type="button" id="codecheck" onclick="sendCode()">인증번호 받기</button>
+                <div class="message"><i class="fa-solid fa-circle-info"></i>&nbsp;전화번호를 입력해주십시오</div>
+            </div>
 	       
-			<button type="button" onclick="goFindPwd()">계속</button>
+	        <input type="text" name="mobileCheck" id="mobileCheck" maxlength="4" class="requiredInfo" placeholder="인증번호" />
+	        <button type="button" id="code" onclick="mobileCodeCheck()">인증확인</button>
+	        <div class="code_message" style="color:red"><i class="fa-solid fa-circle-info"></i>&nbsp;인증번호 4자리를 입력해주세요.</div>
+	        <input type="hidden" name="codeCheck" id="codeCheck" value="${sessionScope.certification_code}"/>
+	        <br>
+			<button type="button" id="goOn" onclick="goFindPwd()">계속</button>
 		</div>
 	</form>
+
+
+	
+
+
+
 
 </body>
 </html>
