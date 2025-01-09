@@ -60,6 +60,7 @@ public class MemberLoginHistoryController extends AbstractController {
 				List<Map<String, String>> hisotryList = memberDAO.selectLoginHistoryByAdmin(paraMap); // 사용자 로그인 기록 조회
 				
 				request.setAttribute("historyList", hisotryList);
+				request.setAttribute("memberNo", memberNo);
 				request.setAttribute("pagingDTO", pagingDTO);
 				
 				super.setRedirect(false);
