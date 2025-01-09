@@ -28,7 +28,7 @@ div#container > input {
 }
 
 
-button {
+button[type='button'] {
     text-align: center;
     width: 35%;
     height: 35px;
@@ -37,6 +37,17 @@ button {
     font-size: 10pt;
     margin-top: 3%;
 }
+
+button[type='button']:hover {
+    text-align: center;
+    width: 35%;
+    height: 35px;
+    background-color: #ecf2f8;
+    border: solid 1px black;
+    font-size: 10pt;
+    margin-top: 3%;
+}
+
 
 div.message {
     font-size: 10pt;
@@ -87,6 +98,7 @@ div#update{
 			
 			<input type="text" name="newMobile" id="newMobile" maxlength="15" class="requiredInfo" placeholder="새 전화번호" size="49%"/>
 	        <input type="hidden" name="pkNum" id="pkNum" value="${sessionScope.loginuser.pk_member_no}"/>
+	        <input type="text" style="display:none"/>
 	        <div class="message"><i class="fa-solid fa-circle-info">&nbsp;전화번호를 입력해주십시오</i></div>
 	        <div class="mobile_message"><i class="fa-solid fa-circle-info"></i></div>
 	       

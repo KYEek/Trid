@@ -43,6 +43,7 @@ $(document).ready(function(){
 		// 같지 않은 경우
 		else{
 			$("div.newPwdCheck_message").show();
+			pwdCheckValid = false;
 		}
 	});
 			
@@ -67,16 +68,21 @@ function goUpdatePwd(){// 기존 비밀번호와 같다면 alert를 띄워준다
 
 		if (val == "") {
 			alert("현재 비밀번호와 변경하실 새 비밀번호를 모두 입력하세요.");
-
 			e_requiredInfo = true;
 			break;
 		}
 	}
-
+	
 	if (e_requiredInfo) {// 모든 입력란에 아무런 값이 들어오지 않았다면 
 		return; //함수 종료
 	}
 	// *** 필수입력사항에 모두 입력이 되었는지 검사하기 끝 *** //
+	
+	if(requiredInfo_list[1].value.trim() != requiredInfo_list[2].value.trim()){
+	//	console.log(requiredInfo_list);
+		alert("비밀번호가 같지 않습니다. 다시 확인해주세요.");
+		return;
+	}
 	
 	
 	// 현재 비밀번호 잘침

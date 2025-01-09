@@ -30,7 +30,6 @@ div#container > input {
     outline: none;
 }
 
-
 button {
     text-align: center;
     width: 35%;
@@ -38,6 +37,17 @@ button {
     color: red;
     border: solid 1px red;
     background-color: white;
+    font-size: 10pt;
+    margin-top: 3%;
+}
+
+button:hover {
+    text-align: center;
+    width: 35%;
+    height: 40px;
+    color: red;
+    border: solid 1px red;
+    background-color: #ffcccc;
     font-size: 10pt;
     margin-top: 3%;
 }
