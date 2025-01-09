@@ -38,7 +38,7 @@ public interface ProductDAO {
 	List<Map<String, String>> selectRecommendProductList(String productNo) throws SQLException;
 	
 	// 관리자 상품 수정 시 이미지 삭제
-	int deleteProductImage(String pkProductImageNo) throws SQLException;
+	int deleteProductImage(String pkProductImageNo, String productNo) throws SQLException;
 	
 	// 관리자 상품 수정 시 이미지 추가
 	int insertProductImage(List<ImageDTO> imageList, int productNo) throws SQLException;

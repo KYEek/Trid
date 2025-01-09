@@ -797,14 +797,14 @@ public class ProductDAO_imple implements ProductDAO {
 	 * 관리자 상품 이미지 삭제
 	 */
 	@Override
-	public int deleteProductImage(String pkProductImageNo) throws SQLException {
+	public int deleteProductImage(String pkProductImageNo, String productNo) throws SQLException {
 		int result = 0;
 		
 		try {
 
 			conn = ds.getConnection();
 			
-			conn.setAutoCommit(false);
+			conn.setAutoCommit(false);			
 
 			String sql 	= " delete from tbl_product_image where pk_product_image_no = ? ";
 
@@ -822,17 +822,20 @@ public class ProductDAO_imple implements ProductDAO {
 	
 			// 상품 수정 일자 변경
 			sql = " update tbl_product set product_updateday = sysdate "
-				+ " where pk_product_no = ( select fk_product_no from tbl_product_image where pk_product_image_no = ? ) ";
+				+ " where pk_product_no = ? ";
 
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setString(1, pkProductImageNo); // 상품 이미지 일련번호
+			pstmt.setString(1, productNo); // 상품 이미지 일련번호
 
 			if(pstmt.executeUpdate() != 1) {
 				System.out.println("[ERROR] tbl_product update failed ");
 				conn.rollback();
 				return 0;
 			}
+			
+			result = 1;
+			conn.commit();
 		
 		} finally {
 			close();

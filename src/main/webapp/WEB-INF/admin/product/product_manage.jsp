@@ -40,7 +40,7 @@
 				<div class="manage_header">
 					<div style="display : flex; align-items : center">
 						<h1 class="main_heading">Product Manage</h1>	 
-						<button class="button--ujarak register_button" onclick="location.href='productRegister.trd'">상품추가</button>
+						<button type="button" class="button--ujarak register_button" onclick="location.href='productRegister.trd'">상품추가</button>
 					</div>
 					<input type="search" class="manage_name" name="searchWord" placeholder="상품명"  />
 				</div>

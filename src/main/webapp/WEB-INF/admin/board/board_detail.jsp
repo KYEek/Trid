@@ -35,8 +35,8 @@
 			<div id="item_container">
 				<div id="detail_header">
 					<h2>Q&A 조회 및 답변</h2>
-					<button type = button class="button--ujarak" onclick="location.href='boardManage.trd'">돌아가기</button>
-					<button id="answer_button" class="button--ujarak">답변달기</button>
+					<button type = "button" class="button--ujarak" onclick="location.href='boardManage.trd'">돌아가기</button>
+					<button type = "button" id="answer_button" class="button--ujarak">답변달기</button>
 				</div>
 			
 				<div id="detail_container">		

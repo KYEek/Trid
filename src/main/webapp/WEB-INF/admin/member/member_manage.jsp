@@ -63,7 +63,7 @@
 								<select id="member_idle" name="memberIdle">
 									<option value="">전체</option>
 									<option value="0">휴면</option>
-									<option value="1">비휴면</option>
+									<option value="1">활성화</option>
 								</select>
 								
 								<span style="margin-left : 10px;">회원상태</span>
@@ -71,7 +71,6 @@
 									<option value="">전체</option>
 									<option value="0">탈퇴</option>
 									<option value="1">가입</option>
-									<option value="2">정지</option>
 								</select>
 								
 								<div class="range">
@@ -86,10 +85,10 @@
 					
 					<div class="sort_box" style="margin-bottom:10px;">
 						<select id="sort_select" name="sortCategory">
-							<option value="0">회원명 &#9650;</option>
-							<option value="1">회원명 &#9660;</option>
-							<option value="2">가입일 &#9650;</option>
 							<option value="3">가입일 &#9660;</option>
+							<option value="2">가입일 &#9650;</option>
+							<option value="1">회원명 &#9660;</option>
+							<option value="0">회원명 &#9650;</option>
 						</select>
 
 						<button type="button" class="button--ujarak" id="search_button">검색</button>
@@ -130,7 +129,6 @@
 								<td>
 									<c:if test="${memberDTO.member_status == 0}" >탈퇴</c:if>
 									<c:if test="${memberDTO.member_status == 1}" >가입</c:if>
-									<c:if test="${memberDTO.member_status == 2}" >정지</c:if>
 								</td>
 								
 								<td>

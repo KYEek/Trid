@@ -54,10 +54,10 @@
 				</div>
 			</div>
 
-			<div style="margin-top:30px; width:100%; display:flex; justify-content:space-between;">
+			<div style="margin-top:30px; width:100%; display:flex; justify-content:center;">
 				<div>
 					<span>빈 재고 알림</span>
-					<div class="table-responsive" style="width: 40vw;">
+					<div class="table-responsive" style="width: 40vw; height: 300px; overflow-y:scroll; margin-right:50px;">
 						<table class="table table-sm">
 							<thead>
 								<tr>
@@ -87,7 +87,7 @@
 				<div>
 					<span>이번주 미답변 질문</span>
 					
-					<div class="table-responsive" style="width: 40vw;">
+					<div class="table-responsive" style="width: 40vw; height: 300px; overflow-y:scroll;">
 						<table class="table table-sm">
 							<thead>
 								<tr>
@@ -116,22 +116,22 @@
 				</div>
 			</div>
 			
-			<div style="display:flex; justify-content:space-between;">
-				<div style="display: flex; width: 40vw; height: 300px;">
+			<div style="display:flex; justify-content:center; ">
+				<div style="display: flex; width: 40vw; margin-right:50px;">
 					<canvas id="week-login-user-chart" width="600" height="300"></canvas>
 				</div>
 				
-				<div style="display: flex; width: 40vw; height: 400px;">
+				<div style="display: flex; width: 40vw;">
 					<canvas id="daily-order-chart" width="600" height="300"></canvas>
 				</div>
 			</div>
 			
-			<div style="margin-top:30px; display:flex; justify-content:space-between;">
-				<div style="display: flex; width: 40vw; height: 300px;">
+			<div style="margin-top:50px; display:flex; justify-content:center;">
+				<div style="display: flex; width: 40vw; margin-right:60px;">
 					<canvas id="monthly-order-chart" width="600" height="300"></canvas>
 				</div>
 				
-				<div style="display: flex; width: 40vw; height: 300px;">
+				<div style="display: flex; width: 40vw;">
 					<canvas id="year-order-chart" width="600" height="300"></canvas>
 				</div>
 			</div>
