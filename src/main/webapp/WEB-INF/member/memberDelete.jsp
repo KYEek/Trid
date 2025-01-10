@@ -91,6 +91,17 @@ button {
     margin-top: 3%;
 }
 
+button:hover {
+    text-align: center;
+    width: 40%;
+    height: 40px;
+    background-color: #ffcccc;
+    border: solid 1px black;
+    font-size: 14pt;
+    margin-top: 3%;
+}
+
+
 </style>
 </head>
 <body>

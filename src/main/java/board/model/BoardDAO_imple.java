@@ -353,10 +353,12 @@ public class BoardDAO_imple implements BoardDAO {
 		try {
 			conn = ds.getConnection();
 
-			String sql 	= " SELECT A.* "
+			String sql 	= " SELECT * "
 						+ " FROM ( "
-								+ " select ROWNUM AS RN, "
-								+ " q.pk_question_no , q.question_title, q.question_content, q.question_answer, "
+								+ " select ROWNUM AS RN, A.* "
+								+ " from "
+								+ " ( "
+								+ " select q.pk_question_no , q.question_title, q.question_content, q.question_answer, "
 								+ " q.question_status, q.question_isprivate, q.question_registerday, "
 								+ " m.pk_member_no, m.member_name "
 								+ " from tbl_question q join tbl_member m on q.fk_member_no = m.pk_member_no "
@@ -407,8 +409,9 @@ public class BoardDAO_imple implements BoardDAO {
 					break;
 			}
 				
-			sql += " ) A "
-					+ " WHERE A.RN between ? and ? ";
+			sql += " ) A"
+					+ ") "
+					+ " WHERE RN between ? and ? ";
 			
 			pstmt = conn.prepareStatement(sql);
 			

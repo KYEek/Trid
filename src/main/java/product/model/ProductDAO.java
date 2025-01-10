@@ -38,7 +38,7 @@ public interface ProductDAO {
 	List<Map<String, String>> selectRecommendProductList(String productNo) throws SQLException;
 	
 	// 관리자 상품 수정 시 이미지 삭제
-	int deleteProductImage(String pkProductImageNo) throws SQLException;
+	int deleteProductImage(String pkProductImageNo, String productNo) throws SQLException;
 	
 	// 관리자 상품 수정 시 이미지 추가
 	int insertProductImage(List<ImageDTO> imageList, int productNo) throws SQLException;
@@ -64,4 +64,9 @@ public interface ProductDAO {
 
 	// 일주일 재고가 빈 상품 리스트
 	List<Map<String, String>> selectWeekEmptyInventoryList() throws SQLException;
+
+	// 검색어 입력시 검색된 상품의 총 개수를 구하는 메소드
+	public int searchCountProductByCategory(Map<String, String> paraMap) throws SQLException;
+
+
 }

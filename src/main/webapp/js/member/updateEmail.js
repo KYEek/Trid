@@ -5,11 +5,14 @@ let b_emailcheck_click = false;
 let b_email_change = false;
 // 이메일값을 변경했는지 여부를 알아오기 위한 용도
 
-let isNewEmail = true;
+let isNewEmail = false;
 // 새로운 이메일인지 아닌지 확인하기 위한 용도
 
 let isCurrentPwd = false;
 // 현재비밀번호가 맞는지 아닌지 확인하기 위한 용도
+
+
+
 
 
 $(document).ready(function() {
@@ -36,7 +39,7 @@ $(document).ready(function() {
 			$("input#newEmail").val("");
 		}
 		else{
-			
+			isNewEmail = true;
 			$.ajax({
 				url: "emailDuplicateCheck.trd", 
 				//tbl_member 테이블에 같은 이메일을 사용하는 사용자가 있는지 알아온다.
@@ -106,19 +109,26 @@ function goUpdateEmail() {
 					// 입력한 비밀번호가 사용중이라면
 					$("div.pwd_message").html("비밀번호 확인 완료").css({ "color": "navy" });
 					isCurrentPwd = true;
-					
 				}
 				else {
 					// 입력한 비밀번호가 이 존재하지 않는 경우라면 
 					$("div.pwd_message").html("올바른 비밀번호를 입력하세요").css({ "color": "red" });
 					isCurrentPwd = false;
 				}
+				
+				if (isNewEmail && isCurrentPwd) {// 변경한 이메일이 형식에 맞는 새로운 이메일이고 올바른 현재비밀번호라면
+
+					const frm = document.emailUpdateFrm;
+					frm.action = "updateEmailEnd.trd";
+					frm.method = "post";
+					frm.submit();
+				}
 
 			},
 
 			error: function(request,error) {
 				alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
-				isCurrentPwd = false;
+				
 			}
 		});
 	
@@ -138,7 +148,7 @@ function goUpdateEmail() {
 
 		if (val == "") {
 			alert("비밀번호와 변경하실 새 이메일 주소를 모두 입력하세요.");
-
+			isCurrentPwd = false;
 			e_requiredInfo = true;
 			break;
 		}
@@ -159,13 +169,7 @@ function goUpdateEmail() {
 	// *** 이메일값을 수정한 다음에 "이메일중복확인" 을 클릭했는지 검사하기 끝 *** //
 
 	
-	if (isNewEmail && isCurrentPwd) {// 변경한 이메일이 새로운 이메일일 경우
-
-		const frm = document.emailUpdateFrm;
-		frm.action = "updateEmailEnd.trd";
-		frm.method = "post";
-		frm.submit();
-	}
+	
 
 }// end of function goUpdateEmail()------------------
 

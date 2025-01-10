@@ -68,12 +68,13 @@ div#gender_container button {
 
 /* 검색어 출력 */
 div#search_word {
-	margin-left: 2.3%;
+	margin-left: 2.5%;
 }
 
 /* 상품 개수 출력 */
 div#search_product_count {
-	margin-left: 2.3%;
+	margin-left: 2.5%;
+	margin-bottom: 1%;
 }
 
 /* 클릭(포커스) 시 border 제거 */
@@ -113,22 +114,34 @@ div#container div#productInfo {
     border: solid 1px black;
 }
 
+/* 상품 이름, 가격 */
 div#name,
 div#price {
 	height: 40px;
 }
 
+/* 상품 가격 */
+div#price {
+	padding-left: 0.7%;
+}
+
+/* 상품 이름 */
+div#name {
+	padding: 4% 3% 0 3%;
+	
+	line-height: 0.9;
+}
 /* 상품에 마우스를 올릴 시 커서 변환 */
 div#product:hover {
 	cursor: pointer;
 }
 
 /* 스크롤 전체 가리기 */
-body{
+/* body{
     -ms-overflow-style: none;
 }
 ::-webkit-scrollbar {
      display: none;
-}
+} */
 
 /* 상품 리스트 페이지 CSS 끝 */

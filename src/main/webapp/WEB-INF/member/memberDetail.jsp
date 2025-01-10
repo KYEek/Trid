@@ -92,6 +92,7 @@ label.arrow {
 div.button {
 	width: 100%;
 	margin: 0 0 4% 2%;
+	cursor: pointer;
 }
 
 button.line {
@@ -107,16 +108,19 @@ button.line {
 button.button {
 	border:solid 1px black;
 	display: none;
+	cursor: pointer;
 }
 
 span#name {
 	display:inline-block;
 	width: 30%;
 	margin: auto;
+	cursor: pointer;
 }
 
 i{
 	margin-left: 65%;
+	cursor: pointer;
 }
 
 div#name {
@@ -142,10 +146,9 @@ div.change{
             <div class="button-list">
 
                 <div class="button address">
-                    <button type="button" id="address" onclick="goAddress()">주소</button><label for="address" class="arrow"><i class="fa-solid fa-greater-than"></i></label>
 
                 <div class="button">
-                	<label for="address" class="arrow"><button type="button" id="address" class="button" onclick="updateAddress()"></button><span id="name">주소</span><i class="fa-solid fa-greater-than"></i></label>
+                	<label for="address" class="arrow"><button type="button" id="address" class="button" onclick="goAddress()"></button><span id="name">주소</span><i class="fa-solid fa-greater-than"></i></label>
                 	<%-- <div id="address" class="change">${sessionScope.loginuser.member_address}</div> --%>
                 </div>
                 

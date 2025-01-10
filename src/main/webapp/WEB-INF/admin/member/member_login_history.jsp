@@ -37,7 +37,7 @@
 			
 				<div class="manage_header">
 					<h2 style="margin-right:20px;">회원 로그인 이력</h2>
-					<button class="button--ujarak" onclick="location.href='memberDetail.trd?memberNo=${historyList.get(0).memberNo}'">돌아가기</button>
+					<button type="button" class="button--ujarak" onclick="location.href='memberDetail.trd?memberNo=${historyList.get(0).memberNo}'">돌아가기</button>
 				</div>
 				
 			</div>

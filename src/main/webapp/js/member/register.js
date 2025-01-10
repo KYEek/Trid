@@ -76,7 +76,7 @@ $(document).ready(function(){
 
 				if (json.isExists) {
 					// 입력한 email 이 이미 사용중이라면
-					$("div.email_message").html($("input#email").val() + " 은 현재 사용중 이므로 다른 이메일을 입력하세요").css({ "color": "red" });
+					$("div.email_message").html($("input#email").val() + " 은 중복된 이메일이므로 다른 이메일을 입력하세요").css({ "color": "red" });
 					$("div.email_message").show();
 					$("input#email").val("");
 					b_emailcheck_click = false;

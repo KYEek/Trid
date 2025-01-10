@@ -29,7 +29,10 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/category/search.css" />
 
 </head>
+
+
 <body>
+<c:set var="categoryList" value="${requestScope.categoryList}" />
 
 <jsp:include page="/WEB-INF/search_header.jsp" />
 
@@ -42,39 +45,18 @@
 		</span>
 	</div>
 	
-	<!-- 추천 카테고리 박스 -->
-	<div id="header_menu">
-		<button id="">
-			<div>티셔츠</div>
-		</button>
-		<button id="">
-			<div>티셔츠</div>
-		</button>
-		<button id="">
-			<div>티셔츠</div>
-		</button>
-		<button id="">
-			<div>티셔츠</div>
-		</button>
-		<button id="">
-			<div>티셔츠</div>
-		</button>
-		<button id="">
-			<div>티셔츠</div>
-		</button>
-		<button id="">
-			<div>티셔츠</div>
-		</button>
-		<button id="">
-			<div>티셔츠</div>
-		</button>
-		<button id="">
-			<div>티셔츠</div>
-		</button>
-		<button id="">
-			<div>티셔츠</div>
-		</button>
+ 	<div id="hide_box">
+ 		<!-- 추천 카테고리 박스 -->
+		<div id="header_menu" style="opacity: 1">
+			<c:forEach var="categoryDTO" items="${categoryList}">
+				<a id="text-scrolling" href="${pageContext.request.contextPath}/product/category_list.trd?chooseGender=${categoryDTO.gender}&chooseType=${categoryDTO.type}&chooseCategoryNo=${categoryDTO.pkCategoryNo}">
+					<div id="categoryName">${categoryDTO.categoryName}</div>
+				</a>
+	
+			</c:forEach>
+		</div>
 	</div>
+
 	
 	<!-- 검색 바 -->
 	<form name="search_container">
@@ -86,7 +68,7 @@
 	<h6>추천 아이템</h6>
 		
 	<!-- 상품 리스트 -->
-    <div id="container" style="overflow-y: auto">
+    <div id="container" style="height: 100%;">
     	<c:forEach var="product" items="${requestScope.recommendProductList}">
 	        <div id="product" data-type="${product.productNo}">
 	            <div id="photo">
@@ -98,14 +80,14 @@
 	            </div>
 	        </div>
         </c:forEach>
-        
         <c:if test="${empty requestScope.searchProductList}">
             <tr>
-               <td colspan="5">데이터가 존재하지 않습니다.</td>
+               <!-- <td colspan="5">데이터가 존재하지 않습니다.</td> -->
             </tr>
         </c:if>
     </div>
 	
+	<jsp:include page="/WEB-INF/footer.jsp" />
 
 </article>
 

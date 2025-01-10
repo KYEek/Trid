@@ -54,10 +54,10 @@
 				</div>
 			</div>
 
-			<div style="margin-top:30px; width:100%; display:flex; justify-content:space-between;">
+			<div style="margin-top:30px; width:100%; display:flex; justify-content:center;">
 				<div>
 					<span>빈 재고 알림</span>
-					<div class="table-responsive" style="width: 40vw;">
+					<div class="table-responsive" style="width: 40vw; height: 300px; overflow-y:scroll; margin-right:50px;">
 						<table class="table table-sm">
 							<thead>
 								<tr>
@@ -69,7 +69,7 @@
 							</thead>
 							<tbody>
 								<c:forEach items="${weekEmptyInventoryList}" var="weekEmptyInventory">
-									<tr>
+									<tr class="empty_inventory_tr">
 										<td>${weekEmptyInventory.productNo}</td>
 										<td>${weekEmptyInventory.productName}</td>
 										<td><c:if test="${weekEmptyInventory.size == 0}">S</c:if> 
@@ -87,7 +87,7 @@
 				<div>
 					<span>이번주 미답변 질문</span>
 					
-					<div class="table-responsive" style="width: 40vw;">
+					<div class="table-responsive" style="width: 40vw; height: 300px; overflow-y:scroll;">
 						<table class="table table-sm">
 							<thead>
 								<tr>
@@ -100,7 +100,7 @@
 							<tbody>
 							<!-- keys(questionNo, memberName, title, registerday) -->
 								<c:forEach items="${weekUnansweredQuestionList}" var="weekUnansweredQuestion">
-									<tr>
+									<tr class="question_tr">
 										<td>${weekUnansweredQuestion.questionNo}</td>
 										
 										<td>${weekUnansweredQuestion.memberName}</td>
@@ -116,22 +116,22 @@
 				</div>
 			</div>
 			
-			<div style="display:flex; justify-content:space-between;">
-				<div style="display: flex; width: 40vw; height: 300px;">
+			<div style="display:flex; justify-content:center; ">
+				<div style="display: flex; width: 40vw; margin-right:50px;">
 					<canvas id="week-login-user-chart" width="600" height="300"></canvas>
 				</div>
 				
-				<div style="display: flex; width: 40vw; height: 400px;">
+				<div style="display: flex; width: 40vw;">
 					<canvas id="daily-order-chart" width="600" height="300"></canvas>
 				</div>
 			</div>
 			
-			<div style="margin-top:30px; display:flex; justify-content:space-between;">
-				<div style="display: flex; width: 40vw; height: 300px;">
+			<div style="margin-top:50px; display:flex; justify-content:center;">
+				<div style="display: flex; width: 40vw; margin-right:60px;">
 					<canvas id="monthly-order-chart" width="600" height="300"></canvas>
 				</div>
 				
-				<div style="display: flex; width: 40vw; height: 300px;">
+				<div style="display: flex; width: 40vw;">
 					<canvas id="year-order-chart" width="600" height="300"></canvas>
 				</div>
 			</div>
@@ -303,6 +303,21 @@
 							}
 						}
 					});
+			
+			$(document).ready(function() {
+				
+				$(document).on("click","tr.question_tr", function(e) {
+					const questionNo = $(this).find("td").eq(0).text();
+					location.href = "boardDetail.trd?questionNo=" + questionNo;
+				});
+				
+				$(document).on("click","tr.empty_inventory_tr", function(e) {
+					const productNo = $(this).find("td").eq(0).text();
+					location.href = "productDetail.trd?productNo=" + productNo;
+				});
+				
+				
+			});
 		
 		</script>
 

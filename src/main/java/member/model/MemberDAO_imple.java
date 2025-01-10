@@ -262,7 +262,7 @@ public class MemberDAO_imple implements MemberDAO {
 			  
 			  String sql = " select member_email "
 			  		     + " from tbl_member "
-			  		     + " where member_email = ? and member_status = 1 ";
+			  		     + " where member_email = ? ";
 			  
 			  pstmt = conn.prepareStatement(sql);
 			  pstmt.setString(1, aes.encrypt(newEmail));
@@ -583,10 +583,11 @@ public class MemberDAO_imple implements MemberDAO {
 			
 			conn = ds.getConnection();
 			
-			String sql 	= " SELECT A.* "
-						+ " FROM "
-						+ " ( "
-						+ " 	select ROWNUM as rnum, pk_member_no, member_email, member_name, member_mobile, member_gender, "
+			String sql 	= " SELECT * "
+						+ " FROM ( "
+						+ " SELECT ROWNUM as rnum, A.* "
+						+ " FROM ( "
+						+ " 	select pk_member_no, member_email, member_name, member_mobile, member_gender, "
 						+ " 	member_birthday, member_status, member_idle, member_registerday, member_pwdchangeday, member_updateday "
 						+ " 	from tbl_member "
 						+ " 	where 1=1 ";
@@ -653,6 +654,7 @@ public class MemberDAO_imple implements MemberDAO {
 			}
 			
 			sql += " ) A "
+					+ ")  "
 					+ " WHERE rnum between ? and ? ";
 			
 			pstmt = conn.prepareStatement(sql);

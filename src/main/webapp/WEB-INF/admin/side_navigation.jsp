@@ -55,6 +55,6 @@
 	<%-- 로그아웃 --%>
 	<form id="logout_frm" name="logout_frm">
 		<span id="profile">${adminName} 님</span>
-		<button type="button" id="logout_button">로그아웃</button>
+		<button type="button" id="logout_button" onclick="location.href='logout.trd';">로그아웃</button>
 	</form>
 </div>

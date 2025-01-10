@@ -1,4 +1,16 @@
 $(document).ready(function() {    
+	
+	// 카테고리 박스 선택 함수
+	$(document).on("click", "div#categoryName", function() {
+	    $("div#header_menu")
+
+	    if($(this).hasClass("choose_category_active")) {
+	        $(this).removeClass("choose_category_active");
+	    }
+	    else {
+	        $(this).addClass("choose_category_active");
+	    }
+	});// end of $(document).on("click", "button#choose_color_button", function() ----------------------------
 
 	// 색상 필터 박스 숨김
     $("div#choose_color_box").hide();
@@ -36,14 +48,14 @@ $(document).ready(function() {
     });// end of $(document).on("click", "div#choose_color_box button", function() ---------------------
 	
 	// 가격 선택 함수
-    $("div#choose_price_box").hide();
+    $("div#price_box").hide();
 
     // 가격 버튼 클릭시 토글
     $(document).on("click", "button#choose_price_button", function() {
-        $("div#choose_price_box")
+        $("div#price_box")
 
 		// 가격 설정 박스
-        const price_box = $("div#choose_price_box");
+        const price_box = $("div#price_box");
 		
         if($(this).hasClass("choose_price_active")) {
             price_box.hide();

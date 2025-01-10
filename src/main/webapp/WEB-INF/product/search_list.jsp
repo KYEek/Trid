@@ -42,36 +42,15 @@
 	    </div>
 	</form>
 	
-	<!-- 성별 선택 바 -->
-	<div id="gender_container">
-		<button type="button">여성</button>
-		<button type="button">남성</button>
-	</div>
-	
     <!-- 검색어 출력 -->
     <div id="search_word">검색어: <strong>${requestScope.searchWord}</strong></div>
     
     <!-- 검색 결과 상품 개수 출력 -->
-    <div id="search_product_count">검색된 상품 개수: <strong>${requestScope.searchProductCount}</strong>개</div>
+    <div id="search_product_count">검색된 상품 개수: <strong>${requestScope.searchRowCount}</strong>개</div>
 	
 	<!-- 상품 리스트 -->
-    <div id="container" style="overflow-y: auto">
-    	<c:if test="${not empty requestScope.searchProductList}">
-	    	<c:forEach var="product" items="${requestScope.searchProductList}">
-		        <div id="product" data-type="${product.productNo}">
-		            <div id="photo">
-		                <img src="${pageContext.request.contextPath}${product.imageList[0].imagePath}" alt="${product.productName}" style="width: 100%; height: 100%; object-fit: fill;">
-		            </div>
-		            <div id="productInfo">
-			            <div id="name">${product.productName}</div>
-			            <div id="price">${product.price}원</div>
-		            </div>
-		        </div>
-	        </c:forEach>
-        </c:if>
-        <c:if test="${empty requestScope.searchProductList}">
-			<p>검색 결과가 없습니다.</p>
-        </c:if>
+    <div id="container" style="height: 100%;">
+
     </div>
 	
 
@@ -79,6 +58,7 @@
 
 
 <script>
+
 	$(document).ready(function() {
     
 	    // #search_bar에 대한 엔터 키 이벤트
@@ -89,23 +69,109 @@
 	        }
 	    });//end of $("#search_bar").bind("keydown", function(e) ---------------------
 	    
+	    // 시작 데이터 로드
+	    loadMoreProducts();
+	    
+	    /* 무한스크롤 처리 함수 */
+	    $(window).scroll(function() {
+	        if (($(window).scrollTop()+1) + $(window).height() >= $(document).height()) {
+	            loadMoreProducts();
+	        }
+	    });
+	    		
 	    // 상품 리스트 클릭시 해당 상품 상세페이지로 이동
 	    $(document).on("click", "div#product", function(e){
 	    	const productNo =($(e.target).closest("div#product").data("type"));
 	    	
 	    	location.href="/Trid/product/detail.trd?productNo="+productNo;
 	    });// end of $(document).on("click", "div#product", function(e) ----------------------
-	    
-	 }); // end of $(document).ready(function() { });;
+
+}); // end of $(document).ready(function() { });
 	 
-	 function goSearch() {
-	    
-	    const form = document.search_container;
-	    form.action = "search_list.trd";   // form 태그에 action 이 명기되지 않았으면 현재보이는 URL 경로로 submit 되어진다.
-	    form.method = "get";   // form 태그에 method 를 명기하지 않으면 "get" 방식이다.
-	    form.submit();
+// 엔터 입력시 검색 함수
+function goSearch() {
     
-	}// end of function goSearch() -------
+    const form = document.search_container;
+    form.action = "search_list.trd";   // form 태그에 action 이 명기되지 않았으면 현재보이는 URL 경로로 submit 되어진다.
+    form.method = "get";   // form 태그에 method 를 명기하지 않으면 "get" 방식이다.
+    form.submit();
+   
+}// end of function goSearch() -------
+	
+let pageNumber = 1;
+let pageSize = 18; // 한 번에 불러올 아이템 수
+let searchRowCount = 350;
+	
+const URL = location.href;
+/* 무한스크롤 처리 ajax */
+function loadMoreProducts() {
+	
+	console.log("호출");
+	console.log(pageNumber * pageSize);
+	console.log(searchRowCount);
+	
+    if(((pageNumber - 1) * pageSize) < searchRowCount ){
+    	$.ajax({
+            url: URL,
+            type: 'get',
+            headers: {
+                'ajaxHeader': 'true',
+            },
+            data: {
+                search_word: $("#search_bar").val(),
+                pageNumber: pageNumber,
+            },
+            dataType: 'json',
+            success: function(response) {
+                console.log("AJAX 응답 데이터:", response);
+                pageNumber++; // 다음 페이지 로드 준비
+                updateProductList(response);
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX 요청 실패:", status, error);
+                console.log("AJAX 요청 실패 응답 상태 코드:", xhr.status); // 상태 코드 확인
+				console.log("AJAX 요청 실패 응답 내용:", xhr.responseText); // 응답 본문 확인
+            }
+        });	
+    }
+}// end of function loadMoreProducts() -----------------------
+
+function updateProductList(products) {
+	
+    const productListDiv = $("div#container");
+    
+/*     if (!products || products.length === 0) {
+        productListDiv.append("<p>상품이 없습니다.</p>");
+        return;
+    } */
+    
+	// 서버에서 받은 JSON 데이터를 기반으로 HTML 생성
+    products.forEach(product => {
+    	
+    	const path = "${pageContext.request.contextPath}" + product.imagePath;
+    	const name = product.productName;
+    	saerchRowCount = Number(product.saerchRowCount);
+    	console.log(name);
+    	// console.log(path);
+    	
+        let productHtml = `
+            <div id="product" data-type=` + product.productNo + `>
+            	<div id="photo">
+			        <img src=`
+			        	productHtml += path;
+			        	
+			        	productHtml +=
+	                `${path} alt="상품 이미지" style="width: 100%; height: 100%; object-fit: cover;">
+	            </div>
+	            <div id="productInfo">
+	                <div id="name">` + product.productName + `</p>
+	                <div id="price">` + product.price + `원</p>
+            	</div>
+            </div>`;
+    	productListDiv.append(productHtml);
+    });
+}// end of function updateProductList(products) ------------------------
+
 </script>
 
 </body>

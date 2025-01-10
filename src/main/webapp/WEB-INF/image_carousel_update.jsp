@@ -50,10 +50,10 @@
 			$(document).ready(function () {
 
 				// 첫 슬라이드 표시
-				$slides.eq(0).show();
+				$slides.fadeOut(0);
+				$slides.eq(0).fadeIn(0);
+				$thumbnails.removeClass('active');
 				$thumbnails.eq(0).addClass('active');
-
-				currentIndex = $("div.product-slide").length;
 
 				// 썸네일 클릭 이벤트
 				$(document).on('click', '.thumbnail', function () {
@@ -67,22 +67,25 @@
 
 					if ($slides.eq(currentIndex).data("no")) {
 						const imageNo = $slides.eq(currentIndex).data("no");
+						const productNo = ${productDTO.productNo};
 						console.log(imageNo);
-						deleteImage(imageNo);
+						deleteImage(imageNo, productNo);
+					}
+					else {
+						$slides.eq(currentIndex).remove();
+						$thumbnails.eq(currentIndex).remove();
+
+						currentIndex = 0;
+						$slides = $('.product-slide');
+						$thumbnails = $('.thumbnail');
+						totalSlides = $slides.length;
+
+						$slides.eq(0).show();
+						$thumbnails.eq(0).addClass('active');
+
+						removeImage();
 					}
 
-					$slides.eq(currentIndex).remove();
-					$thumbnails.eq(currentIndex).remove();
-
-					currentIndex = 0;
-					$slides = $('.product-slide');
-					$thumbnails = $('.thumbnail');
-					totalSlides = $slides.length;
-
-					$slides.eq(0).show();
-					$thumbnails.eq(0).addClass('active');
-
-					removeImage();
 				});
 
 			});
@@ -160,18 +163,32 @@
 
 			}
 
-			function deleteImage(imageNo) {
+			function deleteImage(imageNo, productNo) {
 
 				$.ajax({
 					url: "imageDelete.trd",
 					type: "post",
 					data: {
-						imageNo: imageNo
+						imageNo: imageNo,
+						productNo: productNo
 					},
 					dataType: "json",
 					success: (json) => {
 						if (json.message == "success") {
 							alert("이미지 삭제를 성공했습니다.");
+							
+							$slides.eq(currentIndex).remove();
+							$thumbnails.eq(currentIndex).remove();
+
+							currentIndex = 0;
+							$slides = $('.product-slide');
+							$thumbnails = $('.thumbnail');
+							totalSlides = $slides.length;
+
+							$slides.eq(0).show();
+							$thumbnails.eq(0).addClass('active');
+							
+							removeImage();
 						}
 						else {
 							alert("이미지 삭제를 실패했습니다.");

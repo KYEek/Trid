@@ -63,6 +63,17 @@ button {
     margin-top: 3%;
 }
 
+button:hover {
+    text-align: center;
+    width: 35%;
+    height: 35px;
+    background-color: #ecf2f8;
+    border: solid 1px black;
+    font-size: 10pt;
+    margin-top: 3%;
+}
+
+
 div#updateEmail{
 	margin-bottom: 1%;
 }

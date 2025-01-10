@@ -31,6 +31,8 @@ public class ProductListController extends AbstractController {
             
         Map<String, String> paraMap = new HashMap<>();
         
+        // 카테고리 필터
+        
         // 성별 필터
         String chooseGender = request.getParameter("chooseGender");
         paraMap.put("chooseGender", chooseGender);
@@ -51,7 +53,6 @@ public class ProductListController extends AbstractController {
         paraMap.put("choosePrice", choosePrice);
         
         // 색상 필터 추가
-        // TODO 체크 필요
         String[] colorArray = request.getParameterValues("chooseColor[]");
         
         if(colorArray != null) {
@@ -74,7 +75,7 @@ public class ProductListController extends AbstractController {
         
         
         try {           
-        	int totalRowCount = pdao.selectCountProductByCategory(paraMap);    
+        	int totalRowCount = pdao.selectCountProductByCategory(paraMap);
         	
         	// 상품 리스트 데이터 조회
             List<ProductDTO> productList = pdao.selectProductByCategory(paraMap);
@@ -113,13 +114,15 @@ public class ProductListController extends AbstractController {
                 
                 super.setJsonResponse(true);
                 
+                System.out.println("상품 개수 : " + totalRowCount);
+                
                 // JSON 배열을 응답으로 전송
                 PrintWriter out = response.getWriter();
                 out.print(jsonArray.toString());
                 out.flush();
             } else {
                 request.setAttribute("productList", productList);
-                // request.setAttribute("totalRowCount", totalRowCount);
+                request.setAttribute("totalRowCount", totalRowCount);
                 // View 설정
                 super.setRedirect(false); // forward 방식
                 super.setViewPage(Constants.CATEGORY_LIST_PAGE); // 뷰 페이지 경로
