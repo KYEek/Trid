@@ -19,6 +19,14 @@ const basketList = JSON.parse(basketListStr);
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/js/basket/basket.js"></script>
 </head>
+<style>
+	div#category_box {
+		z-index:2000 !important;
+	}
+	div.header {
+		z-index:500 !important;
+	}
+</style>
 <body>
 
 <%@ include file="../header.jsp"%><style>
