@@ -139,8 +139,7 @@ div#price {
 
 /* 상품 이름 */
 div#name {
-	padding-top: 4%;
-	padding-right: 3%;
+	padding: 4% 3% 0 3%;
 	
 	line-height: 0.9;
 }
