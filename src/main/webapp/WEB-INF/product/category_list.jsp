@@ -34,6 +34,7 @@
 <c:set var="chooseType" value="${requestScope.chooseType}" />
 <c:set var="chooseCategoryNo" value="${requestScope.chooseCategoryNo}" />
 
+
 <jsp:include page="/WEB-INF/header.jsp" />
 
 <!-- 헤더 카테고리 -->
@@ -170,7 +171,7 @@ $(document).ready(function() {
     loadMoreProducts();
     /* 무한스크롤 처리 함수 */
     $(window).scroll(function() {
-        if (($(window).scrollTop()+1) + $(window).height() >= $(document).height()) {
+        if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
             loadMoreProducts();
         }
     });
