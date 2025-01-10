@@ -118,11 +118,7 @@ div#container div#productInfo {
 div#name,
 div#price {
 	height: 40px;
-}
-
-/* 상품 가격 */
-div#price {
-	padding-left: 0.7%;
+	padding-left: 3%;
 }
 
 /* 상품 이름 */

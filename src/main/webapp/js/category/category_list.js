@@ -1,17 +1,5 @@
 $(document).ready(function() {    
-	
-	// 카테고리 박스 선택 함수
-	$(document).on("click", "div#categoryName", function() {
-	    $("div#header_menu")
-
-	    if($(this).hasClass("choose_category_active")) {
-	        $(this).removeClass("choose_category_active");
-	    }
-	    else {
-	        $(this).addClass("choose_category_active");
-	    }
-	});// end of $(document).on("click", "button#choose_color_button", function() ----------------------------
-
+		
 	// 색상 필터 박스 숨김
     $("div#choose_color_box").hide();
 	
@@ -71,4 +59,3 @@ $(document).ready(function() {
 
 	
 });// end of $(document).ready(function() -------------------------------
-

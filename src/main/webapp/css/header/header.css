@@ -1,3 +1,14 @@
+@font-face {
+   font-family: "Pretendard";
+   font-style: normal;
+   font-weight: 400;
+   src: url("../../fonts/Pretendard/Pretendard-Medium.ttf") format("truetype");
+}
+
+* {
+   font-family: "Pretendard";
+}
+
 :root {
   --layout-header-logo-height: 100px;
   --layout-header-transition: 0.5s linear;

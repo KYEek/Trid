@@ -93,34 +93,35 @@
 
 
 <script>
-	$(document).ready(function() {
+
+$(document).ready(function() {
+   
+    // #search_bar에 대한 엔터 키 이벤트
+    $("#search_bar").bind("keydown", function(e) {
+        if (e.keyCode == 13) { // enter 키
+        	console.log("검색어: " + $("#search_bar").val()); // 검색어 출력
+        	e.preventDefault(); // 기본 동작 방지
+            goSearch();
+        }
+    });// end of $("#search_bar").bind("keydown", function(e) --------------------
     
-	    // #search_bar에 대한 엔터 키 이벤트
-	    $("#search_bar").bind("keydown", function(e) {
-	        if (e.keyCode == 13) { // enter 키
-	        	console.log("검색어: " + $("#search_bar").val()); // 검색어 출력
-	        	e.preventDefault(); // 기본 동작 방지
-	            goSearch();
-	        }
-	    });// end of $("#search_bar").bind("keydown", function(e) --------------------
-	    
-	    // 상품 리스트 클릭시 해당 상품 상세페이지로 이동
-	    $(document).on("click", "div#product", function(e){
-	    	const productNo =($(e.target).closest("div#product").data("type"));
-	    	
-	    	location.href="/Trid/product/detail.trd?productNo="+productNo;
-	    });// end of $(document).on("click", "div#product", function(e) ----------------------
-	    
-	 }); // end of $(document).ready(function() { });;
-	 
-	 function goSearch() {
-	    
-	    const form = document.search_container; // form 객체 가져오기
-	    form.action = "search_list.trd";   // form 태그에 action 이 명기되지 않았으면 현재보이는 URL 경로로 submit 되어진다.
-	    form.method = "get";   // form 태그에 method 를 명기하지 않으면 "get" 방식이다.
-	    form.submit(); // 폼 제출
+    // 상품 리스트 클릭시 해당 상품 상세페이지로 이동
+    $(document).on("click", "div#product", function(e){
+    	const productNo =($(e.target).closest("div#product").data("type"));
+    	
+    	location.href="/Trid/product/detail.trd?productNo="+productNo;
+    });// end of $(document).on("click", "div#product", function(e) ----------------------
     
-	}// end of function goSearch() -------
+ }); // end of $(document).ready(function() { });;
+ 
+ function goSearch() {
+    
+    const form = document.search_container; // form 객체 가져오기
+    form.action = "search_list.trd";   // form 태그에 action 이 명기되지 않았으면 현재보이는 URL 경로로 submit 되어진다.
+    form.method = "get";   // form 태그에 method 를 명기하지 않으면 "get" 방식이다.
+    form.submit(); // 폼 제출
+   
+}// end of function goSearch() -------
 </script>
 
 </body>
