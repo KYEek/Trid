@@ -640,8 +640,8 @@ public class OrderDAO_imple implements OrderDAO {
 		
 		weekPaymentMap.put("paid", 0);
 		weekPaymentMap.put("preparing", 0);
-		weekPaymentMap.put("shipping ", 0);
-		weekPaymentMap.put("delivered ", 0);
+		weekPaymentMap.put("shipping", 0);
+		weekPaymentMap.put("delivered", 0);
 		
 		try {
 			
