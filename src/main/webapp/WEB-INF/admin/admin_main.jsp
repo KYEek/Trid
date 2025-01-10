@@ -69,7 +69,7 @@
 							</thead>
 							<tbody>
 								<c:forEach items="${weekEmptyInventoryList}" var="weekEmptyInventory">
-									<tr>
+									<tr class="empty_inventory_tr">
 										<td>${weekEmptyInventory.productNo}</td>
 										<td>${weekEmptyInventory.productName}</td>
 										<td><c:if test="${weekEmptyInventory.size == 0}">S</c:if> 
@@ -100,7 +100,7 @@
 							<tbody>
 							<!-- keys(questionNo, memberName, title, registerday) -->
 								<c:forEach items="${weekUnansweredQuestionList}" var="weekUnansweredQuestion">
-									<tr>
+									<tr class="question_tr">
 										<td>${weekUnansweredQuestion.questionNo}</td>
 										
 										<td>${weekUnansweredQuestion.memberName}</td>
@@ -303,6 +303,21 @@
 							}
 						}
 					});
+			
+			$(document).ready(function() {
+				
+				$(document).on("click","tr.question_tr", function(e) {
+					const questionNo = $(this).find("td").eq(0).text();
+					location.href = "boardDetail.trd?questionNo=" + questionNo;
+				});
+				
+				$(document).on("click","tr.empty_inventory_tr", function(e) {
+					const productNo = $(this).find("td").eq(0).text();
+					location.href = "productDetail.trd?productNo=" + productNo;
+				});
+				
+				
+			});
 		
 		</script>
 
