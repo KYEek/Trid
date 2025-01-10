@@ -569,16 +569,16 @@ public class OrderDAO_imple implements OrderDAO {
 		conn = ds.getConnection();
 		
 		String sql = " with order_detail as( "
-				+ " select PK_ORDER_DETAIL_NO, FK_ORDER_NO, FK_PRODUCT_DETAIL_NO, product_price, PRODUCT_DETAIL_NO, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
+				+ " select PK_ORDER_DETAIL_NO, FK_ORDER_NO, FK_PRODUCT_DETAIL_NO, product_price, PRODUCT_DETAIL_NO, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME, ORDER_DETAIL_QUANTITY "
 				+ " from ( "
-				+ " select row_number() over(partition by PK_ORDER_DETAIL_NO order by PRODUCT_IMAGE_NAME)as rownumber, PK_ORDER_DETAIL_NO, FK_ORDER_NO, FK_PRODUCT_DETAIL_NO, (ORDER_DETAIL_PRICE * ORDER_DETAIL_QUANTITY) product_price, PRODUCT_DETAIL_NO, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME "
+				+ " select row_number() over(partition by PK_ORDER_DETAIL_NO order by PRODUCT_IMAGE_NAME)as rownumber, PK_ORDER_DETAIL_NO, FK_ORDER_NO, FK_PRODUCT_DETAIL_NO, (ORDER_DETAIL_PRICE * ORDER_DETAIL_QUANTITY) product_price, PRODUCT_DETAIL_NO, PRODUCT_NO, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME, ORDER_DETAIL_QUANTITY "
 				+ " from tbl_order_detail "
 				+ " join select_basket_product_info "
 				+ " on product_detail_no = fk_product_detail_no) "
 				+ " where rownumber = 1  "
 				+ " ) "
 				+ "  "
-				+ " select PK_ORDER_NO, ORDER_TOTAL_PRICE, SUM_PRODUC_PRICE, ORDER_STATUS, ORDER_DATE, FK_ADDR_NO, PRODUCT_DETAIL_NO, PRODUCT_PRICE, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME, product_no, fk_member_no  "
+				+ " select PK_ORDER_NO, ORDER_TOTAL_PRICE, SUM_PRODUC_PRICE, ORDER_STATUS, ORDER_DATE, FK_ADDR_NO, PRODUCT_DETAIL_NO, PRODUCT_PRICE, PRODUCT_SIZE, PRODUCT_NAME, COLOR_NAME, PRODUCT_IMAGE_PATH, PRODUCT_IMAGE_NAME, product_no, fk_member_no, ORDER_DETAIL_QUANTITY  "
 				+ " from order_detail "
 				+ "  "
 				+ " join ( "
@@ -621,6 +621,7 @@ public class OrderDAO_imple implements OrderDAO {
 				json.put("PRODUCT_IMAGE_NAME", rs.getString("PRODUCT_IMAGE_NAME"));
 				json.put("PRODUCT_NO", rs.getInt("PRODUCT_NO"));
 				json.put("fk_member_no", rs.getInt("fk_member_no"));
+				json.put("ORDER_DETAIL_QUANTITY", rs.getInt("ORDER_DETAIL_QUANTITY"));
 				
 				
 				jsonArr.put(json);

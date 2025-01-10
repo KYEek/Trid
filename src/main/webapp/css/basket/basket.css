@@ -18,6 +18,7 @@ div#basket_header {
   border-bottom: var(--border_size);
   position: sticky;
   background-color: white;
+  z-index:200;
 }
 
 
@@ -243,5 +244,11 @@ div.no_inventory_text {
 
 .basket_delete {
   z-index: 99;
+}
+div#category_box {
+	z-index:2000 !important;
+}
+div.header {
+	z-index:500 !important;
 }
 

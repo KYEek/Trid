@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let PRODUCT_IMAGE_PATH = "";
   let PRODUCT_IMAGE_NAME = "";
   let PRODUCT_NO = "";
+  let ORDER_DETAIL_QUANTITY = "";
   count_number = 0;
   total_price = 0;
 
@@ -46,6 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
     PRODUCT_IMAGE_PATH = order.PRODUCT_IMAGE_PATH;
     PRODUCT_IMAGE_NAME = order.PRODUCT_IMAGE_NAME;
     PRODUCT_NO = order.PRODUCT_NO;
+	ORDER_DETAIL_QUANTITY = order.ORDER_DETAIL_QUANTITY;
 
     html += `<div id="basket_${PK_ORDER_NO}" class="basket_item" data-basket_no="${PK_ORDER_NO}" >
             <div class="basket_img">
@@ -62,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   >${COLOR_NAME}</span
                 >
               </div>
+			  <div class="basket_product_count_container" style="border:0px solid black;">총 ${ORDER_DETAIL_QUANTITY}개</div>
             </div>
           </div>`;
     count_number = count_number + 1;
