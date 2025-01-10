@@ -42,12 +42,6 @@
 	    </div>
 	</form>
 	
-	<!-- 성별 선택 바 -->
-	<div id="gender_container">
-		<button type="button">여성</button>
-		<button type="button">남성</button>
-	</div>
-	
     <!-- 검색어 출력 -->
     <div id="search_word">검색어: <strong>${requestScope.searchWord}</strong></div>
     
