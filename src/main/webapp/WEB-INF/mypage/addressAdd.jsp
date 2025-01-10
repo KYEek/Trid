@@ -58,7 +58,7 @@
 						<div class="warning_div"></div>
 					</div>
 					<div class="input_area">
-						<label for="input4">선택사항</label> <input class="input_area"
+						<label for="input4">상세주소</label> <input class="input_area"
 							name="addr_detail" type="text" id="input4" />
 
 						<div class="warning_div"></div>
