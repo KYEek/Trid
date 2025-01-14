@@ -20,9 +20,9 @@
 <title>Trid Product Manage</title>
 
 <%-- css --%>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/manage.css">
+<link rel="stylesheet" href="${ctxPath}/css/admin/manage.css">
 
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/admin/util.js"></script>
+<script type="text/javascript" src="${ctxPath}/js/admin/util.js"></script>
 </head>
 <body>
 
@@ -95,6 +95,7 @@
 
 		<span>총 ${pagingDTO.totalRowCount}개 상품</span>
 
+		<%-- 상품 리스트 테이블 --%>
 		<table class="table">
 			<thead>
 				<tr>
@@ -134,13 +135,13 @@
 							
 							<td>${productDTO.registerday}</td>
 							<td>${productDTO.updateday}</td>
-
 						</tr>
 					</c:forEach>
 				</c:if>
 			</tbody>
 		</table>
 
+		<%-- 페이징 --%>
 		<div>
 			<%@ include file="../../paging.jsp" %>
 		</div>
@@ -150,14 +151,14 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		
-		let oldSearchWord = "${requestScope.searchWord}"; // 검색어
-		let oldCategoryNo = "${requestScope.categoryNo}"; // 카테고리 일련번호
-		let oldSortCategory = "${requestScope.sortCategory}"; // 정렬 번호 0:최신순 1:오래된순 2:높은가격순 3: 낮은 가격순
+		let oldSearchWord = "${requestScope.paraMap.searchWord}"; // 검색어
+		let oldCategoryNo = "${requestScope.paraMap.categoryNo}"; // 카테고리 일련번호
+		let oldSortCategory = "${requestScope.paraMap.sortCategory}"; // 정렬 번호 0:최신순 1:오래된순 2:높은가격순 3: 낮은 가격순
 		
-		let oldPriceMin = "${requestScope.priceMin}"; // 기존 최소값 
-		let oldPriceMax = "${requestScope.priceMax}"; // 기존 최대값
-		let oldDateMin = "${requestScope.dateMin}"; // 기존 최소 등록일
-		let oldDateMax = "${requestScope.dateMax}"; // 기존 최대 등록일
+		let oldPriceMin = "${requestScope.paraMap.priceMin}"; // 기존 최소값 
+		let oldPriceMax = "${requestScope.paraMap.priceMax}"; // 기존 최대값
+		let oldDateMin = "${requestScope.paraMap.dateMin}"; // 기존 최소 등록일
+		let oldDateMax = "${requestScope.paraMap.dateMax}"; // 기존 최대 등록일
 		
 		let url = ""; // URL
 

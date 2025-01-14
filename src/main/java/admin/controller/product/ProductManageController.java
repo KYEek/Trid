@@ -22,7 +22,11 @@ import util.StringUtil;
  */
 public class ProductManageController extends AbstractController {
 	
-	private final ProductDAO productDAO = new ProductDAO_imple(); // ProductDAO 초기화
+	private final ProductDAO productDAO;
+	
+	public ProductManageController() {
+		this.productDAO = new ProductDAO_imple(); // ProductDAO 초기화
+	}
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -45,7 +49,10 @@ public class ProductManageController extends AbstractController {
 			// curPage가 정수인지 예외처리
 			try {
 				curPage = Integer.parseInt(request.getParameter("curPage"));
-			} catch (NumberFormatException e) {}
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+				curPage = 1;
+			}
 			
 			Map<String, Object> paraMap = createParaMap(request);  // URL 파라미터에서 받은 값을 Map에 저장
 			
@@ -59,15 +66,9 @@ public class ProductManageController extends AbstractController {
 				
 				List<ProductDTO> productList = productDAO.selectProductList(paraMap); // 상품 리스트 조회
 
-				request.setAttribute("productList", productList);
-				request.setAttribute("pagingDTO", pagingDTO);
-				request.setAttribute("searchWord", paraMap.get("searchWord"));
-				request.setAttribute("categoryNo", paraMap.get("categoryNo"));
-				request.setAttribute("sortCategory", paraMap.get("sortCategory"));
-				request.setAttribute("priceMin", paraMap.get("priceMin"));
-				request.setAttribute("priceMax", paraMap.get("priceMax"));
-				request.setAttribute("dateMin", paraMap.get("dateMin"));
-				request.setAttribute("dateMax", paraMap.get("dateMax"));
+				request.setAttribute("productList", productList); // 상품 리스트 정보
+				request.setAttribute("pagingDTO", pagingDTO); // 페이징 정보
+				request.setAttribute("paraMap", paraMap); // 이전 요청의 필터링 및 카테고리 정보 map
 				
 				super.setRedirect(false);
 				super.setViewPage(Constants.ADMIN_PRODUCT_MANAGE_PAGE);

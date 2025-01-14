@@ -4,8 +4,16 @@
 
 <%-- pageContextPath --%>
 <c:set var="ctxPath" value="${pageContext.request.contextPath}" />
+<%-- OrderDTO --%>
+<c:set var="orderDTO" value="${requestScope.orderDTO}" />
+<%-- MemberDTO --%>
+<c:set var="memberDTO" value="${requestScope.orderDTO.memberDTO}" />
+<%-- AddressDTO --%>
+<c:set var="addrDTO" value="${requestScope.orderDTO.addressDTO}" />
+<%-- OrderDetailDTO List --%>
+<c:set var="orderDetailList" value="${requestScope.orderDTO.orderDetailList}" />
 
-<%-- 관리자 상품 상세 조회 페이지 --%>
+<%-- 관리자 주문 상세 조회 페이지 --%>
 <!DOCTYPE html>
 <html>
 
@@ -18,15 +26,6 @@
 </head>
 
 <body>
-	<%-- OrderDTO --%>
-	<c:set var="orderDTO" value="${requestScope.orderDTO}" />
-	<%-- MemberDTO --%>
-	<c:set var="memberDTO" value="${requestScope.orderDTO.memberDTO}" />
-	<%-- AddressDTO --%>
-	<c:set var="addrDTO" value="${requestScope.orderDTO.addressDTO}" />
-	<%-- OrderDetailDTO List --%>
-	<c:set var="orderDetailList" value="${requestScope.orderDTO.orderDetailList}" />
-
 	<%-- 상품 상세 --%>
 	<div id="container">
 

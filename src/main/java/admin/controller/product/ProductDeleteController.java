@@ -17,7 +17,11 @@ import product.model.ProductDAO_imple;
  */
 public class ProductDeleteController extends AbstractController {
 
-	private final ProductDAO productDAO = new ProductDAO_imple(); // 상품 DAO 초기화
+	private final ProductDAO productDAO;
+	
+	public ProductDeleteController() {
+		this.productDAO = new ProductDAO_imple(); // 상품 DAO 초기화
+	}
  
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

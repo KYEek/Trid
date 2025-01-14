@@ -107,14 +107,15 @@ public abstract class AbstractController implements InterCommand {
 
 		    response.setContentType("application/json"); // JSON 타입으로 MIME 설정
 		    response.setCharacterEncoding("UTF-8");
-			
-		    String jsonData = "{\"message\":\"" + message + "\"}";
+		    
+		    JSONObject json = new JSONObject();
+		    json.put("message", message);
 		    
 		    PrintWriter out = response.getWriter();
-		    out.print(jsonData);
+		    out.print(json.toString());
 		    out.flush();
 		} catch (IOException e) {
-			handleServerError();
+			e.printStackTrace();
 		}
 
 	}

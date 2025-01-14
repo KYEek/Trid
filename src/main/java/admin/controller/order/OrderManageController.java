@@ -20,7 +20,11 @@ import orders.model.OrderDAO_imple;
  */
 public class OrderManageController extends AbstractController {
 	
-	private final OrderDAO orderDAO = new OrderDAO_imple(); // OrderDAO 초기화
+	private final OrderDAO orderDAO;
+	
+	public OrderManageController() {
+		this.orderDAO = new OrderDAO_imple(); // OrderDAO 초기화
+	}
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -43,7 +47,10 @@ public class OrderManageController extends AbstractController {
 			// curPage가 정수인지 예외처리
 			try {
 				curPage = Integer.parseInt(request.getParameter("curPage"));
-			} catch (NumberFormatException e) {}
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+				curPage = 1;
+			}
 			
 			Map<String, Object> paraMap = createParaMap(request);  // URL 파라미터에서 받은 값을 Map에 저장
 			
@@ -56,15 +63,9 @@ public class OrderManageController extends AbstractController {
 		
 				List<OrderDTO> orderList = orderDAO.selectOrderListByAdmin(paraMap); // 주문 내역 리스트 조회
 				
-				request.setAttribute("orderList", orderList);
-				request.setAttribute("pagingDTO", pagingDTO);
-				
-				request.setAttribute("searchType", paraMap.get("searchType"));
-				request.setAttribute("searchWord", paraMap.get("searchWord"));
-				request.setAttribute("sortCategory", paraMap.get("sortCategory"));
-				request.setAttribute("orderStatus", paraMap.get("orderStatus"));
-				request.setAttribute("dateMin", paraMap.get("dateMin"));
-				request.setAttribute("dateMax", paraMap.get("dateMax"));
+				request.setAttribute("orderList", orderList); // 주문 리스트 정보
+				request.setAttribute("pagingDTO", pagingDTO); // 페이징 정보
+				request.setAttribute("paraMap", paraMap); // 이전 요청의 필터링 및 카테고리 정보 map
 
 				super.setRedirect(false);
 				super.setViewPage(Constants.ADMIN_ORDER_MANAGE_JSP);

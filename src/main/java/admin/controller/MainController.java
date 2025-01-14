@@ -23,13 +23,20 @@ import product.model.ProductDAO_imple;
  */
 public class MainController extends AbstractController {
 
-	private final OrderDAO orderDAO = new OrderDAO_imple(); // OrderDAO 초기화
+	private final OrderDAO orderDAO;
 
-	private final ProductDAO productDAO = new ProductDAO_imple(); // ProductDAO 초기화
+	private final ProductDAO productDAO;
 
-	private final BoardDAO boardDAO = new BoardDAO_imple(); // MemberDAO 초기화
+	private final BoardDAO boardDAO;
 
-	private final MemberDAO memberDAO = new MemberDAO_imple(); // MemberDAO 초기화
+	private final MemberDAO memberDAO;
+	
+	public MainController() {
+		this.orderDAO = new OrderDAO_imple(); // OrderDAO 초기화
+		this.productDAO = new ProductDAO_imple(); // ProductDAO 초기화
+		this.boardDAO = new BoardDAO_imple(); // MemberDAO 초기화
+		this.memberDAO = new MemberDAO_imple(); // MemberDAO 초기화
+	}
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -57,6 +64,8 @@ public class MainController extends AbstractController {
 
 			// keys(day, count)
 			List<Map<String, String>> weekLoginUserList = memberDAO.selectWeekLoginUserList(); // 일주일 사용자 접속 수
+			
+			// 일일 로그인 유저 기록 JSON 응답
 			JSONArray jsonWeekLoginUser = new JSONArray();
 
 			for (Map<String, String> map : weekLoginUserList) {
@@ -68,8 +77,12 @@ public class MainController extends AbstractController {
 				jsonWeekLoginUser.put(json);
 			}
 
+			// keys(orderdate, sales)
 			List<Map<String, String>> dailySalesList = orderDAO.selectdailySalesList();
+
+			// 일 매출 JSON 응답			
 			JSONArray jsonDailySales = new JSONArray();
+			
 			for (Map<String, String> map : dailySalesList) {
 				JSONObject json = new JSONObject();
 
@@ -79,8 +92,12 @@ public class MainController extends AbstractController {
 				jsonDailySales.put(json);
 			}
 
+			// keys(month, sales)
 			List<Map<String, String>> monthlySalesList = orderDAO.selectMonthlySalesList();
+			
+			// 월 매출 JSON 응답
 			JSONArray jsonMonthlySales = new JSONArray();
+			
 			for (Map<String, String> map : monthlySalesList) {
 				JSONObject json = new JSONObject();
 
@@ -92,8 +109,12 @@ public class MainController extends AbstractController {
 				jsonMonthlySales.put(json);
 			}
 			
+			// keys(year, sales)
 			List<Map<String, String>> yearSalesList = orderDAO.selectYearSalesList();
+			
+			// 연 매출 JSON 응답
 			JSONArray jsonYearSales = new JSONArray();
+			
 			for (Map<String, String> map : yearSalesList) {
 				JSONObject json = new JSONObject();
 

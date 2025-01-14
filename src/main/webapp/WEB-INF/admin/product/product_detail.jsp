@@ -4,6 +4,16 @@
 
 <%-- pageContextPath --%>
 <c:set var="ctxPath" value="${pageContext.request.contextPath}" />
+<%-- ProductDTO --%>
+<c:set var="productDTO" value="${requestScope.productDTO}" />
+<%-- ColorDTO List --%>
+<c:set var="colorList" value="${requestScope.productDTO.colorList}" />
+<%-- CategoryDTO --%>
+<c:set var="categoryDTO" value="${requestScope.productDTO.categoryDTO}" />
+<%-- ProductDetailDTO List --%>
+<c:set var="productDetailList" value="${requestScope.productDTO.productDetailList}" />
+<%-- ImageDTO List --%>
+<c:set var="imageList" value="${requestScope.productDTO.imageList}" />
 
 <%-- 관리자 상품 상세 조회 페이지 --%>
 <!DOCTYPE html>
@@ -19,17 +29,6 @@
 </head>
 
 <body>
-	<%-- ProductDTO --%>
-	<c:set var="productDTO" value="${requestScope.productDTO}" />
-	<%-- ColorDTO List --%>
-	<c:set var="colorList" value="${requestScope.productDTO.colorList}" />
-	<%-- CategoryDTO --%>
-	<c:set var="categoryDTO" value="${requestScope.productDTO.categoryDTO}" />
-	<%-- ProductDetailDTO List --%>
-	<c:set var="productDetailList" value="${requestScope.productDTO.productDetailList}" />
-	<%-- ImageDTO List --%>
-	<c:set var="imageList" value="${requestScope.productDTO.imageList}" />
-
 	<%-- 상품 상세 --%>
 	<div id="container">
 

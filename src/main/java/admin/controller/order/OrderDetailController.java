@@ -1,6 +1,5 @@
 package admin.controller.order;
 
-import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import common.Constants;
@@ -16,7 +15,11 @@ import orders.model.OrderDAO_imple;
  */
 public class OrderDetailController extends AbstractController {
 	
-	private final OrderDAO orderDAO = new OrderDAO_imple(); // OrderDAO 초기화
+	private final OrderDAO orderDAO;
+	
+	public OrderDetailController() {
+		this.orderDAO = new OrderDAO_imple(); // OrderDAO 초기화
+	}
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -31,27 +34,17 @@ public class OrderDetailController extends AbstractController {
 		if("POST".equalsIgnoreCase(method)) {
 			String orderNo = request.getParameter("orderNo"); // 주문 일련번호
 			String orderStatus = request.getParameter("orderStatus"); // 주문 상태
-			
-			String message = "";
+			String message = ""; // AJAX 응답 메시지
 			
 			try {
 				int result = orderDAO.updateOrderStatusByAdmin(orderNo, orderStatus); // 주문 상태 변경
-				message = result == 1 ? "success" : "failed"; 
+				message = result == 1 ? "success" : "failed"; // 주문 상태 수정 성공 시 success 실패 시 failed
 			} catch (SQLException e ) {
 				e.printStackTrace();
 				message = "failed";
 			}
 			
-			super.setJsonResponse(true); // 클라이언트로 단순 응답 처리
-
-		    response.setContentType("application/json"); // JSON 타입으로 MIME 설정
-		    response.setCharacterEncoding("UTF-8");
-		    
-		    String jsonData = "{\"message\":\"" + message + "\"}";
-		    
-		    PrintWriter out = response.getWriter();
-		    out.print(jsonData);
-		    out.flush();
+			super.handelJsonResponse(response, message); // 서버 응답으로 직접 JSON 메시지 전달
 			
 		}
 		// GET 요청인 경우 주문 상세 조회

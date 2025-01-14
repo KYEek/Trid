@@ -3,8 +3,6 @@
 
 <%-- pageContextPath --%>
 <c:set var="ctxPath" value="${pageContext.request.contextPath}" />
-<%-- 관리자 명 --%>
-<c:set var="adminName" value="${sessionScope.adminName}" />
 <%-- BoardDTO List --%>
 <c:set var="boardList" value="${requestScope.boardList}" />
 
@@ -16,11 +14,11 @@
 <title>Trid Board Manage</title>
 
 <%-- css --%>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/manage.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/board_manage.css">
+<link rel="stylesheet" href="${ctxPath}/css/admin/manage.css">
+<link rel="stylesheet" href="${ctxPath}/css/admin/board_manage.css">
 
 <%-- js --%>
-<script src="${pageContext.request.contextPath}/js/admin/util.js"></script>
+<script src="${ctxPath}/js/admin/util.js"></script>
 </head>
 <body>
 
@@ -89,7 +87,8 @@
 	</div>
 	
 	<span>총 ${pagingDTO.totalRowCount}개 질문</span>
-
+		
+		<%-- 질문 리스트 테이블 --%>
 		<table class="table">
 			<thead>
 				<tr>
@@ -136,6 +135,7 @@
 			</tbody>
 		</table>
 		
+		<%-- 페이징 --%>
 		<div>
 			<%@ include file="../../paging.jsp" %>
 		</div>
@@ -144,15 +144,15 @@
 	
 <script type="text/javascript">
 	$(document).ready(function() {
-		let oldSearchType = "${requestScope.searchType}"; // 검색어 타입 0:글제목 1:작성자명
-		let oldSearchWord = "${requestScope.searchWord}"; // 검색어
-		let oldSortCategory = "${requestScope.sortCategory}"; // 정렬 번호 0:최신순 1:오래된순
+		let oldSearchType = "${requestScope.paraMap.searchType}"; // 검색어 타입 0:글제목 1:작성자명
+		let oldSearchWord = "${requestScope.paraMap.searchWord}"; // 검색어
+		let oldSortCategory = "${requestScope.paraMap.sortCategory}"; // 정렬 번호 0:최신순 1:오래된순
 		
-		let oldPrivateStatus = "${requestScope.privateStatus}"; // 비밀글 여부 번호 0:공개글 1:비밀글 
-		let oldAnswerStatus = "${requestScope.answerStatus}"; // 답변 여부 번호 0:답변대기 1:답변완료
+		let oldPrivateStatus = "${requestScope.paraMap.privateStatus}"; // 비밀글 여부 번호 0:공개글 1:비밀글 
+		let oldAnswerStatus = "${requestScope.paraMap.answerStatus}"; // 답변 여부 번호 0:답변대기 1:답변완료
 		
-		let oldDateMin = "${requestScope.dateMin}"; // 기존 최소 등록일
-		let oldDateMax = "${requestScope.dateMax}"; // 기존 최대 등록일
+		let oldDateMin = "${requestScope.paraMap.dateMin}"; // 기존 최소 등록일
+		let oldDateMax = "${requestScope.paraMap.dateMax}"; // 기존 최대 등록일
 		
 		let url = "";
 		

@@ -24,7 +24,11 @@ import product.model.ProductDAO_imple;
  */
 public class ProductRegisterController extends AbstractController {
 
-	private final ProductDAO productDAO = new ProductDAO_imple(); // 상품 DAO 초기화
+	private final ProductDAO productDAO;
+	
+	public ProductRegisterController() {
+		this.productDAO = new ProductDAO_imple(); // 상품 DAO 초기화
+	}
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -37,12 +41,11 @@ public class ProductRegisterController extends AbstractController {
 
 		// POST 요청인 경우 상품 추가 처리
 		if ("POST".equalsIgnoreCase(method)) {
+			String message = ""; // 응답 메시지
 
 			try {
 				// 이미지 파일을 지정된 경로에 저장 후 이미지 정보가 담긴 ImageDTO list 반환
 				List<ImageDTO> imageList = FileComponent.saveImages(request); 
-				
-				String message = "";
 
 				// 상품 이미지가 존재하는지 확인
 				if (imageList.size() < 1) {
@@ -58,23 +61,22 @@ public class ProductRegisterController extends AbstractController {
 					// DB에 상품 추가 요청
 					int result = productDAO.insertProduct(productDTO);
 
-					// 상품 등록 실패 시
+					// 상품 등록 실패 시 failed 성공 시 success
 					message = (result == 1) ? "success" : "failed";
 				}
 
-				// 상품 등록 성공 시
-				super.handelJsonResponse(response, message);
-
-			} catch (SQLException | NumberFormatException | IOException | ServletException e ) {
+			} catch (SQLException | NumberFormatException | IOException e ) {
 				e.printStackTrace();
 				super.handleServerError();
 			}
+			
+			super.handelJsonResponse(response, message); // 서버 응답으로 직접 JSON 메시지 전달
 
 		}
 		// GET 요청인 경우 상품 추가 페이지로 이동
 		else {
 			try {
-				List<CategoryDTO> categoryList = productDAO.selectCategoryList();
+				List<CategoryDTO> categoryList = productDAO.selectCategoryList(); // 카테고리 정보 조회
 
 				request.setAttribute("categoryList", categoryList);
 
@@ -105,7 +107,7 @@ public class ProductRegisterController extends AbstractController {
 		List<ProductDetailDTO> productDetailList = new ArrayList<>(); // 상품 상세 리스트
 
 		// Request에서 정보 추출
-		String[] inventoryArr = request.getParameter("inventory").split(","); // 재고 배열 (100, 100, 100, 100) 사이즈 순서에 맞추어 형성
+		String[] inventoryArr = request.getParameter("inventory").split(","); // 재고 배열 (100, 100, 100, 100) 사이즈 0:S, 1:M, 2:L, 3:XL 순서에 맞추어 형성
 
 		String[] colorNameArr = request.getParameter("colorName").split(","); // 색상명 (red, blue) 배열
 
