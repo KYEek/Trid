@@ -17,7 +17,11 @@ import product.model.ProductDAO_imple;
  */
 public class ProductDetailController extends AbstractController {
 
-	private final ProductDAO productDAO = new ProductDAO_imple(); // ProductDAO 초기화
+	private final ProductDAO productDAO;
+	
+	public ProductDetailController() {
+		this.productDAO = new ProductDAO_imple(); // ProductDAO 초기화
+	}
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

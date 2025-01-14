@@ -228,7 +228,7 @@ public class BoardDAO_imple implements BoardDAO {
 	@Override
 	public int selectTotalRowCountByAdmin(Map<String, Object> paraMap) throws SQLException {
 		
-		int totalRowCount = 0;
+		int totalRowCount = 0; // 전체 행 개수
 		
 		String searchType = (String)paraMap.get("searchType");
 		
@@ -489,7 +489,7 @@ public class BoardDAO_imple implements BoardDAO {
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, paraMap.get("questionAnswer")); // 질문 답변
-			pstmt.setString(2, paraMap.get("pkQuestionNo")); // 질문 일련번호
+			pstmt.setString(2, paraMap.get("questionNo")); // 질문 일련번호
 			
 			result = pstmt.executeUpdate();
 			
@@ -506,11 +506,10 @@ public class BoardDAO_imple implements BoardDAO {
 		BoardDTO boardDTO = new BoardDTO();
 		
 		try {
-			
 			conn = ds.getConnection();
 			
 			String sql 	= " select q.pk_question_no, q.question_title, q.question_content, q.question_answer, "
-						+ " q.question_status, q.question_isprivate, to_char(q.question_registerday, 'yyyy-mm-dd') as question_registerday, "
+						+ " q.question_status, q.question_isprivate, question_registerday, "
 						+ " p.member_name "
 						+ " from tbl_question q "
 						+ " join tbl_member p on q.fk_member_no = p.pk_member_no "
@@ -526,7 +525,6 @@ public class BoardDAO_imple implements BoardDAO {
 				boardDTO.setPk_question_no(rs.getInt("pk_question_no"));
 				boardDTO.setQuestion_title(rs.getString("question_title"));
 				boardDTO.setQuestion_content(rs.getString("question_content"));
-				
 				boardDTO.setQuestion_answer(rs.getString("question_answer"));
 				boardDTO.setQuestion_status(rs.getInt("question_status"));
 				boardDTO.setQuestion_isprivate(rs.getInt("question_isprivate"));

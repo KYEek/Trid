@@ -9,7 +9,7 @@
 <%-- BoardDTO List --%>
 <c:set var="orderList" value="${requestScope.orderList}" />
 
-<%-- 질문 게시판 리스트 조회 페이지 --%>
+<%-- 관리자 주문 리스트 조회 페이지 --%>
 <!DOCTYPE html>
 <html>
 
@@ -144,15 +144,15 @@
 	
 	<script type="text/javascript">
 		$(document).ready(function() {
-			let oldSearchType = "${requestScope.searchType}"; // 검색어 타입 0:글제목 1:작성자명
-			let oldSearchWord = "${requestScope.searchWord}"; // 검색어
+			let oldSearchType = "${requestScope.paraMap.searchType}"; // 검색어 타입 0:글제목 1:작성자명
+			let oldSearchWord = "${requestScope.paraMap.searchWord}"; // 검색어
 			
-			let oldSortCategory = "${requestScope.sortCategory}"; // 정렬 번호 0:최신순 1:오래된순
+			let oldSortCategory = "${requestScope.paraMap.sortCategory}"; // 정렬 번호 0:최신순 1:오래된순
 			
-			let oldOrderStatus = "${requestScope.orderStatus}"; // 주문 상태 번호 0:결제완료 1:상품준비 2:배송준비 3:배송완료
+			let oldOrderStatus = "${requestScope.paraMap.orderStatus}"; // 주문 상태 번호 0:결제완료 1:상품준비 2:배송준비 3:배송완료
 			
-			let oldDateMin = "${requestScope.dateMin}"; // 기존 최소 등록일
-			let oldDateMax = "${requestScope.dateMax}"; // 기존 최대 등록일
+			let oldDateMin = "${requestScope.paraMap.dateMin}"; // 기존 최소 등록일
+			let oldDateMax = "${requestScope.paraMap.dateMax}"; // 기존 최대 등록일
 			
 			let url = "";
 			

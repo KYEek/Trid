@@ -15,7 +15,11 @@ import member.model.MemberDAO_imple;
  */
 public class MemberDetailController extends AbstractController {
 	
-	private final MemberDAO memberDAO = new MemberDAO_imple(); // MemberDAO 초기화
+	private final MemberDAO memberDAO;
+	
+	public MemberDetailController() {
+		this.memberDAO = new MemberDAO_imple(); // MemberDAO 초기화
+	}
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

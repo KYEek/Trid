@@ -3,8 +3,10 @@
 
 <%-- pageContextPath --%>
 <c:set var="ctxPath" value="${pageContext.request.contextPath}" />
+<%-- MemberDTO --%>
+<c:set var="memberDTO" value="${requestScope.memberDTO}" />
 
-<%-- 관리자 상품 상세 조회 페이지 --%>
+<%-- 관리자 회원 상세 조회 페이지 --%>
 <!DOCTYPE html>
 <html>
 
@@ -14,16 +16,10 @@
 
 <%-- css --%>
 <link rel="stylesheet" href="${ctxPath}/css/admin/member_detail.css">
-
-<%-- js --%>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.7.1.min.js"></script>
 </head>
 
 <body>
-	<%-- MemberDTO --%>
-	<c:set var="memberDTO" value="${requestScope.memberDTO}" />
-
-	<%-- 상품 상세 --%>
+	<%-- 회원 상세 --%>
 	<div id="container">
 
 		<%-- 관리자 사이드 네비게이션 --%>
@@ -106,13 +102,10 @@
 	</div>
 	
 	<script type="text/javascript">
-		$(document).ready(function() {
-			
-			
-		});
-		
+		// 주문상태 수정 요청 함수
 		function updateOrder(orderNo) {
 			if(confirm("주문 상태를 수정하시겠습니까?")) {
+				// 주문 상태 값 0:결제완료 1:상품준비 2:배송중 3:배송완료
 				const orderStatus = $("select#order_status_select").val();
 				
 				$.ajax({
@@ -132,7 +125,7 @@
 						}
 					},
 					error: () => {
-						alert("주문상태 수정를 실패했습니다.");
+						alert("주문상태 수정을 실패했습니다.");
 					}
 				});
 			}

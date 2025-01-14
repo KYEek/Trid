@@ -17,7 +17,11 @@ import util.security.Sha256;
  */
 public class LoginController extends AbstractController {
 
-	private final AdminDAO adminDAO = new AdminDAO_imple(); // 관리자 DAO 초기화
+	private final AdminDAO adminDAO;
+	
+	public LoginController() {
+		this.adminDAO = new AdminDAO_imple(); // 관리자 DAO 초기화 
+	}
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -27,7 +31,7 @@ public class LoginController extends AbstractController {
 		// POST 요청인 경우 관리자 로그인 처리
 		if ("POST".equalsIgnoreCase(method)) {
 			String adminId = request.getParameter("adminId"); // 관리자 아이디
-			String password = request.getParameter("password"); // 관리자 비밀번
+			String password = request.getParameter("password"); // 관리자 비밀번호
 			String encryptPw = Sha256.encrypt(password); // 비밀번호 암호화
 
 			try {
@@ -54,7 +58,7 @@ public class LoginController extends AbstractController {
 		// GET 요청인 경우 관리자 로그인 페이지로 연결
 		else {
 			if (session.getAttribute("adminId") != null) {
-				super.handleMessage(request, "이미 로그인 된 관리자입니다. 메인페이지로 이동합니다.", Constants.ADMIN_MAIN_URL);
+				super.handleMessage(request, Constants.ADMIN_AREADY_LOGIN, Constants.ADMIN_MAIN_URL);
 				return;
 			}
 

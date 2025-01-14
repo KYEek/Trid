@@ -18,7 +18,11 @@ import util.StringUtil;
  */
 public class BoardDetailController extends AbstractController {
 
-	private final BoardDAO boardDAO = new BoardDAO_imple(); // BoardDAO 초기화
+	private final BoardDAO boardDAO;
+	
+	public BoardDetailController() {
+		this.boardDAO = new BoardDAO_imple(); // BoardDAO 초기화
+	}
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -33,7 +37,7 @@ public class BoardDetailController extends AbstractController {
 		if ("POST".equalsIgnoreCase(method)) {
 			Map<String, String> paraMap = new HashMap<>();
 			
-			String pkQuestionNo = request.getParameter("pkQuestionNo"); // 질문 일련번호
+			String questionNo = request.getParameter("questionNo"); // 질문 일련번호
 			String questionAnswer = request.getParameter("questionAnswer"); // 답변
 			
 			// 답변 내용 유효성 검사
@@ -42,7 +46,7 @@ public class BoardDetailController extends AbstractController {
 				return;
 			}
 			 
-			paraMap.put("pkQuestionNo", pkQuestionNo);
+			paraMap.put("questionNo", questionNo);
 			paraMap.put("questionAnswer", questionAnswer);
 			
 			try {
@@ -92,7 +96,7 @@ public class BoardDetailController extends AbstractController {
 	}
 	
 	/*
-	 * 답변 등록 실패 시 이벤트를 처리하기 위한 메소드
+	 * 답변 등록 실패 시 사용자 알림 후 뒤로가기로 지정하는 메소드
 	 */
 	private void handleBoardUpdateFail(HttpServletRequest request) {
 		request.setAttribute("message", "답변 등록/수정을 실패했습니다.");
