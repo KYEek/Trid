@@ -33,6 +33,10 @@ public class ProductListController extends AbstractController {
         
         // 카테고리 필터
         
+        // 선택한 옷 종류
+        String selectedCategory = request.getParameter("selectedCategory");
+        request.setAttribute("selectedCategory", selectedCategory);
+        
         // 성별 필터
         String chooseGender = request.getParameter("chooseGender");
         paraMap.put("chooseGender", chooseGender);
@@ -102,7 +106,8 @@ public class ProductListController extends AbstractController {
                     jsonObject.put("productNo", product.getProductNo());
                     jsonObject.put("productName", product.getProductName());
                     jsonObject.put("price", product.getPrice());
-                    jsonObject.put("imagePath", product.getImageList().get(0).getImagePath());
+                    jsonObject.put("imagePath1", product.getImageList().get(0).getImagePath());
+                    jsonObject.put("imagePath2", product.getImageList().get(1).getImagePath());
                     jsonArray.put(jsonObject);
                 }
 

@@ -20,7 +20,11 @@ import board.model.*;
  */
 public class BoardManageController extends AbstractController {
 
-	private final BoardDAO boardDAO = new BoardDAO_imple(); // BoardDAO 초기화
+	private final BoardDAO boardDAO;
+	
+	public BoardManageController() {
+		this.boardDAO = new BoardDAO_imple(); // BoardDAO 초기화
+	}
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -43,7 +47,10 @@ public class BoardManageController extends AbstractController {
 			// curPage가 정수인지 예외처리
 			try {
 				curPage = Integer.parseInt(request.getParameter("curPage"));
-			} catch (NumberFormatException e) {}
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+				curPage = 1; 
+			}
 			
 			Map<String, Object> paraMap = createParaMap(request);  // URL 파라미터에서 받은 값을 Map에 저장
 			
@@ -56,17 +63,10 @@ public class BoardManageController extends AbstractController {
 				
 				List<BoardDTO> boardList = boardDAO.selectQuestionListByAdmin(paraMap); // 질문 리스트 조회
 				
-				request.setAttribute("boardList", boardList);
-				request.setAttribute("pagingDTO", pagingDTO);
+				request.setAttribute("boardList", boardList); // Q&A 리스트 정보
+				request.setAttribute("pagingDTO", pagingDTO); // 페이징 정보
+				request.setAttribute("paraMap", paraMap); // 이전 요청 시 받았던 필터링, 카테고리 정보가 담긴 map
 				
-				request.setAttribute("searchType", paraMap.get("searchType"));
-				request.setAttribute("searchWord", paraMap.get("searchWord"));
-				request.setAttribute("sortCategory", paraMap.get("sortCategory"));
-				request.setAttribute("privateStatus", paraMap.get("privateStatus"));
-				request.setAttribute("answerStatus", paraMap.get("answerStatus"));
-				request.setAttribute("dateMin", paraMap.get("dateMin"));
-				request.setAttribute("dateMax", paraMap.get("dateMax"));
-
 				super.setRedirect(false);
 				super.setViewPage(Constants.ADMIN_BOARD_MANAGE_JSP);
 

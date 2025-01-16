@@ -22,7 +22,11 @@ import product.model.ProductDAO_imple;
  */
 public class ProductUpdateController extends AbstractController {
 	
-	private final ProductDAO productDAO = new ProductDAO_imple(); // 상품 DAO 초기화
+	private final ProductDAO productDAO;
+	
+	public ProductUpdateController() {
+		this.productDAO = new ProductDAO_imple(); // 상품 DAO 초기화
+	}
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -35,12 +39,11 @@ public class ProductUpdateController extends AbstractController {
 
 		// POST 요청인 경우 상품 수정 처리
 		if ("POST".equalsIgnoreCase(method)) {
+			String message = "";
 			
 			try {
 				// 이미지 파일을 지정된 경로에 저장 후 이미지 정보가 담긴 ImageDTO list 반환
 				List<ImageDTO> imageList = FileComponent.saveImages(request); 
-				
-				String message = "";
 				
 				// 이미지를 제외한 정보 저장
 				ProductDTO productDTO = createProductDTO(request);
@@ -52,13 +55,13 @@ public class ProductUpdateController extends AbstractController {
 
 				// 상품 수정 실패 시
 				message = (result == 1) ? "success" : "failed";
-				
-				super.handelJsonResponse(response, message);
 
-			} catch (SQLException | NumberFormatException | IOException | ServletException e ) {
+			} catch (SQLException | NumberFormatException | IOException e ) {
 				e.printStackTrace();
-				super.handleServerError();
+				message = "failed";
 			}
+			
+			super.handelJsonResponse(response, message); // 서버 응답으로 직접 JSON 메시지 전달
 
 		}
 		// GET 요청인 경우 상품 수정 페이지로 이동, 기존 상품 정보를 조회
@@ -70,9 +73,8 @@ public class ProductUpdateController extends AbstractController {
 				
 				request.setAttribute("productDTO", productDTO);
 
-				// TODO 좀 더 나은 방법 찾아보기
-				int[] inventoryArr = new int[4];
-				int[] productDetailNoArr = new int[4];
+				int[] inventoryArr = new int[4]; // 사이즈 0:S, 1:M, 2:L, 3:XL 에 맞추어 각 재고량 저장
+				int[] productDetailNoArr = new int[4]; // 사이즈 0:S, 1:M, 2:L, 3:XL 에 맞추어 상품 상세 일련번호 저장
 				
 				for(ProductDetailDTO productDetailDTO : productDTO.getProductDetailList()) {
 					inventoryArr[productDetailDTO.getSize()] = productDetailDTO.getInventory();
@@ -105,7 +107,7 @@ public class ProductUpdateController extends AbstractController {
 		List<ProductDetailDTO> productDetailList = new ArrayList<>(); // 상품 상세 리스트
 
 		// Request에서 정보 추출
-		String[] inventoryArr = request.getParameter("inventory").split(","); // 재고 배열 (100, 100, 100, 100) 사이즈 순서에 맞추어 형성
+		String[] inventoryArr = request.getParameter("inventory").split(","); // 재고 배열 (100, 100, 100, 100) 사이즈 0:S, 1:M, 2:L, 3:XL 순서에 맞추어 형성
 
 		String[] productDetailNoArr = request.getParameter("productDetailNoArr").split(",");
 		

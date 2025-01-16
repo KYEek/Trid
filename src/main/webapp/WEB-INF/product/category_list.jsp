@@ -33,6 +33,7 @@
 <c:set var="chooseGender" value="${requestScope.chooseGender}" />
 <c:set var="chooseType" value="${requestScope.chooseType}" />
 <c:set var="chooseCategoryNo" value="${requestScope.chooseCategoryNo}" />
+<c:set var="imageList" value="${requestScope.productDTO.imageList}" />
 
 
 <jsp:include page="/WEB-INF/header.jsp" />
@@ -112,15 +113,55 @@
 		<img src="../images/logo/4box.svg" alt="4box" />
 	</button> -->
 	
-
-
     <div id="container" style="height: 100%">
-       
     	
     </div>
 
 <script>
+
+let imageList = [];
+let isAnimating = false;
+
 $(document).ready(function() {
+	
+	/* 기존 이미지에 마우스를 올리면 다른 이미지로 변경 */
+	$(document).on('mouseenter', "div#product", function(e){
+		if(isAnimating) {
+			return;
+		}
+		isAnimating = true;
+		
+    	const $img = $(this).find("img");
+    	const index = $(this).index();
+ 	      
+    	$img.fadeOut(250, function() {
+        	// 2. 이미지 src 변경
+        	$img.prop('src', imageList[index].path2);
+           	// 3. 새로운 이미지 서서히 나타나기
+            $img.fadeIn(250)
+      	});
+    	isAnimating = false;
+    });
+ 	   
+	/* 이미지에서 마우스를 내리면 기존 이미지로 변경 */
+   	$(document).on('mouseleave', "div#product", function(e){
+		if(isAnimating) {
+			return;
+		}
+		isAnimating = true;
+	   		
+	   	const $img = $(this).find("img");
+	   	const index = $(this).index();
+	      
+   		$img.fadeOut(250, function() {
+         	// 2. 이미지 src 변경
+       		$img.prop('src', imageList[index].path1);
+           	// 3. 새로운 이미지 서서히 나타나기
+       		$img.fadeIn(250)
+   		});
+   		isAnimating = false;
+	});
+	
 	
 	// 필터 적용 버튼 클릭 시 필터 적용 함수
 	$("#apply_filter_button").on("click", function() {
@@ -183,6 +224,7 @@ $(document).ready(function() {
     	location.href="/Trid/product/detail.trd?productNo="+productNo;
     });
     
+ 	
 });// end of $(document).ready(function() -------------------------
 		
 // 가격 범위 필터 설정 함수
@@ -250,21 +292,30 @@ function updateProductList(products) {
         productListDiv.append("<p>상품이 없습니다.</p>");
         return;
     }
+    
 
     // 서버에서 받은 JSON 데이터를 기반으로 HTML 생성
     products.forEach(product => {
     	
+    	const path1 = "${pageContext.request.contextPath}" + product.imagePath1;
+    	const path2 = "${pageContext.request.contextPath}" + product.imagePath2;
+    	
+    	imageList.push({
+    		path1 : path1 ,
+    		path2 : path2
+    	})
+    	
     	const path = "${pageContext.request.contextPath}" + product.imagePath;
     	const name = product.productName;
+    	
     	totalRowCount = Number(product.totalRowCount);
-    	console.log(name);
-    	// console.log(path);
+    	console.log(path1, path2);
     	
         let productHtml = `
 			<div id="product" data-type=` + product.productNo + `>
 			    <div id="photo">
 			        <img src=`
-			        	productHtml += path;
+			        	productHtml += path1;
 			        	
 			        	productHtml +=
 			        `${path} alt="상품 이미지" style="width: 100%; height: 100%; object-fit: cover;">
@@ -275,6 +326,7 @@ function updateProductList(products) {
 			    </div>
 			</div>`;
         productListDiv.append(productHtml);
+        
     });
 }// end of function updateProductList(products) --------------------------------
 	

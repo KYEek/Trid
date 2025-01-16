@@ -3,8 +3,10 @@
 
 <%-- pageContextPath --%>
 <c:set var="ctxPath" value="${pageContext.request.contextPath}" />
+<%-- categoryList --%>
+<c:set var="categoryList" value="${requestScope.categoryList}" />
 
-<%-- 관리자 상품 상세 페이지 --%>
+<%-- 관리자 상품 등록 페이지 --%>
 <!DOCTYPE html>
 <html>
 
@@ -17,22 +19,21 @@
 <link rel="stylesheet" href="${ctxPath}/css/admin/button.css">
 
 <%-- js --%>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.7.1.min.js"></script>
 <script type="text/javascript" src="${ctxPath}/js/admin/product.js"></script>
 <script type="text/javascript" src="${ctxPath}/js/admin/util.js"></script>
 
 </head>
 
 <body>
-	<c:set var="categoryList" value="${requestScope.categoryList}" />
-
 	<div id="product_edit_container">
-
+		<%-- 관리자 사이드 네비게이션 --%>
 		<%@ include file="../side_navigation.jsp"%>
 
 		<div id="image_register_container">
 			<div id="image_container">
+				<%-- 이미지 등록 캐러셀 --%>
 				<%@ include file="../../image_carousel_register.jsp"%>
+				
 				<div id="image_frm_container">
 					<input type="hidden" name="fileName" />
 					<button type="button" class="button--ujarak" id="file_upload_button">이미지 추가</button>
@@ -47,6 +48,7 @@
 
 			<div id="register_container">
 			
+				<%-- 상품 등록 폼 --%>
 				<form id="register_frm" name="product_register_frm" enctype="multipart/form-data">
 				
 					<div id="register_header">
@@ -153,6 +155,8 @@
 
 	<script type="text/javascript">
 		$(document).ready(function () {
+			
+			// 상품 등록 버튼 클릭 이벤트 함수
 			$(document).on("click", "#product_register_button", function () {
 				
 				// 제츨 요소 유효성 검사
@@ -160,12 +164,15 @@
 					return false;
 				}
 				
+				// 사이즈별 재고 배열
 				const arr_inventory = [];
 				
+				// 0:S, 1:M, 2:L, 3:XL 순서대로 재고 배열 저장
 				$("input.size").each((index, element) => {
 					arr_inventory.push($(element).val());
 				});
 
+				// 사이즈별 재고 정보 문자열
 				const str_inventory = arr_inventory.join(",");
 
 				$("input:hidden[name='inventory']").val(str_inventory);

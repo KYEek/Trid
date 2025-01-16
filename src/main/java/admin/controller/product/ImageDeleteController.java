@@ -1,6 +1,5 @@
 package admin.controller.product;
 
-import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import common.Constants;
@@ -16,7 +15,11 @@ import product.model.ProductDAO_imple;
  */
 public class ImageDeleteController extends AbstractController {
 	
-	private final ProductDAO productDAO = new ProductDAO_imple(); // ProductDAO 초기화
+	private final ProductDAO productDAO;
+	
+	public ImageDeleteController() {
+		this.productDAO = new ProductDAO_imple(); // ProductDAO 초기화
+	}
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -31,27 +34,17 @@ public class ImageDeleteController extends AbstractController {
 		if("POST".equalsIgnoreCase(method)) {
 			String imageNo = request.getParameter("imageNo"); // 상품 이미지 일련번호
 			String productNo = request.getParameter("productNo"); // 상품 일련번호
-			
 			String message = ""; // 응답 메시지
 			
 			try {
 				int result = productDAO.deleteProductImage(imageNo, productNo); // 상품 이미지 삭제
-				message = result == 1 ? "success" : "failed";
+				message = result == 1 ? "success" : "failed"; // 성공하면 success 실패하면 failed 로 메시지 저장
 			} catch (SQLException e) { // 예외 발생 시 실패 처리
 				e.printStackTrace();
 				message = "failed";
 			}
 			
-			super.setJsonResponse(true); // 클라이언트로 단순 응답 처리
-
-		    response.setContentType("application/json"); // JSON 타입으로 MIME 설정
-		    response.setCharacterEncoding("UTF-8");
-			
-		    String jsonData = "{\"message\":\"" + message + "\"}";
-		    
-		    PrintWriter out = response.getWriter();
-		    out.print(jsonData);
-		    out.flush();
+			super.handelJsonResponse(response, message); // 서버 응답으로 직접 JSON 메시지 전달
 
 		}
 		// POST 요청이 아닌 경우 상품 관리 페이지로 리다이렉트

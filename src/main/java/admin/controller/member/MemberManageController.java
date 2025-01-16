@@ -20,7 +20,11 @@ import member.model.MemberDAO_imple;
  */
 public class MemberManageController extends AbstractController {
 	
-	private final MemberDAO memberDAO = new MemberDAO_imple(); // MemberDAO 초기화
+	private final MemberDAO memberDAO;
+	
+	public MemberManageController() {
+		this.memberDAO = new MemberDAO_imple(); // MemberDAO 초기화
+	}
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -43,7 +47,10 @@ public class MemberManageController extends AbstractController {
 			// curPage가 정수인지 예외처리
 			try {
 				curPage = Integer.parseInt(request.getParameter("curPage"));
-			} catch (NumberFormatException e) {}
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+				curPage = 1;
+			}
 			
 			Map<String, Object> paraMap = createParaMap(request);  // URL 파라미터에서 받은 값을 Map에 저장
 			
@@ -56,17 +63,9 @@ public class MemberManageController extends AbstractController {
 				
 				List<MemberDTO> memberList = memberDAO.selectMemberListByAdmin(paraMap); // 회원정보 리스트 조회
 				
-				request.setAttribute("memberList", memberList);
-				request.setAttribute("pagingDTO", pagingDTO);
-				
-				request.setAttribute("searchWord", paraMap.get("searchWord"));
-				request.setAttribute("searchType", paraMap.get("searchType"));
-				request.setAttribute("sortCategory", paraMap.get("sortCategory"));
-				request.setAttribute("memberGender", paraMap.get("memberGender"));
-				request.setAttribute("memberIdle", paraMap.get("memberIdle"));
-				request.setAttribute("memberStatus", paraMap.get("memberStatus"));
-				request.setAttribute("dateMin", paraMap.get("dateMin"));
-				request.setAttribute("dateMax", paraMap.get("dateMax"));
+				request.setAttribute("memberList", memberList); // 회원 리스트 정보
+				request.setAttribute("pagingDTO", pagingDTO); // 페이징 정보
+				request.setAttribute("paraMap", paraMap); // 이전 요청의 필터링 및 카테고리 정보 map
 
 				super.setRedirect(false);
 				super.setViewPage(Constants.ADMIN_MEMBER_MANAGE_JSP);
@@ -91,7 +90,7 @@ public class MemberManageController extends AbstractController {
 		paraMap.put("sortCategory", request.getParameter("sortCategory")); // 정렬 타입 0: 회원명 오름차순, 1: 회원명 내림차순, 2:가입일 오름차순, 3: 가입일 내림차순
 		paraMap.put("memberGender", request.getParameter("memberGender")); // 성별 0:여자 1:남자
 		paraMap.put("memberIdle", request.getParameter("memberIdle")); // 회원 휴면 상태 1 : 비휴면, 0 :휴면 (6개월 기준)
-		paraMap.put("memberStatus", request.getParameter("memberStatus")); // 회원 상태 1 : 활성,  0: 탈퇴,  2: 정지
+		paraMap.put("memberStatus", request.getParameter("memberStatus")); // 회원 상태 1 : 활성,  0: 탈퇴
 		paraMap.put("dateMin", request.getParameter("dateMin")); // 최소 일자
 		paraMap.put("dateMax", request.getParameter("dateMax")); // 최대 일자
 		

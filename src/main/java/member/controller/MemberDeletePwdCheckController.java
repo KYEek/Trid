@@ -46,7 +46,7 @@ public class MemberDeletePwdCheckController extends AbstractController {
 				
 				session.invalidate(); // 로그아웃 처리하기
 				
-				String message = "계정 탈퇴가 완료되었습니다."; 
+				String message = "계정 탈퇴가 완료되었습니다.이용해주셔서 감사합니다."; 
 				String loc = "/main.trd";
 				super.handleMessage(request, message, loc);
 				

@@ -1089,12 +1089,12 @@ public class ProductDAO_imple implements ProductDAO {
 		        conn = ds.getConnection();
 
 		        StringBuilder sql = new StringBuilder(
-					                    " WITH COLOR AS "
-					                  + " ( "
-					                  + "  SELECT fk_product_no, "
-					                  + "  LISTAGG(color_name, ',') WITHIN GROUP(ORDER BY color_name) AS color_name "
-					                  + "  FROM tbl_color "
-					                  + "  WHERE 1=1 ");
+		        						  " WITH COLOR AS "
+		        						+ " ( "
+		        						+ " SELECT fk_product_no, "
+		        						+ " LISTAGG(color_name, ',') WITHIN GROUP(ORDER BY color_name) AS color_name "
+		        						+ " FROM tbl_color "
+		        						+ " WHERE 1=1 ");
 					                  
 					                  if (!StringUtil.isBlank(paraMap.get("chooseColor"))) {
 					  		            String[] colors = paraMap.get("chooseColor").split(",");
@@ -1112,29 +1112,25 @@ public class ProductDAO_imple implements ProductDAO {
 					  		        }	                  
 					                  
 					                sql.append(" GROUP BY fk_product_no "
-						                     + " )"
-						                     + " SELECT T.*"
-						                     + " FROM"
+						                     + " ) "
+						                     + " SELECT T.* "
+						                     + " FROM "
 						                     + " ( "
 						                     + " SELECT  ROWNUM as RN, p.pk_product_no, p.product_name, p.product_price, "
-						                     + "         i.product_image_path, i.pk_product_image_no, "
 						                     + "         c.pk_category_no, c.category_type, c.category_gender, "
-						                     + "         cr.color_name "
+						                     + "         cr.color_name, "
+						                     + " ("
+						                     + " SELECT LISTAGG(product_image_path, ',') WITHIN GROUP (ORDER BY pk_product_image_no) "
+						                     + "    FROM tbl_product_image "
+						                     + "     WHERE fk_product_no = p.pk_product_no "
+						                     + "                 AND ROWNUM <= 2 "
+						                     + " ) AS product_image_path "
 						                     + " FROM    tbl_product p "
 						                     + "         JOIN tbl_category c "
 						                     + "         ON p.fk_category_no = c.pk_category_no "
 						                     + "         JOIN COLOR cr "
 						                     + "         ON p.pk_product_no = cr.fk_product_no "
-						                     + "         JOIN tbl_product_image i "
-						                     + "         ON p.pk_product_no = i.fk_product_no "
-						                     + " WHERE   product_status_code = 1 "
-						                     + " AND     i.pk_product_image_no ="
-						                     + " ( "
-						                     + "  SELECT  MIN(pk_product_image_no) "
-						                     + "  FROM    tbl_product_image "
-						                     + "  WHERE   fk_product_no = p.pk_product_no )");
-					                  
-					                 
+						                     + " WHERE   product_status_code = 1 " ) ;
 					     
 		        // 필터링 조건 추가
 		        if (!StringUtil.isBlank(paraMap.get("choosePrice"))) {
@@ -1201,11 +1197,13 @@ public class ProductDAO_imple implements ProductDAO {
 	                // 이미지 정보 매핑
 	                List<ImageDTO> imageList = new ArrayList<>(); // 이미지 정보를 ProductDTO의 이미지 리스트에 추가
 	                
-	                ImageDTO image = new ImageDTO();
-	                image.setPkProductImageNo(rs.getInt("pk_product_image_no"));
-	                image.setImagePath(rs.getString("product_image_path"));
+	                String[] imgPathArr = rs.getString("product_image_path").split(",");
 	                
-	                imageList.add(image);  // 이미지 리스트에 이미지 하나씩 쌓아주기
+	                for(String imgPath : imgPathArr) {
+	                	ImageDTO image = new ImageDTO();
+	                	image.setImagePath(imgPath);
+	                	imageList.add(image); // 이미지 리스트에 이미지 하나씩 쌓아주기
+	                }
 	                
 	                product.setColorNameArray(rs.getString("color_name").split(","));
 	                
@@ -1401,19 +1399,22 @@ public class ProductDAO_imple implements ProductDAO {
 		    try {
 		        conn = ds.getConnection();
 
-		        String sql = " SELECT p.pk_product_no, p.product_name, p.product_price, "
-		                   + "        i.product_image_path, i.pk_product_image_no "
-		                   + " FROM   tbl_product p "
-		                   + " JOIN   tbl_product_image i "
-		                   + " ON     p.pk_product_no = i.fk_product_no "
-		                   + " WHERE  product_status_code = 1 "
-		                   + " AND    i.pk_product_image_no = "
-		                   + "        ( "
-		                   + "		  SELECT MIN(pk_product_image_no"
-		                   + "		  ) "
-		                   + "        FROM tbl_product_image "
-		                   + "        WHERE fk_product_no = p.pk_product_no) "
-		                   + " ORDER BY DBMS_RANDOM.VALUE "; // 랜덤으로 섞어서 가져옴
+		        String sql = " SELECT * "
+		        		   + " FROM "
+		        		   + " ( "
+		        		   + " SELECT  p.pk_product_no, p.product_name, p.product_price, "
+		        		   + "        i.product_image_path, i.pk_product_image_no, "
+		        		   + "        ROW_NUMBER() OVER (ORDER BY DBMS_RANDOM.VALUE) AS rnum "
+		        		   + " FROM    tbl_product p "
+		        		   + "        JOIN tbl_product_image i "
+		        		   + "        ON p.pk_product_no = i.fk_product_no "
+		        		   + " WHERE   product_status_code = 1 "
+		        		   + " AND     i.pk_product_image_no = "
+		        		   + "        (SELECT MIN(pk_product_image_no) "
+		        		   + " FROM    tbl_product_image "
+		        		   + " WHERE   fk_product_no = p.pk_product_no) "
+		        		   + " ) "
+		        		   + " WHERE rnum <= 18 "; // 18개 상품 랜덤으로 섞어서 가져옴
 
 		        pstmt = conn.prepareStatement(sql);
 

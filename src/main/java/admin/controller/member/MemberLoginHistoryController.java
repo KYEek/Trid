@@ -20,7 +20,11 @@ import member.model.MemberDAO_imple;
  */
 public class MemberLoginHistoryController extends AbstractController {
 	
-	private final MemberDAO memberDAO = new MemberDAO_imple();
+	private final MemberDAO memberDAO;
+	
+	public MemberLoginHistoryController() {
+		this.memberDAO = new MemberDAO_imple(); // MemberDAO 초기화
+	}
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -43,7 +47,10 @@ public class MemberLoginHistoryController extends AbstractController {
 			// curPage가 정수인지 예외처리
 			try {
 				curPage = Integer.parseInt(request.getParameter("curPage"));
-			} catch (NumberFormatException e) {}
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+				curPage = 1;
+			}
 			
 			try {
 				Map<String, Object> paraMap = new HashMap<>();

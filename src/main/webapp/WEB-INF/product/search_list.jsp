@@ -56,35 +56,35 @@
 
 </article>
 
-
 <script>
 
-	$(document).ready(function() {
+
+$(document).ready(function() {
+	
+    // #search_bar에 대한 엔터 키 이벤트
+    $("#search_bar").bind("keydown", function(e) {
+        if (e.keyCode == 13) {
+        	console.log("검색어: " + $("#search_bar").val()); // 검색어 출력
+            goSearch();
+        }
+    });//end of $("#search_bar").bind("keydown", function(e) ---------------------
     
-	    // #search_bar에 대한 엔터 키 이벤트
-	    $("#search_bar").bind("keydown", function(e) {
-	        if (e.keyCode == 13) {
-	        	console.log("검색어: " + $("#search_bar").val()); // 검색어 출력
-	            goSearch();
-	        }
-	    });//end of $("#search_bar").bind("keydown", function(e) ---------------------
-	    
-	    // 시작 데이터 로드
-	    loadMoreProducts();
-	    
-	    /* 무한스크롤 처리 함수 */
-	    $(window).scroll(function() {
-	        if (($(window).scrollTop()+1) + $(window).height() >= $(document).height()) {
-	            loadMoreProducts();
-	        }
-	    });
-	    		
-	    // 상품 리스트 클릭시 해당 상품 상세페이지로 이동
-	    $(document).on("click", "div#product", function(e){
-	    	const productNo =($(e.target).closest("div#product").data("type"));
-	    	
-	    	location.href="/Trid/product/detail.trd?productNo="+productNo;
-	    });// end of $(document).on("click", "div#product", function(e) ----------------------
+    // 시작 데이터 로드
+    loadMoreProducts();
+    
+    /* 무한스크롤 처리 함수 */
+    $(window).scroll(function() {
+        if ((window).scrollTop() + $(window).height() >= $(document).height()) {
+            loadMoreProducts();
+        }
+    });
+    		
+    // 상품 리스트 클릭시 해당 상품 상세페이지로 이동
+    $(document).on("click", "div#product", function(e){
+    	const productNo =($(e.target).closest("div#product").data("type"));
+    	
+    	location.href="/Trid/product/detail.trd?productNo="+productNo;
+    });// end of $(document).on("click", "div#product", function(e) ----------------------
 
 }); // end of $(document).ready(function() { });
 	 
@@ -140,19 +140,14 @@ function updateProductList(products) {
 	
     const productListDiv = $("div#container");
     
-/*     if (!products || products.length === 0) {
-        productListDiv.append("<p>상품이 없습니다.</p>");
-        return;
-    } */
-    
 	// 서버에서 받은 JSON 데이터를 기반으로 HTML 생성
     products.forEach(product => {
     	
     	const path = "${pageContext.request.contextPath}" + product.imagePath;
     	const name = product.productName;
+    	
     	saerchRowCount = Number(product.saerchRowCount);
     	console.log(name);
-    	// console.log(path);
     	
         let productHtml = `
             <div id="product" data-type=` + product.productNo + `>
@@ -164,8 +159,8 @@ function updateProductList(products) {
 	                `${path} alt="상품 이미지" style="width: 100%; height: 100%; object-fit: cover;">
 	            </div>
 	            <div id="productInfo">
-	                <div id="name">` + product.productName + `</p>
-	                <div id="price">` + product.price + `원</p>
+	                <div id="name">` + product.productName + `</div>
+	                <div id="price">` + product.price + `원</div>
             	</div>
             </div>`;
     	productListDiv.append(productHtml);

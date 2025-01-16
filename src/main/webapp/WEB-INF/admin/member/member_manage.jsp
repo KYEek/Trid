@@ -3,14 +3,10 @@
 
 <%-- pageContextPath --%>
 <c:set var="ctxPath" value="${pageContext.request.contextPath}" />
-<%-- 관리자 명 --%>
-<c:set var="adminName" value="${sessionScope.adminName}" />
 <%-- MemberDTO List --%>
 <c:set var="memberList" value="${requestScope.memberList}" />
 
-
-
-<%-- 질문 게시판 리스트 조회 페이지 --%>
+<%-- 관리자 사용자 목록 조회 페이지 --%>
 <!DOCTYPE html>
 <html>
 
@@ -19,11 +15,11 @@
 <title>Trid Member Manage</title>
 
 <%-- css --%>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/manage.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin/member_manage.css">
+<link rel="stylesheet" href="${ctxPath}/css/admin/manage.css">
+<link rel="stylesheet" href="${ctxPath}/css/admin/member_manage.css">
 
 <%-- js --%>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/admin/util.js"></script>
+<script type="text/javascript" src="${ctxPath}/js/admin/util.js"></script>
 </head>
 <body>
 	<div class="main_container">
@@ -95,10 +91,11 @@
 					</div>
 				</div>
 			</form>
-		</div>
+			</div>
 		
-		<span>총 ${pagingDTO.totalRowCount}명 회원</span>
+			<span>총 ${pagingDTO.totalRowCount}명 회원</span>
 	
+			<%-- 사용자 정보 리스트 테이블 --%>
 			<table class="table">
 				<thead>
 					<tr>
@@ -137,13 +134,13 @@
 								</td>
 								
 								<td>${memberDTO.member_registerday}</td>
-								
 							</tr>
 						</c:forEach>
 					</c:if>
 				</tbody>
 			</table>
 			
+			<%-- 페이징 --%>
 			<div>
 				<%@ include file="../../paging.jsp" %>
 			</div>
@@ -152,21 +149,23 @@
 	
 	<script type="text/javascript">
 		$(document).ready(function() {			
-			let oldSearchType = "${requestScope.searchType}"; // 검색 타입 0: 회원명, 1: 이메일
-			let oldSearchWord = "${requestScope.searchWord}"; // 검색어
+			let oldSearchType = "${requestScope.paraMap.searchType}"; // 검색 타입 0: 회원명, 1: 이메일
+			let oldSearchWord = "${requestScope.paraMap.searchWord}"; // 검색어
 			
-			let oldSortCategory = "${requestScope.sortCategory}"; // 정렬 타입 0: 회원명 오름차순, 1: 회원명 내림차순, 2:가입일 오름차순, 3: 가입일 내림차순
-			let oldMemberGender = "${requestScope.memberGender}"; // 회원 성별 0:여자, 1:남자
-			let oldMemberIdle = "${requestScope.memberIdle}"; // 회원 휴면 상태 1 : 비휴면, 0 :휴면 (6개월 기준)
-			let oldMemberStatus = "${requestScope.memberStatus}"; // 회원 상태 1 : 활성,  0: 탈퇴,  2: 정지
+			let oldSortCategory = "${requestScope.paraMap.sortCategory}"; // 정렬 타입 0: 회원명 오름차순, 1: 회원명 내림차순, 2:가입일 오름차순, 3: 가입일 내림차순
+			let oldMemberGender = "${requestScope.paraMap.memberGender}"; // 회원 성별 0:여자, 1:남자
+			let oldMemberIdle = "${requestScope.paraMap.memberIdle}"; // 회원 휴면 상태 1 : 비휴면, 0 :휴면 (6개월 기준)
+			let oldMemberStatus = "${requestScope.paraMap.memberStatus}"; // 회원 상태 1 : 활성,  0: 탈퇴,  2: 정지
 			
-			let oldDateMin = "${requestScope.dateMin}"; // 기존 최소 등록일
-			let oldDateMax = "${requestScope.dateMax}"; // 기존 최대 등록일
+			let oldDateMin = "${requestScope.paraMap.dateMin}"; // 기존 최소 등록일
+			let oldDateMax = "${requestScope.paraMap.dateMax}"; // 기존 최대 등록일
 			
 			let url = "";
 			
+			// 이전 요청 검색 조건 유지 함수 실행
 			keepSearchConditions();
 			
+			// 검색어 input 엔터 처리
 			$(document).on("keydown", "input#search_word" , function(e) {
 				if(e.keyCode == 13) {
 					$("button#search_button").click();	
@@ -256,6 +255,7 @@
 				}
 			}
 			
+			// 페이지 버튼 클릭 이벤트 함수
 			$(document).on("click", "a.page_button", function () {
 				const page = $(this).data("page");
 	
