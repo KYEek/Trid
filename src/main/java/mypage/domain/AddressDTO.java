@@ -3,18 +3,18 @@ package mypage.domain;
 public class AddressDTO {
 
 	
-	int addr_no;        
-	int member_no;        
-	int post_no; 
-	String address;
-	String detail; 
-	int addr_isdefault; 
-	String extraaddr; 
+	private int addr_no;        
+	private int member_no;        
+	private int post_no; 
+	private String address;
+	private String detail; 
+	private int addr_isdefault; 
+	private String extraaddr; 
 	
 	
 	//조인한 데이터
-	String addr_mobile;
-	String member_name;
+	private String addr_mobile;
+	private String member_name;
 	
 	
 	

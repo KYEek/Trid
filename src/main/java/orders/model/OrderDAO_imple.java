@@ -508,7 +508,7 @@ public class OrderDAO_imple implements OrderDAO {
 
 	// 유저의 주문 정보를 불러온다
 	@Override
-	public JSONArray selectOrderListByMember(int pk_member_no) throws SQLException {
+	public JSONArray selectOrderListByMember(int pk_member_no, int startNum) throws SQLException {
 		
 		JSONArray jsonArr = null;
 		
@@ -528,13 +528,22 @@ public class OrderDAO_imple implements OrderDAO {
 					+ " join select_basket_product_info product_info "
 					+ " on order_info.fk_product_detail_no = product_info.PRODUCT_DETAIL_NO "
 					+ " ) "
-					+ " where rownumber = 1 and fk_member_no = ? "
+					+ " join ( "
+					+ " select rownum as rowno, pk_order_no "
+					+ " from tbl_order "
+					+ " where fk_member_no = ? "
+					+ " order by pk_order_no desc) "
+					+ " on pk_order_no = fk_order_no "
+					+ " where rownumber = 1 and fk_member_no = ? and (rowno between ? and ?) "
 					+ " order by fk_order_no desc ";
 			
 			
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt. setInt(1, pk_member_no);
+			pstmt. setInt(2, pk_member_no);
+			pstmt. setInt(3, startNum);
+			pstmt. setInt(4, (startNum + 4));
 			
 			rs = pstmt.executeQuery();
 			jsonArr = new JSONArray();

@@ -9,16 +9,16 @@ import product.domain.ProductDetailDTO;
 public class BasketDTO {
 
 	
-	 int pk_basket_no;    
-	 int fk_member_no;
-	 int fk_product_detail_no;
-	 int basket_quantity;
+	 private int pk_basket_no;    
+	 private int fk_member_no;
+	 private int fk_product_detail_no;
+	 private int basket_quantity;
 	 
-	 MemberDTO fk_member;
-	 ColorDTO color;
-	 ImageDTO image;
-	 ProductDTO pruduct;
-	 ProductDetailDTO product_detail;
+	 private MemberDTO fk_member;
+	 private ColorDTO color;
+	 private ImageDTO image;
+	 private ProductDTO pruduct;
+	 private ProductDetailDTO product_detail;
 	 
 	 
 	 

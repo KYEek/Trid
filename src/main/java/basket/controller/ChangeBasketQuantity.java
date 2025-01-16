@@ -17,8 +17,8 @@ import member.domain.MemberDTO;
 
 public class ChangeBasketQuantity extends AbstractController{
 
-	BasketDAO bskDao = new BasketDAO_imple();
-	BasketDTO bskDTO = null;
+	private  BasketDAO bskDao = new BasketDAO_imple();
+	private  BasketDTO bskDTO = null;
 	
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		

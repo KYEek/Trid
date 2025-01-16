@@ -12,8 +12,8 @@ import mypage.domain.AddressDTO;
 public class AddressAddController extends AbstractController {
 	
 	// DTO, DAO 변수 생성
-	AddressDTO addrDto = new AddressDTO();
-	AddressDAO addrDao = new AddressDAO_imple();
+	private AddressDTO addrDto = new AddressDTO();
+	private AddressDAO addrDao = new AddressDAO_imple();
 	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

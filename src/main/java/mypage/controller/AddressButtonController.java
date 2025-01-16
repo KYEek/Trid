@@ -14,8 +14,8 @@ import mypage.model.AddressDAO_imple;
 
 public class AddressButtonController extends AbstractController {
 	
-	AddressDAO addrDao = new AddressDAO_imple();
-	AddressDTO addrDto = new AddressDTO();
+	private AddressDAO addrDao = new AddressDAO_imple();
+	private AddressDTO addrDto = new AddressDTO();
 	
 	
 	@Override

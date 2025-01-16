@@ -15,8 +15,8 @@ import basket.model.*;
 
 public class BasketController extends AbstractController {
 
-	BasketDAO bskDao = new BasketDAO_imple();
-	BasketDTO bskDTO = null;
+	private BasketDAO bskDao = new BasketDAO_imple();
+	private BasketDTO bskDTO = null;
 	
 	
 	@Override

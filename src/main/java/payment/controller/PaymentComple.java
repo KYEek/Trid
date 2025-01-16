@@ -19,7 +19,7 @@ import payment.model.Payment_DAO_imple;
 
 public class PaymentComple extends AbstractController {
 
-	Payment_DAO pdao = new Payment_DAO_imple();
+	private Payment_DAO pdao = new Payment_DAO_imple();
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
