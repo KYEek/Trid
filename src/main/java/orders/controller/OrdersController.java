@@ -1,8 +1,10 @@
 package orders.controller;
 
+import java.io.BufferedReader;
 import java.sql.SQLException;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import common.Constants;
 import common.controller.AbstractController;
@@ -14,7 +16,7 @@ import orders.model.*;
 
 public class OrdersController extends AbstractController {
 
-	OrderDAO odao = new OrderDAO_imple();
+	private OrderDAO odao = new OrderDAO_imple();
 	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -24,6 +26,7 @@ public class OrdersController extends AbstractController {
 		MemberDTO member = (MemberDTO) session.getAttribute("loginuser");
 		//주문 정보를 담기 위한 배열
 		JSONArray orderList = null;
+		int startNum = 1;
 		
 		
 		
@@ -35,21 +38,57 @@ public class OrdersController extends AbstractController {
 			return;
 		}
 		
-		try {
-		//sql에서 주문 값을 가져오기
-		orderList = odao.selectOrderListByMember(member.getPk_member_no());
-		request.setAttribute("orderList", orderList.toString());
+		//get 요청일 때 (처음 페이지로 왔을 때)
+		if("get".equalsIgnoreCase(method)) {
+			try {
+				//sql에서 주문 값을 가져오기
+				orderList = odao.selectOrderListByMember(member.getPk_member_no(), startNum);
+				request.setAttribute("orderList", orderList.toString());
+				
+				super.setRedirect(false);
+				super.setViewPage(Constants.ORDERS_PAGE);
+			}
+			//sql 오류시 오류페이지로 이동
+			catch(SQLException e) {
+				e.printStackTrace();
+				
+				super.setRedirect(false);
+				super.setViewPage(request.getContextPath()+"/error.jsp");
+			}
+		}
+		//post요청 시 (무한 스크롤 시)
+		else {
+			try {
+				System.out.println("무한스크롤 실행");
+				StringBuilder strb = new StringBuilder();
+				try (BufferedReader bffr = request.getReader()){
+					String line;
+					while((line = bffr.readLine()) != null) {
+						strb.append(line);
+					}
+				}
+				JSONObject startNumJson = new JSONObject(strb.toString());
+				startNum = startNumJson.getInt("startNum");
+				//System.out.println(startNum);
+				
+				//sql에서 주문 값을 가져오기
+				orderList = odao.selectOrderListByMember(member.getPk_member_no(), startNum);
+				request.setAttribute("orderList", orderList.toString());
+				
+				//System.out.println(orderList);
+				request.setAttribute("result", orderList);
+				super.setRedirect(false);
+				super.setViewPage("/WEB-INF/basket/jsonview.jsp");
+			}
+			//sql 오류시 오류페이지로 이동
+			catch(SQLException e) {
+				e.printStackTrace();
+				
+				super.setRedirect(false);
+				super.setViewPage(request.getContextPath()+"/error.jsp");
+			}
+		}
 		
-		super.setRedirect(false);
-		super.setViewPage(Constants.ORDERS_PAGE);
-		}
-		//sql 오류시 오류페이지로 이동
-		catch(SQLException e) {
-			e.printStackTrace();
-			
-			super.setRedirect(false);
-			super.setViewPage(request.getContextPath()+"/error.jsp");
-		}
 	}
 
 }

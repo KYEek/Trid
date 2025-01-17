@@ -18,8 +18,8 @@ import orders.model.OrderDAO_imple;
 
 public class OrderDetailController extends AbstractController {
 
-	OrderDAO odao = new OrderDAO_imple();
-	AddressDAO addrdao = new AddressDAO_imple();
+	private OrderDAO odao = new OrderDAO_imple();
+	private AddressDAO addrdao = new AddressDAO_imple();
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

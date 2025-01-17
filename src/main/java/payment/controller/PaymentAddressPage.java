@@ -18,8 +18,8 @@ import payment.model.Payment_DAO_imple;
 
 public class PaymentAddressPage extends AbstractController {
 
-	AddressDAO addr_dao = new AddressDAO_imple();
-	Payment_DAO pdao = new Payment_DAO_imple();
+	private AddressDAO addr_dao = new AddressDAO_imple();
+	private Payment_DAO pdao = new Payment_DAO_imple();
 	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

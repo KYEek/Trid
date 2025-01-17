@@ -14,7 +14,7 @@ import mypage.model.*;
 
 public class AddressController extends AbstractController {
 
-	AddressDAO addr_dao = new AddressDAO_imple();
+	private AddressDAO addr_dao = new AddressDAO_imple();
 	
 	
 	@Override
