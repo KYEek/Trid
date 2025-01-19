@@ -85,7 +85,7 @@
 				</div>
 
 				<div>
-					<span>이번주 미답변 질문</span>
+					<span>미답변 질문</span>
 					
 					<div class="table-responsive" style="width: 40vw; height: 300px; overflow-y:scroll;">
 						<table class="table table-sm">

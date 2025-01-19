@@ -22,8 +22,6 @@ public class MemberDTO {
     
     private String member_registerday;	// 가입일자
     
-    private String member_pwdchangeday;	// 비밀번호 수정일자
-    
     private String member_updateday; 	// 수정일자
     
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,23 +110,12 @@ public class MemberDTO {
 		this.member_registerday = member_registerday;
 	}
 
-	public String getMember_pwdchangeday() {
-		return member_pwdchangeday;
-	}
-
-	public void setMember_pwdchangeday(String member_pwdchangeday) {
-		this.member_pwdchangeday = member_pwdchangeday;
-	}
-
 	public String getMember_updateday() {
 		return member_updateday;
 	}
 
 	public void setMember_updateday(String member_updateday) {
 		this.member_updateday = member_updateday;
-	}
-
-	
-    
+	} 
 	
 }

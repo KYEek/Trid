@@ -551,7 +551,6 @@ public class BoardDAO_imple implements BoardDAO {
 			String sql 	= " select pk_question_no, member_name, question_title, question_registerday "
 						+ " from tbl_question join tbl_member on fk_member_no = pk_member_no "
 						+ " where question_status = 0 "
-						+ " and question_registerday between sysdate-6 and sysdate "
 						+ " order by question_registerday ";
 			
 			pstmt = conn.prepareStatement(sql);
