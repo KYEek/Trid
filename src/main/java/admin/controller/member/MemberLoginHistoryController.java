@@ -47,10 +47,7 @@ public class MemberLoginHistoryController extends AbstractController {
 			// curPage가 정수인지 예외처리
 			try {
 				curPage = Integer.parseInt(request.getParameter("curPage"));
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-				curPage = 1;
-			}
+			} catch (NumberFormatException e) {}
 			
 			try {
 				Map<String, Object> paraMap = new HashMap<>();

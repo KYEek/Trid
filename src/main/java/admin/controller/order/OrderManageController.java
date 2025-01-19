@@ -47,10 +47,7 @@ public class OrderManageController extends AbstractController {
 			// curPage가 정수인지 예외처리
 			try {
 				curPage = Integer.parseInt(request.getParameter("curPage"));
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-				curPage = 1;
-			}
+			} catch (NumberFormatException e) {}
 			
 			Map<String, Object> paraMap = createParaMap(request);  // URL 파라미터에서 받은 값을 Map에 저장
 			

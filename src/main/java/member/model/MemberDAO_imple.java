@@ -79,7 +79,7 @@ public class MemberDAO_imple implements MemberDAO {
 			conn = ds.getConnection();
 
 			String sql 	= " insert into tbl_member(pk_member_no, member_email, member_password, "
-						+ " member_name, member_mobile, member_gender, member_birthday, member_pwdchangeday, "
+						+ " member_name, member_mobile, member_gender, member_birthday, "
 						+ " member_updateday, member_registerday) "
 						+ " values(pk_member_no_seq.nextval , ?, ?, ?, ?, ?, ?, sysdate , sysdate, sysdate) ";
 
@@ -114,7 +114,7 @@ public class MemberDAO_imple implements MemberDAO {
 			conn = ds.getConnection();
 
 			String sql 	= " select pk_member_no, member_email, member_name, member_mobile, member_gender, member_birthday, member_idle, to_char(member_registerday, 'yyyy-mm-dd') as member_registerday, "
-						+ " member_pwdchangeday, to_char(member_updateday, 'yyyy-mm-dd') as member_updateday,"
+						+ " to_char(member_updateday, 'yyyy-mm-dd') as member_updateday,"
 						+ " (select NVL(ROUND(MONTHS_BETWEEN(sysdate, max(login_date))), 0) from tbl_login where fk_member_no = pk_member_no) as lastlogingap " 
 						+ " from tbl_member "
 						+ " where member_email = ? and member_password = ? "
@@ -142,7 +142,6 @@ public class MemberDAO_imple implements MemberDAO {
 				
 				member.setMember_idle((rs.getInt("member_idle")));
 				member.setMember_registerday((rs.getString("member_registerday")));
-				member.setMember_pwdchangeday((rs.getString("member_pwdchangeday")));
 				member.setMember_updateday((rs.getString("member_updateday")));
 
 				// 휴면 계정 확인
@@ -588,7 +587,7 @@ public class MemberDAO_imple implements MemberDAO {
 						+ " SELECT ROWNUM as rnum, A.* "
 						+ " FROM ( "
 						+ " 	select pk_member_no, member_email, member_name, member_mobile, member_gender, "
-						+ " 	member_birthday, member_status, member_idle, member_registerday, member_pwdchangeday, member_updateday "
+						+ " 	member_birthday, member_status, member_idle, member_registerday, member_updateday "
 						+ " 	from tbl_member "
 						+ " 	where 1=1 ";
 	
@@ -710,7 +709,6 @@ public class MemberDAO_imple implements MemberDAO {
 				memberDTO.setMember_status(rs.getInt("member_status"));
 				memberDTO.setMember_idle(rs.getInt("member_idle"));
 				memberDTO.setMember_registerday(rs.getString("member_registerday"));
-				memberDTO.setMember_pwdchangeday(rs.getString("member_pwdchangeday"));
 				memberDTO.setMember_updateday(rs.getString("member_updateday"));
 				
 				memberList.add(memberDTO);
@@ -735,7 +733,7 @@ public class MemberDAO_imple implements MemberDAO {
 			conn = ds.getConnection();
 			
 			String sql 	= " select pk_member_no, member_email, member_name, member_mobile, member_gender, "
-						+ " member_birthday, member_status, member_idle, member_registerday, member_pwdchangeday, member_updateday "
+						+ " member_birthday, member_status, member_idle, member_registerday, member_updateday "
 						+ " from tbl_member "
 						+ " where pk_member_no = ? ";
 			
@@ -755,7 +753,6 @@ public class MemberDAO_imple implements MemberDAO {
 				memberDTO.setMember_status(rs.getInt("member_status"));
 				memberDTO.setMember_idle(rs.getInt("member_idle"));
 				memberDTO.setMember_registerday(rs.getString("member_registerday"));
-				memberDTO.setMember_pwdchangeday(rs.getString("member_pwdchangeday"));
 				memberDTO.setMember_updateday(rs.getString("member_updateday"));
 			}
 			else {

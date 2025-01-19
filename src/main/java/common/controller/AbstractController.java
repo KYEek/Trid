@@ -2,6 +2,8 @@ package common.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.List;
 
 import org.json.JSONObject;
 
@@ -10,11 +12,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import member.domain.MemberDTO;
+import product.domain.CategoryDTO;
+import product.model.ProductDAO;
+import product.model.ProductDAO_imple;
 
 /*
  * InterCommand 인터페이스를 구현하는 추상 클래스
  */
 public abstract class AbstractController implements InterCommand {
+	
+	private ProductDAO productDAO = new ProductDAO_imple();
 	
 	private boolean isRedirect = false;
 
@@ -45,7 +52,29 @@ public abstract class AbstractController implements InterCommand {
 	public void setJsonResponse(boolean isJsonResponse) {
 		this.isJsonResponse = isJsonResponse;
 	}
-
+	
+	/*
+	 * 모든 컨트롤러의 공통기능 및 개별기능을 수행하기 위한 메소드
+	 */
+	public void executeCommand(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// 헤더 메뉴의 카테고리 데이터를 불러오기
+		try {
+			List<CategoryDTO> categoryList = productDAO.selectCategoryList();
+			request.setAttribute("categoryList", categoryList);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			handleServerError();
+		}
+		
+		// 자식 컨트롤러의 개별 기능 수행
+		execute(request, response);
+	}
+	
+	/*
+	 * 자식 컨트롤러의 개별 기능을 수행하기 위한 추상 메소드
+	 */
+	public abstract void execute(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	
 	/*
 	 * 사용자 알림 처리를 위한 메소드
 	 */
@@ -121,15 +150,15 @@ public abstract class AbstractController implements InterCommand {
 	}
 	
 	
-/*
- 	JSON view 응답 처리 메소드
-*/
-   public void handelJsonView(HttpServletRequest request, JSONObject jsonObj) {
-      String json = jsonObj.toString(); // JSON 객체 문자열 변환
-      request.setAttribute("json", json);
+	/*
+	 	JSON view 응답 처리 메소드
+	*/
+	public void handelJsonView(HttpServletRequest request, JSONObject jsonObj) {
+		String json = jsonObj.toString(); // JSON 객체 문자열 변환
+		request.setAttribute("json", json);
 
-      setRedirect(false);
-      setViewPage("/WEB-INF/jsonview.jsp");
-   }
+		setRedirect(false);
+		setViewPage("/WEB-INF/jsonview.jsp");
+	}
 	
 }

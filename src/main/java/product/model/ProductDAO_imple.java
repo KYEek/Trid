@@ -1648,7 +1648,7 @@ public class ProductDAO_imple implements ProductDAO {
 		}
 
 		/*
-		 *  일주일 재고가 빈 상품 리스트
+		 * 재고가 빈 상품 리스트
 		 */
 		@Override
 		public List<Map<String, String>> selectWeekEmptyInventoryList() throws SQLException {
@@ -1659,8 +1659,7 @@ public class ProductDAO_imple implements ProductDAO {
 				
 				String sql  = " select pk_product_no, product_name, product_detail_size , product_detail_updateday "
 							+ " from tbl_product join tbl_product_detail on pk_product_no = fk_product_no "
-							+ " where product_detail_updateday between sysdate-6 and sysdate "
-							+ " and product_inventory = 0 ";
+							+ " where product_inventory = 0 ";
 				
 				pstmt = conn.prepareStatement(sql);
 				

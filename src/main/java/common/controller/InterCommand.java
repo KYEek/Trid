@@ -8,5 +8,5 @@ public interface InterCommand {
 	/*
 	 * HTTP Method(GET, POST) 요청을 받아 실행하는 메소드
 	 */
-	void execute(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	void executeCommand(HttpServletRequest request, HttpServletResponse response) throws Exception;
 }

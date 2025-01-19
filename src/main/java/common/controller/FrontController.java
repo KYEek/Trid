@@ -34,8 +34,6 @@ public class FrontController extends HttpServlet {
 
    private static final long serialVersionUID = 1L;
    
-   ProductDAO productDAO = new ProductDAO_imple(); // 카테고리 리스트를 불러오기 위한 DAO
-   
    // Command.properties의 {uri, 클래스 경로}를 저장하는 map
    private Map<String, Object> cmdMap = new HashMap<>();
    
@@ -96,23 +94,19 @@ public class FrontController extends HttpServlet {
       
       if(controllerInstance == null) {
          System.out.println(">>> " + key + " 은 URI 패턴에 매핑된 클래스가 존재하지 않습니다.");
+         RequestDispatcher dispatcher = request.getRequestDispatcher(Constants.ERROR_URL);
+         dispatcher.forward(request, response);
       }
       
       else {
          try {
-            controllerInstance.execute(request, response); // 컨트롤러 인스턴스의 execute 메소드 실행
+            controllerInstance.executeCommand(request, response); // 컨트롤러 인스턴스의 execute 메소드 실행
             
             boolean isJsonResponse = controllerInstance.isJsonResponse();
             
             boolean isRedirect = controllerInstance.isRedirect(); // 리다이렉트 처리 여부
              
             String viewPage = controllerInstance.getViewPage(); // 페이지 경로
-            
-            // 카테고리 리스트 불러오기
-            if(request.getAttribute("categoryList") == null) {
-               List<CategoryDTO> categoryList = productDAO.selectCategoryList();
-               request.setAttribute("categoryList", categoryList);
-            }
          
             if(isJsonResponse) {
                controllerInstance.setJsonResponse(false);

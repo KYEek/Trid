@@ -32,7 +32,6 @@ public class RegisterController extends AbstractController {
 			String member_gender = request.getParameter("member_gender");
 			String member_birthday = request.getParameter("member_birthday");
 			String member_registerday = request.getParameter("member_registerday");
-			String member_pwdchangeday = request.getParameter("member_pwdchangeday");
 			String member_updateday = request.getParameter("member_updateday");
 			
 			System.out.println(request.getParameter("mobile"));
@@ -45,7 +44,6 @@ public class RegisterController extends AbstractController {
 			member.setMember_gender(Integer.parseInt(member_gender));
 			member.setMember_birthday(member_birthday);
 			member.setMember_registerday(member_registerday);
-			member.setMember_pwdchangeday(member_pwdchangeday);
 			member.setMember_updateday(member_updateday);
 			
 			// ==== 회원가입이 성공되어지면 "회원가입이 완료되었습니다" 라는 alert 를 띄우고 시작페이지로 이동한다. === // 
