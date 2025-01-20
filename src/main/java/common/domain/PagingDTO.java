@@ -8,9 +8,9 @@ public class PagingDTO {
 	// 입력 데이터
 	private int curPage = 1; // 현재 페이지 번호
 
-	private int rowSizePerPage = 3; // 페이지 당 레코드 수
+	private int rowSizePerPage; // 페이지 당 레코드 수
 
-	private int pageSize = 2; // 페이지리스트에서 보여줄 페이지 개수 (1페이지, 2페이지 ...)
+	private int pageSize; // 페이지리스트에서 보여줄 페이지 개수 (1페이지, 2페이지 ...)
 
 	private int totalRowCount; // 전체 레코드(데이터) 개수
 
@@ -24,6 +24,24 @@ public class PagingDTO {
 	private int firstPage; // 페이지 리스트에서 시작 페이지 번호 ex) [6], [7], [8], [9], [10] 에서 6를 뜻함
 
 	private int lastPage; // 페이지 리스트에서 마지막 페이지 번호 ex) [6], [7], [8], [9], [10] 에서 10를 뜻함
+	
+	// 기본 생성자
+	public PagingDTO() {}
+	
+	// 부분 생성자 
+	// 현재 페이지 및 전체 행 개수를 받아 나머지 페이징 정보 연산
+	public PagingDTO(int curPage, int totalRowCount) {
+		// curPage 유효성 검사
+		if(curPage > totalRowCount || curPage < 1 ) {
+			curPage = 1;
+		}
+		
+		this.setCurPage(curPage);
+		this.setTotalRowCount(totalRowCount);
+		this.setPageSize(5);
+		this.setRowSizePerPage(8);
+		this.pageSetting(); // 페이징 시 필요한 나머지 정보 계산
+	}
 
 	public void pageSetting() {
 		totalPageCount= (totalRowCount-1) / rowSizePerPage + 1;

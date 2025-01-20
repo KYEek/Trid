@@ -2,13 +2,10 @@ package admin.controller.product;
 
 import java.sql.SQLException;
 
-import admin.model.AdminDAO;
-import admin.model.AdminDAO_imple;
 import common.Constants;
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import product.model.ProductDAO;
 import product.model.ProductDAO_imple;
 

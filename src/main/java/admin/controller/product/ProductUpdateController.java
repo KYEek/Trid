@@ -8,7 +8,6 @@ import java.util.List;
 import common.Constants;
 import common.component.FileComponent;
 import common.controller.AbstractController;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import product.domain.ImageDTO;
