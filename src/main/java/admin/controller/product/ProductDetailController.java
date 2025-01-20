@@ -1,13 +1,11 @@
 package admin.controller.product;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import common.Constants;
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import product.domain.ColorDTO;
 import product.domain.ProductDTO;
 import product.model.ProductDAO;
 import product.model.ProductDAO_imple;

@@ -1,7 +1,6 @@
 package admin.controller.board;
 
 import common.Constants;
-import common.component.PagingComponent;
 import common.controller.AbstractController;
 import common.domain.PagingDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -54,7 +53,7 @@ public class BoardManageController extends AbstractController {
 			try {
 				int totalRowCount = boardDAO.selectTotalRowCountByAdmin(paraMap); // 전체 행 개수 조회
 				
-				PagingDTO pagingDTO = PagingComponent.createPaging(curPage, totalRowCount); // 페이징 관련 정보가 저장된 DTO 생성
+				PagingDTO pagingDTO = new PagingDTO(curPage, totalRowCount); // 페이징 관련 정보가 저장된 DTO 생성
 				
 				paraMap.put("pagingDTO", pagingDTO);
 				
