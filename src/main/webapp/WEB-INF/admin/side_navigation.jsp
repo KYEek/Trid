@@ -51,10 +51,15 @@
 		</div>
 	</div>
 
-
 	<%-- 로그아웃 --%>
 	<form id="logout_frm" name="logout_frm">
 		<span id="profile">${adminName} 님</span>
 		<button type="button" id="logout_button" onclick="location.href='logout.trd';">로그아웃</button>
 	</form>
+	
+	<p style="font-size:11pt;">
+	위 프로젝트에 사용된 사진은 <br>
+	비영리적 목적이며 <br>
+	교육목적으로 포트폴리오를 <br> 
+	만드는데 사용되었습니다.</p>
 </div>

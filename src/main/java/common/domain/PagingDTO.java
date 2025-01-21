@@ -36,10 +36,10 @@ public class PagingDTO {
 			curPage = 1;
 		}
 		
-		this.setCurPage(curPage);
-		this.setTotalRowCount(totalRowCount);
-		this.setPageSize(5);
-		this.setRowSizePerPage(8);
+		this.curPage = curPage;
+		this.totalRowCount = totalRowCount;
+		this.pageSize = 5;
+		this.rowSizePerPage = 8;
 		this.pageSetting(); // 페이징 시 필요한 나머지 정보 계산
 	}
 
