@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -18,9 +17,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import product.domain.CategoryDTO;
-import product.model.ProductDAO;
-import product.model.ProductDAO_imple;
 
 /*
  * 클라이언트의 요청을 가장 먼저 처리하는 컨트롤러
@@ -69,7 +65,7 @@ public class FrontController extends HttpServlet {
                
                Class<?> cls = Class.forName(className); // 컨트롤러 지정
                
-                Constructor<?> constrt = cls.getDeclaredConstructor(); // 컨트롤러 생성자 불러오기
+               Constructor<?> constrt = cls.getDeclaredConstructor(); // 컨트롤러 생성자 불러오기
                
                Object obj = constrt.newInstance(); // 컨트롤러 인스턴스 생성
                
@@ -102,15 +98,17 @@ public class FrontController extends HttpServlet {
          try {
             controllerInstance.executeCommand(request, response); // 컨트롤러 인스턴스의 execute 메소드 실행
             
-            boolean isJsonResponse = controllerInstance.isJsonResponse();
+            boolean isJsonResponse = controllerInstance.isJsonResponse(); // 포워드를 거치지 않은 JSON 응답 여부
             
             boolean isRedirect = controllerInstance.isRedirect(); // 리다이렉트 처리 여부
              
             String viewPage = controllerInstance.getViewPage(); // 페이지 경로
          
+            // 포워드를 거치지 않은 JSON 응답의 경우 
             if(isJsonResponse) {
-               controllerInstance.setJsonResponse(false);
-               return;
+            	// 자식 컨트롤러에서 flush()를 진행, isJsonResponse 원상태 복구
+            	controllerInstance.setJsonResponse(false);
+            	return;
             }
             
             // 포워드인 경우

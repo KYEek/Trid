@@ -12,13 +12,14 @@
 
 <head>
 <meta charset="UTF-8">
-<title>관리자 상품 상세</title>
+<title>관리자 상품 등록</title>
 
 <%-- css --%>
 <link rel="stylesheet" href="${ctxPath}/css/admin/product_register.css">
 <link rel="stylesheet" href="${ctxPath}/css/admin/button.css">
 
 <%-- js --%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.7.1.min.js"></script>
 <script type="text/javascript" src="${ctxPath}/js/admin/product.js"></script>
 <script type="text/javascript" src="${ctxPath}/js/admin/util.js"></script>
 
@@ -52,7 +53,7 @@
 				<form id="register_frm" name="product_register_frm" enctype="multipart/form-data">
 				
 					<div id="register_header">
-						<h2>상품 추가</h2>
+						<h2>상품 등록</h2>
 						<div>
 							<button type="button" class="button--ujarak" onclick="location.href='productManage.trd';">돌아가기</button>
 						</div>

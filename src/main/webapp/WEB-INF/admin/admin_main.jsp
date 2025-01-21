@@ -36,7 +36,7 @@
 		<%@ include file="side_navigation.jsp"%>
 
 		<div class="content_container">
-			<div style="padding : 10px; border : solid 1px black; width:500px;">
+			<div style="padding : 10px; border : solid 1px black; width:600px;">
 				<span>일주일간 주문 내역</span>
 				<div style="display: flex;">
 					<div>
